@@ -1,4 +1,4 @@
-/*Tahir Agalliu	753550 VA
+package ClimateMonitoring;/*Tahir Agalliu	753550 VA
 Letizia Capitanio 752465 VA
 Alessandro D'Urso 753578 VA
 Francesca Ziggiotto	752504 VA
@@ -10,7 +10,7 @@ import java.time.format.FormatStyle;
 import java.util.*;
 
 /**
- *La classe <strong>GestioneCentri</strong> si occupa degli aspetti relativi ai centri di monitoraggio.
+ *La classe <strong>ClimateMonitoring.GestioneCentri</strong> si occupa degli aspetti relativi ai centri di monitoraggio.
  *Sia le fasi per registrare il centro, sia l'aggiunta delle area associate.
  *@author Letizia Capitanio
  */
@@ -40,7 +40,7 @@ public class GestioneCentri {
 
 
     /**
-     * Metodo che imposta il centro e l'utente nella classe <strong>GestioneCentri</strong>
+     * Metodo che imposta il centro e l'utente nella classe <strong>ClimateMonitoring.GestioneCentri</strong>
      * @param NomeCentro Stringa contenente il nome del centro dell'utente.
      * @param Userid Stringa contenente l'userId.
      */

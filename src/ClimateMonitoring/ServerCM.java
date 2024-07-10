@@ -1,4 +1,4 @@
-/*Tahir Agalliu	753550 VA
+package ClimateMonitoring;/*Tahir Agalliu	753550 VA
 Letizia Capitanio 752465 VA
 Alessandro D'Urso 753578 VA
 Francesca Ziggiotto	752504 VA
@@ -13,33 +13,33 @@ import java.util.Map;
 /*
 public class Utente {
 
-    private GestioneUtente GestioneUtente = new GestioneUtente();
-    private GestioneCentri centro = new GestioneCentri();
+    private ClimateMonitoring.GestioneUtente ClimateMonitoring.GestioneUtente = new ClimateMonitoring.GestioneUtente();
+    private ClimateMonitoring.GestioneCentri centro = new ClimateMonitoring.GestioneCentri();
 
 
     public void registrazione(String id, LinkedList<String> inserimenti) {
-           if(GestioneUtente .controlloId(id)){
-               GestioneUtente.RichiestaDatiPerRegistrazione(inserimenti);
+           if(ClimateMonitoring.GestioneUtente .controlloId(id)){
+               ClimateMonitoring.GestioneUtente.RichiestaDatiPerRegistrazione(inserimenti);
            }
     }
 
     public void registraCentroAree(LinkedList<String> inserimenti, LinkedList<String> lonlatInserite) {
-           GestioneUtente.registraCentroAree(inserimenti,lonlatInserite);
+           ClimateMonitoring.GestioneUtente.registraCentroAree(inserimenti,lonlatInserite);
     }
 
 
 
     public boolean richiestaInserimentoCentro(String centro) {
-          return GestioneUtente.richiestaInserimentoCentro(centro);
+          return ClimateMonitoring.GestioneUtente.richiestaInserimentoCentro(centro);
     }
 
     public boolean login(String id, String password) {
-           return GestioneUtente.login(id,password);
+           return ClimateMonitoring.GestioneUtente.login(id,password);
     }
 
 
     public void inserisciParametriClimatici(String longlatScelta, Map<String, Object> MappavaluNote) {
-           GestioneUtente.inserisciParametriClimatici(longlatScelta,  MappavaluNote);
+           ClimateMonitoring.GestioneUtente.inserisciParametriClimatici(longlatScelta,  MappavaluNote);
     }
 
 
@@ -57,6 +57,7 @@ public class ServerCM extends UnicastRemoteObject implements ServerInterface {
     private static final long serialVersionUID = 1L;
     private GestioneUtente ute = new GestioneUtente();
     private GestioneCentri centro = new GestioneCentri();
+    private DatabaseConnection db = new DatabaseConnection();
 
 
     public ServerCM() throws RemoteException {
@@ -64,10 +65,11 @@ public class ServerCM extends UnicastRemoteObject implements ServerInterface {
     }
 
     @Override
-    public synchronized void registrazione(String id, LinkedList<String> inserimenti) throws RemoteException{
+    public synchronized boolean registrazione(String id, LinkedList<String> inserimenti) throws RemoteException{
         if (ute.controlloId(id)) {
             ute.RichiestaDatiPerRegistrazione(inserimenti);
-        }
+            return true;
+        }return false;
     }
 
     @Override
@@ -76,9 +78,16 @@ public class ServerCM extends UnicastRemoteObject implements ServerInterface {
     }
 
     @Override
-    public synchronized boolean richiestaInserimentoCentro(String centro)throws RemoteException {
-        return ute.richiestaInserimentoCentro(centro);
+    public synchronized boolean richiestaInserimentoCentro(String centro, LinkedList<String> elementiDisponibili)throws RemoteException {
+        return ute.richiestaInserimentoCentro(centro,elementiDisponibili);
     }
+
+
+    @Override
+    public synchronized LinkedList<String> mostraElementiDisponibili(String tabella, String centro, String nomeColonnaDoveRicercare, boolean ricercaLibera){
+        return db.mostraElementiDisponibili(tabella, centro, nomeColonnaDoveRicercare, ricercaLibera);
+    }
+
     @Override
     public  synchronized boolean login(String id, String password)throws RemoteException {
 

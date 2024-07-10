@@ -1,3 +1,5 @@
+package ClimateMonitoring;
+
 import java.sql.*;
 import java.util.Arrays;
 import java.util.HashMap;

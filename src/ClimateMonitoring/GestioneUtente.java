@@ -1,4 +1,4 @@
-/*Tahir Agalliu	753550 VA
+package ClimateMonitoring;/*Tahir Agalliu	753550 VA
 Letizia Capitanio 752465 VA
 Alessandro D'Urso 753578 VA
 Francesca Ziggiotto	752504 VA
@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.*;
     /**
      *
-     *La classe <strong>GestioneUtente</strong> si occupa degli aspetti relativi ai dati dell'utente.
+     *La classe <strong>ClimateMonitoring.GestioneUtente</strong> si occupa degli aspetti relativi ai dati dell'utente.
      *Sia le fasi per registrarsi all'interno del programma <strong>Climate Monitoring</strong>,
      *sia le fasi per fare il login.
      *@author Letizia Capitanio
@@ -94,7 +94,7 @@ public class GestioneUtente  implements Serializable {
     protected boolean controlloId(String id) {
         // Connection connection = null;
 
-        //    connection = DatabaseConnection.connect();
+        //    connection = ClimateMonitoring.DatabaseConnection.connect();
 //            Statement statement = connection.createStatement();
 
 
@@ -228,11 +228,11 @@ public class GestioneUtente  implements Serializable {
      */
 
 
-    protected boolean richiestaInserimentoCentro(String centro)  {
+    protected boolean richiestaInserimentoCentro(String centro,LinkedList<String> elementiDisponibili)  {
 
-        LinkedList<String> elementiDisponibili;
+        //LinkedList<String> elementiDisponibili;
         String choice;
-        elementiDisponibili = db.mostraElementiDisponibili("CentriMonitoraggio", null, "NomeCentro",false);
+       // elementiDisponibili = db.mostraElementiDisponibili("CentriMonitoraggio", null, "NomeCentro",false);
   /*      if (!elementiDisponibili.isEmpty()) {
             System.out.println("Lista centri disponibili :");
             for (String elemento : elementiDisponibili) {
@@ -268,7 +268,7 @@ public class GestioneUtente  implements Serializable {
 /*
     private void RichiestaDatidelCentrodaRegistrare() {
         ControlloDatiPrimadiInserire( false);
-        gestioneCentri = new GestioneCentri();
+        gestioneCentri = new ClimateMonitoring.GestioneCentri();
         gestioneCentri.setCentroId(centro, id);
         gestioneCentri.inserimentoAree(quantitaAreeperilCentro);
 
