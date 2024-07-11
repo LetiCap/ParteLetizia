@@ -48,9 +48,11 @@ public class Maindiprova {
                 System.out.println(riuscito);
 
                  u.inserisciParametriClimatici("15115 155", MappavaluNote);
-                 u.statisticaParametri("centro", "centrum" );
 
-*/
+                  */
+                // u.statisticaParametri("area", "155,16(castelletto)" );
+
+
 
 
 

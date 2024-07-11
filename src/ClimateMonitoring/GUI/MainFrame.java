@@ -56,7 +56,7 @@ public class MainFrame extends JFrame {
         mainPanel.add(homePanel, "Home");
         mainPanel.add(new RegistrazionePanel( server,cardLayout, mainPanel), "Registrazione");
         mainPanel.add(new LoginPanel(server,cardLayout, mainPanel), "Login");
-        mainPanel.add(new SceltaCentro(server,cardLayout, mainPanel), "SceltaCentro");
+        mainPanel.add(new SceltaCentroPanel(server,cardLayout, mainPanel), "SceltaCentro");
         // mainPanel.add(new VisualizzazionePanel( cardLayout, mainPanel), "Visualizzazione");
 
         // Aggiungi azioni ai pulsanti

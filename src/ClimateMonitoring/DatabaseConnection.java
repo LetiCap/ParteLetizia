@@ -15,6 +15,12 @@ public class DatabaseConnection {
     private static final String USERNAME = "postgres";
     private static final String PASSWORD = "6313";
 
+/*
+    private static final String URL = "jdbc:postgresql://localhost:5432/Utente";
+    private static final String USERNAME = "postgres";
+    private static final String PASSWORD = "6313";
+
+ */
 
 
     public static Connection connect() {

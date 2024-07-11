@@ -181,6 +181,7 @@ public class GestioneCentri {
             System.out.println(elemento);
         }
        // String elementoScelto= utente.getInfoFromUser("per quale valore le valutazioni inserite");
+
         GestoreStampe( db.RicercaMode(elementoScelto,NomiColonneParametriPAR, NomiColonneParametriNOT,  parametroScelto ));
 
     }
