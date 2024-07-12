@@ -54,7 +54,7 @@ public class GestioneCentri {
      * controlla che le longitutidine e latituidine non sono già presenti. in caso positivo, vengono inserite nella tabella <stron>aree</stron>
      * @param lonlatInserite lista contenente longitudini e latitutidini come unico formato delle aree
      */
-    public void inserimentoAree(LinkedList<String> lonlatInserite)  {
+    public void inserimentoAree(LinkedList<String> lonlatInserite, DatabaseConnection db)  {
 
         String input;
         Map<String, String> dataMap = new HashMap<>();
@@ -87,11 +87,13 @@ public class GestioneCentri {
 
 
     /**
-     *Inserisce le note e le valutazioni contenute nell'argomento mappavaluNote nell'area passata come argomento
+     * Inserisce le note e le valutazioni contenute nell'argomento mappavaluNote nell'area passata come argomento
+     *
      * @param longlatScelta longitutdine e latitudine dell'area scelta
      * @param MappavaluNote mappa che contiene le note e le valutazioni da inserire
+     * @param db
      */
-    public void selezioneAreadiLavoroeInserimento(String longlatScelta, Map<String, Object> MappavaluNote) {
+    public void selezioneAreadiLavoroeInserimento(String longlatScelta, Map<String, Object> MappavaluNote, DatabaseConnection db) {
 
 
         String output;
@@ -168,7 +170,7 @@ public class GestioneCentri {
      * @param parametroScelto inserire area o centro in base a che tipo di elemento si vuole inserire
      * @param elementoScelto nome del centro, oppure longitutdine e latitudine dell'area
      */
-    public void restitutoreMode(String parametroScelto, String elementoScelto) {
+    public void restitutoreMode(String parametroScelto, String elementoScelto, DatabaseConnection db) {
 
         LinkedList<String> elementiDisponibili;
        // String campoDiricerca = utente.getInfoFromUser("per quale valore di ricerca vuoi visualizzare [centro] o [area]");

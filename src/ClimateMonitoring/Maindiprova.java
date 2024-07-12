@@ -8,9 +8,12 @@ import java.util.Map;
 
 public class Maindiprova {
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) throws SQLException {
+       // DatabaseConnection db = new DatabaseConnection();
+       // db.setConnectionDetails("jdbc:postgresql://localhost:5432/", "postgres", "6313");
+       // db.connect();
 
-
+/*
         Connection connect = null;
         try {
             new DatabaseConnection();
@@ -49,7 +52,7 @@ public class Maindiprova {
 
                  u.inserisciParametriClimatici("15115 155", MappavaluNote);
 
-                  */
+
                 // u.statisticaParametri("area", "155,16(castelletto)" );
 
 
@@ -70,6 +73,8 @@ public class Maindiprova {
         }
 
 
+    }
+    */
     }
 
 }

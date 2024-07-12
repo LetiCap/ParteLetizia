@@ -1,0 +1,119 @@
+-- Table: public.CentriMonitoraggio
+
+-- DROP TABLE IF EXISTS public."CentriMonitoraggio";
+
+CREATE TABLE IF NOT EXISTS public."CentriMonitoraggio"
+(
+    "NomeCentro" character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    "Civico" character varying(50) COLLATE pg_catalog."default",
+    "CAP" character(5) COLLATE pg_catalog."default",
+    "Comune" character varying(50) COLLATE pg_catalog."default",
+    "Via/Piazza" character varying(50) COLLATE pg_catalog."default",
+    "Provincia" character varying(50) COLLATE pg_catalog."default",
+    CONSTRAINT centrimonitoraggio_pk PRIMARY KEY ("NomeCentro")
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."CentriMonitoraggio"
+    OWNER to postgres;
+
+
+
+
+
+
+-- Table: public.OperatoriRegistrati
+
+-- DROP TABLE IF EXISTS public."OperatoriRegistrati";
+
+CREATE TABLE IF NOT EXISTS public."OperatoriRegistrati"
+(
+    "Userid" character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    "Password" character varying(60) COLLATE pg_catalog."default",
+    "NomeCognome" character varying(50) COLLATE pg_catalog."default",
+    "CodiceFiscale" character varying(16) COLLATE pg_catalog."default",
+    "Email" character varying(50) COLLATE pg_catalog."default",
+    "NomeCentro" character varying(60) COLLATE pg_catalog."default",
+    CONSTRAINT operatoriregistrati_pk PRIMARY KEY ("Userid"),
+    CONSTRAINT utenti_centri_nomecentro_fk FOREIGN KEY ("NomeCentro")
+        REFERENCES public."CentriMonitoraggio" ("NomeCentro") MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE SET NULL
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."OperatoriRegistrati"
+    OWNER to postgres;
+
+
+
+
+
+-- Table: public.aree
+
+-- DROP TABLE IF EXISTS public.aree;
+
+CREATE TABLE IF NOT EXISTS public.aree
+(
+    lonlat character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    "NomeCentro" character varying(50) COLLATE pg_catalog."default",
+    "NomeArea" character varying(50) COLLATE pg_catalog."default",
+    CONSTRAINT table_name_pk PRIMARY KEY (lonlat),
+    CONSTRAINT table_name_centri_nomecentro_fk FOREIGN KEY ("NomeCentro")
+        REFERENCES public."CentriMonitoraggio" ("NomeCentro") MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.aree
+    OWNER to postgres;
+
+
+
+
+-- Table: public.ParametriClimatici
+
+-- DROP TABLE IF EXISTS public."ParametriClimatici";
+
+CREATE TABLE IF NOT EXISTS public."ParametriClimatici"
+(
+    vento_val integer,
+    vento_notes character varying(100) COLLATE pg_catalog."default",
+    umidita_val integer,
+    umidita_notes character varying(100) COLLATE pg_catalog."default",
+    precipitazioni_val integer,
+    precipitazioni_notes character varying(100) COLLATE pg_catalog."default",
+    pressione_val integer,
+    pressione_notes character varying(100) COLLATE pg_catalog."default",
+    temperatura_val integer,
+    temperatura_notes character varying(100) COLLATE pg_catalog."default",
+    altitudineghiacchi_val integer,
+    altitudineghiacchi_notes character varying(100) COLLATE pg_catalog."default",
+    massaghiacci_val integer,
+    massaghiacci_notes character varying(100) COLLATE pg_catalog."default",
+    area character varying COLLATE pg_catalog."default",
+    centro character varying(50) COLLATE pg_catalog."default",
+    datainserimento date,
+    CONSTRAINT parametri_aree_lonlat_fk FOREIGN KEY (area)
+        REFERENCES public.aree (lonlat) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT alt_check CHECK (altitudineghiacchi_val >= 1 AND altitudineghiacchi_val <= 5),
+    CONSTRAINT massa_check CHECK (massaghiacci_val >= 1 AND massaghiacci_val <= 5),
+    CONSTRAINT preci_check CHECK (precipitazioni_val >= 1 AND precipitazioni_val <= 5),
+    CONSTRAINT press_check CHECK (pressione_val >= 1 AND pressione_val <= 5),
+    CONSTRAINT temp_check CHECK (temperatura_val >= 1 AND temperatura_val <= 5),
+    CONSTRAINT umi_check CHECK (umidita_val >= 1 AND umidita_val <= 5),
+    CONSTRAINT vento_check CHECK (vento_val >= 1 AND vento_val <= 5)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."ParametriClimatici"
+    OWNER to postgres;
+
+

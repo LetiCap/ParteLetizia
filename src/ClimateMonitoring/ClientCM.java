@@ -1,6 +1,5 @@
 package ClimateMonitoring;
 
-
 import ClimateMonitoring.GUI.MainFrame;
 
 import javax.swing.*;
@@ -11,7 +10,12 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 public class ClientCM extends UnicastRemoteObject implements ClientInterface {
-    ServerInterface server;
+    private ServerInterface server;
+
+
+
+
+
     public ClientCM() throws RemoteException {
     }
 
@@ -40,6 +44,5 @@ public class ClientCM extends UnicastRemoteObject implements ClientInterface {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-
     }
 }

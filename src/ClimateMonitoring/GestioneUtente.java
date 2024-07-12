@@ -41,13 +41,14 @@ public class GestioneUtente  implements Serializable {
     /*Metodo controllo password e id del login*/
     /**
      * Viene controllato che sia presente quella corrispondenza nel db <strong>OperatoriRegistrati</strong>.
-     * @param id da controllare
+     *
+     * @param id       da controllare
      * @param password password associata all'id
+     * @param db
      * @return true login effettuato, false rifiutato
      */
 
-    protected boolean login(String id, String password) {
-
+    protected boolean login(String id, String password, DatabaseConnection db) {
 
         // while (true) {
         // id = getInfoFromUser("user ID ");
@@ -88,10 +89,12 @@ public class GestioneUtente  implements Serializable {
         /**
          * Metodo di controllo dell'id in fase di <strong>registrazione</strong>..
          * Viene controllato che <strong>non</strong> sia presente l'id nel db <strong>OperatoriRegistrati</strong>
+         *
          * @param id id da verificare
+         * @param db
          * @return true se l'id non è gia presente, altrimenti false
          */
-    protected boolean controlloId(String id) {
+    protected boolean controlloId(String id, DatabaseConnection db) {
         // Connection connection = null;
 
         //    connection = ClimateMonitoring.DatabaseConnection.connect();
@@ -128,14 +131,16 @@ public class GestioneUtente  implements Serializable {
 
     /*Metodo che richiede tutti i dati */
     /**
-     *Metodo per la fase di <strong>registrazione</strong>.
-     *È costituito da più metodi singoli. Usando questo metodo si facilita la parte di registrazione con un metodo solo.
-     *Vengono passati i dati per la registrazione: Email, Codice Fiscale, Nome e Cognome
+     * Metodo per la fase di <strong>registrazione</strong>.
+     * È costituito da più metodi singoli. Usando questo metodo si facilita la parte di registrazione con un metodo solo.
+     * Vengono passati i dati per la registrazione: Email, Codice Fiscale, Nome e Cognome
+     *
      * @param inserimenti lista con elementi da inserire associati all'utente
+     * @param db
      */
-    protected void RichiestaDatiPerRegistrazione(LinkedList<String> inserimenti)  {
+    protected void RichiestaDatiPerRegistrazione(LinkedList<String> inserimenti, DatabaseConnection db)  {
         db.inserimentoinDB("OperatoriRegistrati", this.id, "Userid", null, null, "User");
-        ControlloDatiPrimadiInserire( inserimenti,true);
+        ControlloDatiPrimadiInserire( inserimenti,true, db);
         //richiestaInserimentoCentro();
     }
 
@@ -147,7 +152,7 @@ public class GestioneUtente  implements Serializable {
      * @param datiUtente è un booleano. se impostato su true, richiede i dati per l'utente, se false richiede i dati per registrare un nuovo centro
      * @param inserimenti lista con elementi da inserire
      */
-    protected void ControlloDatiPrimadiInserire( LinkedList<String> inserimenti, boolean datiUtente) {
+    protected void ControlloDatiPrimadiInserire( LinkedList<String> inserimenti, boolean datiUtente, DatabaseConnection db) {
         String [] Nomicolonne;
       //  String [] OutputSchermo;
         if(datiUtente){
@@ -228,7 +233,7 @@ public class GestioneUtente  implements Serializable {
      */
 
 
-    protected boolean richiestaInserimentoCentro(String centro,LinkedList<String> elementiDisponibili)  {
+    protected boolean richiestaInserimentoCentro(String centro,LinkedList<String> elementiDisponibili, DatabaseConnection db)  {
 
         //LinkedList<String> elementiDisponibili;
         String choice;
@@ -251,7 +256,9 @@ public class GestioneUtente  implements Serializable {
         //} else if ((choice).equals("1")) {
          //   while(true){
           //      centro = getInfoFromUser("il nome del centro tra i nomi della lista");
+
                 if(elementiDisponibili.contains(centro)){
+
                     db.UpdateDataToDB("NomeCentro", centro, id);
                     return true;
                    // break;
@@ -289,10 +296,10 @@ public class GestioneUtente  implements Serializable {
      * @param longlatScelta
      * @param MappavaluNote
      */
-    protected void inserisciParametriClimatici(String longlatScelta, Map<String, Object> MappavaluNote) {
+    protected void inserisciParametriClimatici(String longlatScelta, Map<String, Object> MappavaluNote, DatabaseConnection db) {
         gestioneCentri = new GestioneCentri();
         gestioneCentri.setCentroId(centro, id);
-        gestioneCentri.selezioneAreadiLavoroeInserimento(longlatScelta, MappavaluNote);
+        gestioneCentri.selezioneAreadiLavoroeInserimento(longlatScelta, MappavaluNote, db);
 
     }
 
@@ -309,14 +316,14 @@ public class GestioneUtente  implements Serializable {
     se invece entra nellelse, restituisce false e dato che ce false, si apre una nuova schermata dove poi parte il metodo RichiestaDatidelCentrodaRegistrare
     in caso si faccia cosi, invertire i nomi dei metodi registracentroaree e richiestadatidelcentroda regsitrare
     richiestadatidelcentroda non è necessario che venga implememntato nel server*/
-    protected void registraCentroAree(LinkedList<String> inserimenti, LinkedList<String> lonlatInserite){
+    protected void registraCentroAree(LinkedList<String> inserimenti, LinkedList<String> lonlatInserite, DatabaseConnection db){
       //  centro = getInfoFromUser("il nome del centro");
 
-        ControlloDatiPrimadiInserire( inserimenti,false);
+        ControlloDatiPrimadiInserire( inserimenti,false, db);
        gestioneCentri = new GestioneCentri();
         gestioneCentri.setCentroId(centro, id);
       //  gestioneCentri.inserimentoAree(quantitaAreeperilCentro);
-      gestioneCentri.inserimentoAree(lonlatInserite);
+      gestioneCentri.inserimentoAree(lonlatInserite, db);
 
 
     }

@@ -1,52 +1,123 @@
-package ClimateMonitoring;/*Tahir Agalliu	753550 VA
-Letizia Capitanio 752465 VA
-Alessandro D'Urso 753578 VA
-Francesca Ziggiotto	752504 VA
-*/
+package ClimateMonitoring;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-
-
 public class DatabaseConnection {
-    private static final String URL = "jdbc:postgresql://localhost:5432/Utente";
-    private static final String USERNAME = "postgres";
-    private static final String PASSWORD = "6313";
+    private static String URL;
+    private static String USERNAME;
+    private static String PASSWORD;
 
-/*
-    private static final String URL = "jdbc:postgresql://localhost:5432/Utente";
-    private static final String USERNAME = "postgres";
-    private static final String PASSWORD = "6313";
-
- */
-
-
-    public static Connection connect() {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            System.out.println("Connessione al database PostgreSQL riuscita.");
-        } catch (SQLException e) {
-            System.err.println("Errore di connessione al database: " + e.getMessage());
-        }
-        return connection;
+    public static void setConnectionDetails(String dbUrl, String dbUsername, String dbPassword) {
+        URL = dbUrl;
+        USERNAME = dbUsername;
+        PASSWORD = dbPassword;
     }
+
+    public static Connection connect() throws SQLException {
+        if (URL == null || USERNAME == null || PASSWORD == null) {
+            throw new SQLException("Database connection details are not set.");
+        }
+
+        try {
+            createDatabase(); // Ensure the database exists
+            Connection connection=  DriverManager.getConnection(URL, USERNAME, PASSWORD);
+
+            return connection;
+        } catch (SQLException e) {
+            System.err.println("Error connecting to database: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    private static boolean databaseExists() {
+        try (Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/", USERNAME, PASSWORD)) {
+            DatabaseMetaData metaData = conn.getMetaData();
+            ResultSet rs = metaData.getCatalogs();
+            while (rs.next()) {
+                String dbName = rs.getString(1);
+                System.out.println(dbName);
+                if (dbName.equals("climatemonitoring")) {
+                    System.out.println("caaz");
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private static void createDatabase() throws SQLException {
+        if (!databaseExists()) {
+            try (Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/", USERNAME, PASSWORD)) {
+                String dbName = "climatemonitoring";
+                try (Statement stmt = conn.createStatement()) {
+                    String sql = "CREATE DATABASE " + dbName;
+                    stmt.executeUpdate(sql);
+                    System.out.println("Database created successfully");
+
+                    executeTableCreationScript();
+                }
+            }
+        }
+    }
+
+    private static void executeTableCreationScript() throws SQLException {
+        Connection g= DriverManager.getConnection("jdbc:postgresql://localhost:5432/climatemonitoring", USERNAME, PASSWORD);
+        setConnectionDetails("jdbc:postgresql://localhost:5432/climatemonitoring",USERNAME,PASSWORD);
+        try (InputStream scriptStream = DatabaseConnection.class.getResourceAsStream("/script");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(scriptStream));
+             Statement statement = g.createStatement()) {
+
+            StringBuilder script = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                script.append(line).append("\n"); // Aggiungi una nuova riga dopo ogni linea letta
+            }
+
+            // Dividi lo script in singole istruzioni SQL (separate da ";")
+            String[] sqlStatements = script.toString().split(";");
+
+            // Esegui ciascuna istruzione SQL
+            for (String sql : sqlStatements) {
+                String trimmedSql = sql.trim();
+                if (!trimmedSql.isEmpty()) {
+                    statement.executeUpdate(trimmedSql);
+                }
+            }
+
+            System.out.println("Script executed successfully");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void closeConnection(Connection connection) {
         if (connection != null) {
             try {
                 connection.close();
-                System.out.println("Connessione al database chiusa.");
+                System.out.println("Database connection closed.");
             } catch (SQLException e) {
-                System.err.println("Errore durante la chiusura della connessione: " + e.getMessage());
+                System.err.println("Error closing database connection: " + e.getMessage());
             }
         }
     }
 
+    // Other methods for interacting with the database, such as inserting data, querying, etc.
 
-    /**
+
+
+
+/**
      * Metodo che permette di inserire uno o piu valori contemporaneamente nella tabella passata come parametro
      * @param tabella nome della tabella dove inserire i dati
      * @param valore valore da inserire nella tabella
@@ -58,7 +129,9 @@ public class DatabaseConnection {
     protected void inserimentoinDB(String tabella, String valore, String colonna, String valore2, String colonna2, String dato) {
         Connection connection = null;
         try {
-            connection = DatabaseConnection.connect();
+            connection = connect();
+
+            String database="climatemonitoringdb";
             Statement statement = connection.createStatement();
             int esito;
             String query = null;
@@ -70,16 +143,18 @@ public class DatabaseConnection {
             }
             esito = statement.executeUpdate(query);
 
-            if (esito == 1)
+            if (esito == 1) {
                 System.out.println("inserimento eseguito correttamente " + dato);
-            else
+
+
+            }else
                 System.out.println("inserimento non eseguito " + dato);
         } catch (SQLException e) {
 
             e.printStackTrace();
         } finally {
             // Chiudi la connessione
-            DatabaseConnection.closeConnection(connection);
+            closeConnection(connection);
         }
     }
 
@@ -94,7 +169,8 @@ public class DatabaseConnection {
     protected void UpdateDataToDB(Map<String, Object> dataMap, String tabella, String valoreColonnaWhere, String nomeColonnaWhere) {
         Connection connection = null;
         try {
-            connection = DatabaseConnection.connect();
+            connection = connect();
+
             Statement statement = connection.createStatement();
             int esito;
             for (Map.Entry<String, Object> entry : dataMap.entrySet()) {
@@ -105,6 +181,7 @@ public class DatabaseConnection {
                 else
                     System.out.println("inserimento non eseguito ");
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -122,12 +199,14 @@ public class DatabaseConnection {
     protected void UpdateDataToDB(String colonna, String inserimento, String id) {
         Connection connection = null;
         try {
-            connection = DatabaseConnection.connect();
+            connection = connect();
+
             Statement statement = connection.createStatement();
             int esito;
 
             String query = "UPDATE \"OperatoriRegistrati\" SET \"" + colonna + "\" = '" + inserimento + "' WHERE \"Userid\" = '" + id + "'";
             esito = statement.executeUpdate(query);
+            System.out.println(query);
             if (esito == 1)
                 System.out.println("inserimento eseguito correttamente ");
             else
@@ -151,11 +230,12 @@ public class DatabaseConnection {
     protected boolean controlloSegiaPresente(String valore, String tabella, String colonna)  {
         Connection connection = null;
         try {
-            connection = DatabaseConnection.connect();
+            connection = connect();
             Statement statement = connection.createStatement();
             String query = "SELECT \"" + colonna + "\" FROM \"" + tabella + "\" WHERE \"" + colonna + "\" = '" + valore + "'";
 
             ResultSet resultSet = statement.executeQuery(query);
+            System.out.println(query);
             return resultSet.next();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -176,16 +256,20 @@ public class DatabaseConnection {
         Connection connection = null;
         String centro = null;
         try {
-            connection = DatabaseConnection.connect();
+            connection = connect();
             Statement statement = connection.createStatement();
             String query = "SELECT \"NomeCentro\" FROM \"OperatoriRegistrati\"  WHERE \"OperatoriRegistrati\".\"Userid\" = ('" + id + "') AND \"OperatoriRegistrati\".\"Password\"=('" + password + "')";
             ResultSet resultSet = statement.executeQuery(query);
+
             if (resultSet.next()) {
+
+
                 centro = resultSet.getString("NomeCentro");
             } else {
                 // Nessun risultato trovato per l'id e la password specificati
                 centro = null; // o qualsiasi valore di default desiderato
             }
+            System.out.println("cazzi" + mostraElementiDisponibili("CentriMonitoraggio",null,"NomeCentro",true));
         } catch (SQLException e) {
             e.printStackTrace();
 
@@ -207,11 +291,11 @@ public class DatabaseConnection {
      * @param ricercaLibera impostare true se si tratta di una ricerca senza un WHERE, altrimenti false
      * @return lista dei valori della colonna
      */
-    public LinkedList<String> mostraElementiDisponibili(String tabella, String centro, String nomeColonnaDoveRicercare, boolean ricercaLibera) {
+    public  LinkedList<String> mostraElementiDisponibili(String tabella, String centro, String nomeColonnaDoveRicercare, boolean ricercaLibera) {
         Connection connection = null;
         LinkedList<String> listaElementi = new LinkedList<>();
         try {
-            connection = DatabaseConnection.connect();
+            connection = connect();
             Statement statement = connection.createStatement();
             String query = "";
 
@@ -253,7 +337,7 @@ public class DatabaseConnection {
         boolean stampatoIntestazione = false;
         Map<String, HashMap<String, String>> result = new HashMap<>();
         try {
-            connection = DatabaseConnection.connect();
+            connection = connect();
             Statement statement = connection.createStatement();
             for (String colonna : nomiColonneParametriPAR) {
                 query = "SELECT " + colonna + ", COUNT(" + colonna + ") AS frequenza FROM \"ParametriClimatici\" WHERE \"" + campoDiricerca + "\" = '" + parametroscelto + "'  GROUP BY " + colonna + " ORDER BY frequenza DESC LIMIT 1";
