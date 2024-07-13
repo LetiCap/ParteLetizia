@@ -133,7 +133,7 @@ CREATE TABLE IF NOT EXISTS public.coordinatemonitoraggiodati
     countryname text COLLATE pg_catalog."default",
     latitude real,
     longitude real,
-    CONSTRAINT coordinatemonitoraggiodati_pk PRIMARY KEY (geoname),
+    CONSTRAINT coordinatemonitoraggiodati_pk PRIMARY KEY (geoname,latitude,longitude),
     CONSTRAINT file_sec UNIQUE (latitude, longitude)
 )
 
@@ -141,6 +141,7 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.coordinatemonitoraggiodati
     OWNER to postgres;
+
 
 INSERT INTO public.coordinatemonitoraggiodati (geoname, name, asciiname, countrycode, countryname, latitude, longitude) VALUES (3171721, 'Padru', 'Padru', 'IT', 'Italy', 40.7662, 9.521);
 INSERT INTO public.coordinatemonitoraggiodati (geoname, name, asciiname, countrycode, countryname, latitude, longitude) VALUES (3173644, 'Mel', 'Mel', 'IT', 'Italy', 46.0638, 12.09);
