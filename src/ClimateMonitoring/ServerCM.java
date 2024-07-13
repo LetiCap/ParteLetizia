@@ -176,6 +176,22 @@ public class ServerCM extends UnicastRemoteObject implements ServerInterface {
         centro.restitutoreMode(parametroScelto,elementoScelto,db);
 
     }
+    @Override
+    public synchronized  LinkedList<Result>ricercaTramiteNome(String nome){
+        return db.cercaAreaGeograficaNomeCitta(nome);
+    }
+
+
+
+@Override
+    public synchronized LinkedList<Result> ricercaTramiteStato(String statoAppartenenza) {
+        return db.ricercaTramiteStato(statoAppartenenza);
+    }
+
+    @Override
+    public LinkedList<Result> cercaAreaGeograficaCoordinate(double latitudine, double longitudine) {
+        return db.cercaAreaGeograficaCoordinate(latitudine,longitudine);
+    }
 
 
 

@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import java.util.LinkedList;
 
 public class VisualizzaRisultatiTramiteNomePanel extends JPanel {
@@ -15,12 +16,12 @@ public class VisualizzaRisultatiTramiteNomePanel extends JPanel {
     private JButton backButtonBottom; // Pulsante "Back" in basso
     private JLabel resultCountLabel; // JLabel per visualizzare il conteggio dei risultati
 
-    private DatabaseConnection db;
+    private ServerInterface server;
     private CardLayout cardLayout;
     private JPanel mainPanel; // Riferimento al pannello principale
 
-    public VisualizzaRisultatiTramiteNomePanel(DatabaseConnection db, CardLayout cardLayout, JPanel mainPanel) {
-        this.db = db;
+    public VisualizzaRisultatiTramiteNomePanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
+        this.server = server;
         this.cardLayout = cardLayout;
         this.mainPanel = mainPanel; // Inizializza il riferimento al mainPanel
 
@@ -54,7 +55,11 @@ public class VisualizzaRisultatiTramiteNomePanel extends JPanel {
                 // Esegui la ricerca in base all'input dell'utente
                 LinkedList<Result> results = null;
                 if (searchTerm.length() > 1) {
-                    results = db.cercaAreaGeograficaNomeCitta(searchTerm);
+                    try {
+                        results = server.ricercaTramiteNome(searchTerm);
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 } else {
                     // Gestione caso in cui l'input sia troppo corto
                     JOptionPane.showMessageDialog(VisualizzaRisultatiTramiteNomePanel.this, "Inserisci un nome di città valido.");

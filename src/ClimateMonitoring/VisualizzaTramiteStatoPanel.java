@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import java.util.LinkedList;
 
 public class VisualizzaTramiteStatoPanel extends JPanel {
@@ -15,12 +16,12 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
     private JButton backButtonBottom; // Pulsante "Back" in basso
     private JLabel resultCountLabel; // JLabel per visualizzare il conteggio dei risultati
 
-    private DatabaseConnection db;
+    private ServerInterface server;
     private CardLayout cardLayout;
     private JPanel mainPanel; // Riferimento al pannello principale
 
-    public VisualizzaTramiteStatoPanel(DatabaseConnection db, JPanel mainPanel,CardLayout cardLayout) {
-        this.db = db;
+    public VisualizzaTramiteStatoPanel(ServerInterface server, JPanel mainPanel,CardLayout cardLayout) {
+       this.server=server;
         this.cardLayout=cardLayout;
         this.mainPanel = mainPanel; // Inizializza il riferimento al mainPanel
 
@@ -54,7 +55,11 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
                 // Esegui la ricerca in base all'input dell'utente
                 LinkedList<Result> results = null;
                 if (searchTerm.length() > 1) {
-                    results = db.ricercaTramiteStato(searchTerm);
+                    try {
+                        results = server.ricercaTramiteStato(searchTerm);
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 } else {
                     // Gestione caso in cui l'input sia troppo corto
                     JOptionPane.showMessageDialog(VisualizzaTramiteStatoPanel.this, "Inserisci un nome di stato valido.");

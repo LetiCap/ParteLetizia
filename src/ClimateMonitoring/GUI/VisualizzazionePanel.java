@@ -50,8 +50,7 @@ public class VisualizzazionePanel extends JPanel {
         add(bottomPanel, BorderLayout.SOUTH);
 
         // Azione per il pulsante "Ricerca tramite nome città"
-        DatabaseConnection dbConnection = new DatabaseConnection();
-        VisualizzaRisultatiTramiteNomePanel risultatiTramiteNomePanel = new VisualizzaRisultatiTramiteNomePanel(dbConnection, cardLayout, mainPanel);
+        VisualizzaRisultatiTramiteNomePanel risultatiTramiteNomePanel = new VisualizzaRisultatiTramiteNomePanel(server, cardLayout, mainPanel);
         mainPanel.add(risultatiTramiteNomePanel, "VisualizzaRisultatiTramiteNomePanel");
         btnRicercaNomeCitta.addActionListener(e -> {
             cardLayout.show(mainPanel, "VisualizzaRisultatiTramiteNomePanel");
@@ -59,7 +58,7 @@ public class VisualizzazionePanel extends JPanel {
         });
 
         // Azione per il pulsante "Ricerca tramite coordinate"
-        VisualizzaTramiteCoordinatePanel risultatiTramiteCoordinatePanel = new VisualizzaTramiteCoordinatePanel(dbConnection, mainPanel,cardLayout);
+        VisualizzaTramiteCoordinatePanel risultatiTramiteCoordinatePanel = new VisualizzaTramiteCoordinatePanel(server, mainPanel,cardLayout);
         mainPanel.add(risultatiTramiteCoordinatePanel, "VisualizzaTramiteCoordinatePanel");
         btnRicercaCoordinate.addActionListener(e -> {
             cardLayout.show(mainPanel, "VisualizzaTramiteCoordinatePanel");
@@ -67,7 +66,7 @@ public class VisualizzazionePanel extends JPanel {
         });
 
         // Azione per il pulsante "Ricerca tramite stato di appartenenza"
-        VisualizzaTramiteStatoPanel risultatiTramiteStatoPanel = new VisualizzaTramiteStatoPanel(dbConnection, mainPanel,cardLayout);
+        VisualizzaTramiteStatoPanel risultatiTramiteStatoPanel = new VisualizzaTramiteStatoPanel(server, mainPanel,cardLayout);
         mainPanel.add(risultatiTramiteStatoPanel, "VisualizzaTramiteStatoPanel");
         btnRicercaStato.addActionListener(e -> {
             cardLayout.show(mainPanel, "VisualizzaTramiteStatoPanel");

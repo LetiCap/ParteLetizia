@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import java.util.LinkedList;
 
 public class VisualizzaTramiteCoordinatePanel extends JPanel {
@@ -18,11 +19,11 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
     private JButton backButtonBottom;
     private JLabel resultCountLabel;
 
-    private DatabaseConnection db;
+    private ServerInterface server;
     private JPanel mainPanel;
 
-    public VisualizzaTramiteCoordinatePanel(DatabaseConnection db, JPanel mainPanel,CardLayout cardLayout) {
-        this.db = db;
+    public VisualizzaTramiteCoordinatePanel(ServerInterface server, JPanel mainPanel,CardLayout cardLayout) {
+        this.server = server;
         this.cardLayout=cardLayout;
         this.mainPanel = mainPanel;
 
@@ -72,7 +73,12 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
                     return;
                 }
 
-                LinkedList<Result> results = db.cercaAreaGeograficaCoordinate(latitude, longitude);
+                LinkedList<Result> results = null;
+                try {
+                    results = server.cercaAreaGeograficaCoordinate(latitude, longitude);
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
 
                 resultCountLabel.setText(String.format("La ricerca ha prodotto %d risultati", results.size()));
 

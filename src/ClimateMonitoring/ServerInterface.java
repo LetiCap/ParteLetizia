@@ -19,4 +19,10 @@ public interface ServerInterface extends Remote {
     public void inserisciParametriClimatici(String longlatScelta, Map<String, Object> MappavaluNote) throws RemoteException;
 
     public void statisticaParametri(String parametroScelto, String elementoScelto) throws RemoteException;
+
+    LinkedList<Result>ricercaTramiteNome(String nome)throws RemoteException;
+
+    LinkedList<Result> ricercaTramiteStato(String statoAppartenenza)throws RemoteException;
+
+    LinkedList<Result> cercaAreaGeograficaCoordinate(double latitudine, double longitudine)throws RemoteException;
 }

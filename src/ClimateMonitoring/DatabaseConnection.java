@@ -55,7 +55,7 @@ public class DatabaseConnection {
     private static void createDatabase() throws SQLException {
         if (!databaseExists()) {
             try (Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/", USERNAME, PASSWORD)) {
-                String dbName = "climatemonitoring";
+                String dbName = "climatemonitoring111";
                 try (Statement stmt = conn.createStatement()) {
                     String sql = "CREATE DATABASE " + dbName;
                     stmt.executeUpdate(sql);
