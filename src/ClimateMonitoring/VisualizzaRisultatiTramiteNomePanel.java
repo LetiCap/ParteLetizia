@@ -17,6 +17,7 @@ public class VisualizzaRisultatiTramiteNomePanel extends JPanel {
     private JLabel resultCountLabel; // JLabel per visualizzare il conteggio dei risultati
 
     private ServerInterface server;
+
     private CardLayout cardLayout;
     private JPanel mainPanel; // Riferimento al pannello principale
 
@@ -56,7 +57,7 @@ public class VisualizzaRisultatiTramiteNomePanel extends JPanel {
                 LinkedList<Result> results = null;
                 if (searchTerm.length() > 1) {
                     try {
-                        results = server.ricercaTramiteNome(searchTerm);
+                        results =server.ricercaTramiteNome(searchTerm);
                     } catch (RemoteException ex) {
                         throw new RuntimeException(ex);
                     }

@@ -2,6 +2,7 @@ package ClimateMonitoring.GUI;
 import ClimateMonitoring.*;
 
 import javax.swing.*;
+import javax.xml.crypto.Data;
 import java.awt.*;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -11,6 +12,7 @@ import java.rmi.registry.Registry;
 public class VisualizzazionePanel extends JPanel {
 
     private CardLayout cardLayout;
+
     private JPanel mainPanel;
 
     public VisualizzazionePanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {

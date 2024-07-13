@@ -198,8 +198,8 @@ public class ServerCM extends UnicastRemoteObject implements ServerInterface {
     public static void main(String[] args) {
         try {
             ServerCM utente = new ServerCM();
-           // Registry reg = LocateRegistry.createRegistry(1099);
-           // reg.rebind("Server", utente);
+            Registry reg = LocateRegistry.createRegistry(1099);
+            reg.rebind("Server", utente);
             System.out.println("Server running");
         } catch (RemoteException e) {
             System.out.println("Server creation failed");
