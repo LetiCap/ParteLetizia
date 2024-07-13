@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 public class DatabaseConnection {
     private static String URL;
@@ -387,4 +385,230 @@ public class DatabaseConnection {
         return result;
 
     }
+
+
+
+
+    public LinkedList<Result> cercaAreaGeograficaNomeCitta(String nomeCitta) {
+        LinkedList<Result> risultati = new LinkedList<>();
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = connect();
+            statement = connection.createStatement();
+
+            // Query SQL iniziale per selezionare geoname dove name = nomeCitta
+            String query = "SELECT * FROM CoordinateMonitoraggioDati WHERE name = '" + nomeCitta + "'";
+
+            resultSet = statement.executeQuery(query);
+
+            // Itera sui risultati della query e aggiungi i geoname alla lista risultati
+            while (resultSet.next()) {
+                Result risultato=new Result(resultSet.getInt("geoname"),resultSet.getString("name"),
+                        resultSet.getString("asciiname"),resultSet.getString("countrycode")
+                        ,resultSet.getString("countryname"), resultSet.getDouble("latitude"),
+                        resultSet.getDouble("longitude")
+                );
+                risultati.add(risultato);
+            }
+
+            // Se non ci sono risultati, riduci gradualmente la lunghezza di nomeCitta e riprova
+            while (risultati.isEmpty() && nomeCitta.length() > 1) {
+                nomeCitta = nomeCitta.substring(0, nomeCitta.length() - 1);
+                query = "SELECT * FROM CoordinateMonitoraggioDati WHERE name LIKE '%" + nomeCitta + "%'";
+                resultSet = statement.executeQuery(query);
+
+                while (resultSet.next()) {
+                    Result risultato=new Result(resultSet.getInt("geoname"),resultSet.getString("name"),
+                            resultSet.getString("asciiname"),resultSet.getString("countrycode")
+                            ,resultSet.getString("countryname"), resultSet.getDouble("latitude"),
+                            resultSet.getDouble("longitude")
+                    );
+
+
+                    risultati.add(risultato);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Gestisci eventuali eccezioni o errori di connessione al database
+        } finally {
+            // Chiudi resultSet, statement e connection nel blocco finally
+            try {
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return risultati;
+    }
+
+
+    public LinkedList<Result> ricercaTramiteStato(String statoAppartenenza) {
+        LinkedList<Result> risultati = new LinkedList<>();
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = connect();
+            statement = connection.createStatement();
+
+            // Query SQL iniziale per selezionare geoname dove name = nomeCitta
+            String query = "SELECT * FROM CoordinateMonitoraggioDati WHERE countryname= '" + statoAppartenenza + "'";
+
+            resultSet = statement.executeQuery(query);
+
+            // Itera sui risultati della query e aggiungi i geoname alla lista risultati
+            while (resultSet.next()) {
+                Result risultato=new Result(resultSet.getInt("geoname"),resultSet.getString("name"),
+                        resultSet.getString("asciiname"),resultSet.getString("countrycode")
+                        ,resultSet.getString("countryname"), resultSet.getDouble("latitude"),
+                        resultSet.getDouble("longitude")
+                );
+                risultati.add(risultato);
+            }
+
+            // Se non ci sono risultati, riduci gradualmente la lunghezza di nomeCitta e riprova
+            while (risultati.isEmpty() && statoAppartenenza.length() > 1) {
+                statoAppartenenza = statoAppartenenza.substring(0, statoAppartenenza.length() - 1);
+                query = "SELECT * FROM CoordinateMonitoraggioDati WHERE countryname LIKE '%" + statoAppartenenza + "%'";
+                resultSet = statement.executeQuery(query);
+
+                while (resultSet.next()) {
+                    Result risultato=new Result(resultSet.getInt("geoname"),resultSet.getString("name"),
+                            resultSet.getString("asciiname"),resultSet.getString("countrycode")
+                            ,resultSet.getString("countryname"), resultSet.getDouble("latitude"),
+                            resultSet.getDouble("longitude")
+                    );
+
+
+                    risultati.add(risultato);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Gestisci eventuali eccezioni o errori di connessione al database
+        } finally {
+            // Chiudi resultSet, statement e connection nel blocco finally
+            try {
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return risultati;
+    }
+
+
+
+
+
+
+
+
+    public LinkedList<Result> cercaAreaGeograficaCoordinate(double latitudine, double longitudine) {
+        LinkedList<Result> risultati = new LinkedList<>();
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        double[] range = {0.00001, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0};
+
+        try {
+            connection = connect();
+            statement = connection.createStatement();
+
+            double latitudeMin, latitudeMax, longitudeMin, longitudeMax;
+            for (int i = 0; i < range.length; i++) {
+                // Applichiamo il range di ricerca
+                latitudeMin = latitudine - range[i];
+                latitudeMax = latitudine + range[i];
+                longitudeMin = longitudine - range[i];
+                longitudeMax = longitudine + range[i];
+                String query;
+
+                if (i == 0) {
+                    query = "SELECT * FROM CoordinateMonitoraggioDati WHERE latitude BETWEEN " + latitudeMin +
+                            " AND " + latitudeMax + " AND longitude BETWEEN " + longitudeMin + " AND " + longitudeMax;
+                } else {
+                    query = "SELECT * FROM CoordinateMonitoraggioDati WHERE latitude BETWEEN " + latitudeMin +
+                            " AND " + latitudeMax + " OR longitude BETWEEN " + longitudeMin + " AND " + longitudeMax;
+                }
+                resultSet = statement.executeQuery(query);
+
+                // Utilizziamo un Set per verificare i duplicati di geoname
+                Set<Integer> geonameSet = new HashSet<>();
+
+                // Itera sui risultati della query e aggiungi i Result alla lista risultati
+                while (resultSet.next()) {
+                    int geoname = resultSet.getInt("geoname");
+                    // Creare un oggetto Result per ogni riga
+                    Result result = new Result(geoname,resultSet.getString("name"),
+                            resultSet.getString("asciiname"),resultSet.getString("countrycode")
+                            ,resultSet.getString("countryname"), resultSet.getDouble("latitude"),
+                            resultSet.getDouble("longitude")
+                    );
+
+                    // Verifica se il geoname è già presente nel Set
+                    if (!geonameSet.contains(geoname)) {
+                        geonameSet.add(geoname);
+                        risultati.add(result);
+                    } else {
+                        // Se troviamo un duplicato, restituire una lista con solo quel geoname
+                        LinkedList<Result> risultatoSingolo = new LinkedList<>();
+                        risultatoSingolo.add(result);
+                        closeConnection(connection);
+
+                        return risultatoSingolo;
+                    }
+                }
+
+                // Se abbiamo trovato risultati, restituiamo la lista completa
+                if (!risultati.isEmpty()) {
+                    return risultati;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Gestisci eventuali eccezioni o errori di connessione al database
+        } finally {
+            // Chiudi resultSet, statement e connection nel blocco finally
+            try {
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return risultati;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
