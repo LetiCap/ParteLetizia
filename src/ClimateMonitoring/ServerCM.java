@@ -15,48 +15,6 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Map;
 
-/*
-public class Utente {
-
-    private ClimateMonitoring.GestioneUtente ClimateMonitoring.GestioneUtente = new ClimateMonitoring.GestioneUtente();
-    private ClimateMonitoring.GestioneCentri centro = new ClimateMonitoring.GestioneCentri();
-
-
-    public void registrazione(String id, LinkedList<String> inserimenti) {
-           if(ClimateMonitoring.GestioneUtente .controlloId(id)){
-               ClimateMonitoring.GestioneUtente.RichiestaDatiPerRegistrazione(inserimenti);
-           }
-    }
-
-    public void registraCentroAree(LinkedList<String> inserimenti, LinkedList<String> lonlatInserite) {
-           ClimateMonitoring.GestioneUtente.registraCentroAree(inserimenti,lonlatInserite);
-    }
-
-
-
-    public boolean richiestaInserimentoCentro(String centro) {
-          return ClimateMonitoring.GestioneUtente.richiestaInserimentoCentro(centro);
-    }
-
-    public boolean login(String id, String password) {
-           return ClimateMonitoring.GestioneUtente.login(id,password);
-    }
-
-
-    public void inserisciParametriClimatici(String longlatScelta, Map<String, Object> MappavaluNote) {
-           ClimateMonitoring.GestioneUtente.inserisciParametriClimatici(longlatScelta,  MappavaluNote);
-    }
-
-
-    public void statisticaParametri(String parametroScelto, String elementoScelto ) {
-        centro.restitutoreMode(parametroScelto,elementoScelto);
-
-    }
-
-}
-
-
- */
 
 public class ServerCM extends UnicastRemoteObject implements ServerInterface {
     private static final long serialVersionUID = 1L;
@@ -124,7 +82,7 @@ public class ServerCM extends UnicastRemoteObject implements ServerInterface {
 
     private void startRMIServer() {
         try {
-            Registry registry = LocateRegistry.createRegistry(1099);
+            Registry registry = LocateRegistry.createRegistry(1097);
             registry.rebind("Server", this);
             System.out.println("Server CM started on RMI registry.");
 
@@ -156,13 +114,12 @@ public class ServerCM extends UnicastRemoteObject implements ServerInterface {
 
 
     @Override
-    public synchronized LinkedList<String> mostraElementiDisponibili(String tabella, String centro, String nomeColonnaDoveRicercare, boolean ricercaLibera){
-        return db.mostraElementiDisponibili(tabella, centro, nomeColonnaDoveRicercare, ricercaLibera);
+    public synchronized LinkedList<String> mostraElementiDisponibili(String tabella,  String nomeColonnaDoveRicercare, boolean ricercaLibera){
+        return db.mostraElementiDisponibili(tabella, nomeColonnaDoveRicercare, ricercaLibera);
     }
 
     @Override
     public  synchronized boolean login(String id, String password)throws RemoteException {
-
         return ute.login(id,password,db);
     }
 
@@ -172,8 +129,8 @@ public class ServerCM extends UnicastRemoteObject implements ServerInterface {
     }
 
     @Override
-    public synchronized void statisticaParametri(String parametroScelto, String elementoScelto)throws RemoteException {
-        centro.restitutoreMode(parametroScelto,elementoScelto,db);
+    public synchronized void statisticaParametri( String elementoScelto)throws RemoteException {
+        centro.restitutoreMode(elementoScelto,db);
 
     }
     @Override
@@ -181,9 +138,7 @@ public class ServerCM extends UnicastRemoteObject implements ServerInterface {
         return db.cercaAreaGeograficaNomeCitta(nome);
     }
 
-
-
-@Override
+    @Override
     public synchronized LinkedList<Result> ricercaTramiteStato(String statoAppartenenza) {
         return db.ricercaTramiteStato(statoAppartenenza);
     }

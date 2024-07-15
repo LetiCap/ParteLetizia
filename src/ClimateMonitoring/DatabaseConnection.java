@@ -11,6 +11,7 @@ public class DatabaseConnection {
     private static String URL;
     private static String USERNAME;
     private static String PASSWORD;
+    private String centro;
 
     public static void setConnectionDetails(String dbUrl, String dbUsername, String dbPassword) {
         URL = dbUrl;
@@ -69,7 +70,7 @@ public class DatabaseConnection {
 
     private static void executeTableCreationScript() throws SQLException {
         Connection g= DriverManager.getConnection("jdbc:postgresql://localhost:5432/climatemonitoring", USERNAME, PASSWORD);
-        setConnectionDetails("jdbc:postgresql://localhost:5432/climatemonitoring",USERNAME,PASSWORD);
+       // setConnectionDetails("jdbc:postgresql://localhost:5432/climatemonitoring",USERNAME,PASSWORD);
         try (InputStream scriptStream = DatabaseConnection.class.getResourceAsStream("/script");
              BufferedReader reader = new BufferedReader(new InputStreamReader(scriptStream));
              Statement statement = g.createStatement()) {
@@ -124,7 +125,7 @@ public class DatabaseConnection {
      * @param colonna2 colonna dove inserire il valore 2
      * @param dato cosa visualizzare nella stampa di successo o insuccesso
      */
-    protected void inserimentoinDB(String tabella, String valore, String colonna, String valore2, String colonna2, String dato) {
+    protected void inserimentoinDB(String tabella, String valore, String colonna, String valore2, String colonna2, String dato, Map<String, Object> dataMap ) {
         Connection connection = null;
         try {
             connection = connect();
@@ -136,15 +137,29 @@ public class DatabaseConnection {
             switch (tabella) {
                 case "CentriMonitoraggio", "OperatoriRegistrati":
                     query = "INSERT INTO \"" + tabella + "\" (\"" + colonna + "\") VALUES ('" + valore + "')";break;
-                case "aree", "ParametriClimatici":
+                case "aree":
                     query = "INSERT INTO \"" + tabella + "\" (\"" + colonna + "\", \"" + colonna2 + "\") VALUES ('" + valore + "', '" + valore2 + "')";break;
+                case "ParametriClimatici":
+                    StringBuilder columns = new StringBuilder();
+                    StringBuilder values = new StringBuilder();
+                    for (Map.Entry<String, Object> entry : dataMap.entrySet()) {
+                        if (!columns.isEmpty()) {
+                            columns.append(", ");
+                            values.append(", ");
+                        }
+                        columns.append("\"").append(entry.getKey()).append("\"");
+                        values.append("'").append(entry.getValue()).append("'");
+                    }
+
+                    query = "INSERT INTO \"" + tabella + "\" (" + columns + ") VALUES (" + values + ")";
+                    System.out.println("Eseguendo query: " + query);
+                    break;
+
             }
             esito = statement.executeUpdate(query);
 
             if (esito == 1) {
                 System.out.println("inserimento eseguito correttamente " + dato);
-
-
             }else
                 System.out.println("inserimento non eseguito " + dato);
         } catch (SQLException e) {
@@ -173,6 +188,7 @@ public class DatabaseConnection {
             int esito;
             for (Map.Entry<String, Object> entry : dataMap.entrySet()) {
                 String query = "UPDATE  \"" + tabella + "\" SET \"" + entry.getKey() + "\" = '" + entry.getValue() + "' WHERE \"" + nomeColonnaWhere + "\" = '" + valoreColonnaWhere + "'";
+                System.out.println(query);
                 esito = statement.executeUpdate(query);
                 if (esito == 1)
                     System.out.println("inserimento eseguito correttamente ");
@@ -252,7 +268,7 @@ public class DatabaseConnection {
      */
     public String controlloPasswordUtente(String id, String password)  {
         Connection connection = null;
-        String centro = null;
+
         try {
             connection = connect();
             Statement statement = connection.createStatement();
@@ -262,12 +278,12 @@ public class DatabaseConnection {
             if (resultSet.next()) {
 
 
-                centro = resultSet.getString("NomeCentro");
+               System.out.println(this.centro = resultSet.getString("NomeCentro"));
+
             } else {
                 // Nessun risultato trovato per l'id e la password specificati
-                centro = null; // o qualsiasi valore di default desiderato
+                this.centro = null; // o qualsiasi valore di default desiderato
             }
-            System.out.println("cazzi" + mostraElementiDisponibili("CentriMonitoraggio",null,"NomeCentro",true));
         } catch (SQLException e) {
             e.printStackTrace();
 
@@ -283,20 +299,20 @@ public class DatabaseConnection {
      * Se si tratta della tabella <strong>CentroMonitoraggio</strong> non è necessario specificare l'argoemnto centro, ne il boolean. Va specificata come argomento "nomeColonnaDoveRicercare"
      * Se si tratta della tabella <strong>aree</strong> e si vuole restituire gli elementi di una colonna di un centro specifico, va specificato l'argoemnto "centro" e boolean come false
      * Se si tratta della tabella <strong>aree</strong> e si vogliono restituire i valori di una colonna, senza vincolo del centro, non va specificato quest'ultimo, ma va imposto come boolean true
-     * @param tabella nome della tabella dove estrarre i dati
-     * @param centro nome del centro di cui vanno restituite le aree (può essere {@code null})
+     *
+     * @param tabella                  nome della tabella dove estrarre i dati
      * @param nomeColonnaDoveRicercare nome della colonna di cui restituire i valori
-     * @param ricercaLibera impostare true se si tratta di una ricerca senza un WHERE, altrimenti false
+     * @param ricercaLibera            impostare true se si tratta di una ricerca senza un WHERE, altrimenti false
      * @return lista dei valori della colonna
      */
-    public  LinkedList<String> mostraElementiDisponibili(String tabella, String centro, String nomeColonnaDoveRicercare, boolean ricercaLibera) {
+    public  LinkedList<String> mostraElementiDisponibili(String tabella, String nomeColonnaDoveRicercare, boolean ricercaLibera) {
         Connection connection = null;
         LinkedList<String> listaElementi = new LinkedList<>();
         try {
             connection = connect();
             Statement statement = connection.createStatement();
             String query = "";
-
+            System.out.println("qui");
             switch (tabella) {
                 case "CentriMonitoraggio":
                     query = "SELECT \"" + nomeColonnaDoveRicercare + "\" FROM \"" + tabella + "\"";break;
@@ -304,7 +320,7 @@ public class DatabaseConnection {
                     if(ricercaLibera){
                         query = "SELECT \"" + nomeColonnaDoveRicercare + "\" FROM \"" + tabella + "\"";break;
                     }else
-                        query = "SELECT  \"" + nomeColonnaDoveRicercare + "\" FROM  \"" + tabella + "\" WHERE \"NomeCentro\"='" + centro + "'";break;
+                        query = "SELECT  \"" + nomeColonnaDoveRicercare + "\" FROM  \"" + tabella + "\" WHERE \"NomeCentro\"='" + this.centro + "'";break;
             }
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
@@ -322,13 +338,10 @@ public class DatabaseConnection {
     /**
      * Metodo che restituisce in forma di Map le mode e le eventuali note di tutti i parametri, di un'area o di un centro in base all'argomento "campodiricerca",
      * dell'elemento dell'area o centro passato come argomento "parametroscelto"
-     * @param parametroscelto nome dell'area o del centro di cui si vogliono visualizzare le mode
-     * @param nomiColonneParametriPAR nomi delle colonne delle valutazioni nella tabella <strong>ParametriClimatici</strong>
-     * @param nomiColonneParametriNOT nomi delle colonne delle note nella tabella <strong>ParametriClimatici</strong>
-     * @param campoDiricerca stringa centro o area
      * @return map che restituisce le mode e le note
      */
-    public Map<String, HashMap<String, String>>  RicercaMode(String parametroscelto, String[] nomiColonneParametriPAR, String[] nomiColonneParametriNOT, String campoDiricerca) {
+
+    public Map<String, HashMap<String, String>>  RicercaMode(String parametroscelto, String[] nomiColonneParametriPAR, String[] nomiColonneParametriNOT) {
         Connection connection = null;
         String query;
         ResultSet resultSet;
@@ -338,7 +351,7 @@ public class DatabaseConnection {
             connection = connect();
             Statement statement = connection.createStatement();
             for (String colonna : nomiColonneParametriPAR) {
-                query = "SELECT " + colonna + ", COUNT(" + colonna + ") AS frequenza FROM \"ParametriClimatici\" WHERE \"" + campoDiricerca + "\" = '" + parametroscelto + "'  GROUP BY " + colonna + " ORDER BY frequenza DESC LIMIT 1";
+                query = "SELECT " + colonna + ", COUNT(" + colonna + ") AS frequenza FROM \"ParametriClimatici\" WHERE  \"NomeCentro\" = '" + parametroscelto + "'  GROUP BY " + colonna + " ORDER BY frequenza DESC LIMIT 1";
                 resultSet = statement.executeQuery(query);
                 HashMap<String, String> parResult = new HashMap<>();
                 if (resultSet.next()) {
@@ -355,7 +368,7 @@ public class DatabaseConnection {
                 }
             }
             for (String column : nomiColonneParametriNOT) {
-                query = "SELECT \"" + column + "\" FROM \"ParametriClimatici\" WHERE \"" + campoDiricerca + "\" = '" + parametroscelto + "'";
+                query = "SELECT \"" + column + "\" FROM \"ParametriClimatici\" WHERE  \"area\" = '" + parametroscelto + "'";
                 resultSet = statement.executeQuery(query);
                 HashMap<String, String> noteResult = new HashMap<>();
                 LinkedList<String> listaNote = new LinkedList<>();
@@ -385,6 +398,8 @@ public class DatabaseConnection {
         return result;
 
     }
+
+
 
 
 
@@ -440,7 +455,7 @@ public class DatabaseConnection {
             try {
                 if (resultSet != null) resultSet.close();
                 if (statement != null) statement.close();
-                if (connection != null) connection.close();
+                DatabaseConnection.closeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -501,7 +516,7 @@ public class DatabaseConnection {
             try {
                 if (resultSet != null) resultSet.close();
                 if (statement != null) statement.close();
-                if (connection != null) connection.close();
+                DatabaseConnection.closeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

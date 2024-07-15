@@ -22,11 +22,6 @@ public class GestioneCentri {
     private String lonlat;
     private String areaScelta;
     private GestioneUtente utente = new GestioneUtente();
-    private static String[] NomiColonneAree = {"lonlat",  "NomeArea"};
-    private static String[] OutputSchermoAree = {"longitudine e latitudine",  "il nome dell'area"};
-    private static String[] OutputSchermoParametri = {"valutazione per il Vento",  "valutazione per l'Umidita","valutazione per le Precipitazioni", "valutazione per la Pressione", "valutazione per la Temperatura", "valutazione per l'altitudine dei ghiacciai","valutazione per la Massa dei Ghiacciai"};
-    private static String[] OutputSchermoParametriNotes = {"note per il Vento",  "note per l'Umidita","note per le Precipitazioni", "note per la Pressione", "note per la Temperatura", "note per l'altitudine dei ghiacciai","note per la Massa dei Ghiacciai"};
-
     private static String[] NomiColonneParametriPAR = {"vento_val" ,"umidita_val", "precipitazioni_val" ,"pressione_val" ,"temperatura_val" ,"altitudineghiacchi_val" ,"massaghiacci_val" };
     private static String[] NomiColonneParametriNOT = {
             "vento_notes","umidita_notes",
@@ -60,26 +55,15 @@ public class GestioneCentri {
         Map<String, String> dataMap = new HashMap<>();
 
         for (int i = 0; i < lonlatInserite.size();) {
-           // for(int j=0;j<2;j++) {
-              // input = utente.getInfoFromUser(OutputSchermoAree[j]);
-              //  if(NomiColonneAree[j].equals("lonlat")){
             // Ottieni l'elemento corrente
             String lonlat = lonlatInserite.get(i);
+            System.out.println(lonlat);
             if(db.controlloSegiaPresente(lonlat,"aree","lonlat")){
-                        //System.out.print("Area già presente, reinserire >");
-                       // input = scanner.nextLine().toUpperCase();
                 lonlatInserite.remove(i);
             }else{
-                db.inserimentoinDB("aree",lonlat ,"lonlat", centro, "NomeCentro","lonlat");
+                db.inserimentoinDB("aree",lonlat ,"lonlat", centro, "NomeCentro","lonlat", null);
                 i++; }// Passa all'elemento successivo solo se non viene rimosso
 
-                   // lonlat=input;
-
-              //  }else{
-                //    dataMap.put(NomiColonneAree[j], input);
-                //}
-          //  }
-          //  db.UpdateDataToDB(dataMap,"aree", lonlat,"lonlat");
         }
 
 
@@ -96,33 +80,17 @@ public class GestioneCentri {
     public void selezioneAreadiLavoroeInserimento(String longlatScelta, Map<String, Object> MappavaluNote, DatabaseConnection db) {
 
 
-        String output;
-        elementiDisponibili = db.mostraElementiDisponibili("aree", centro, "NomeArea",false );
-        longlatDisponibili= db.mostraElementiDisponibili("aree", centro,"lonlat",false);
-        for (String elemento : longlatDisponibili) {
-            System.out.println(elemento);
-        }
-       // output= utente.getInfoFromUser("area scelta");
-        /*
-        while(!longlatDisponibili.contains(longlatScelta)) {
-            System.out.println("reinserire perchè non presente ");
-            output = utente.getInfoFromUser("area scelta");
-        }
-
-
-        areaScelta=output;
-        String longlatScelto = "";
-        int index = elementiDisponibili.indexOf(areaScelta);
-        if (index != -1) {
-            longlatScelto = longlatDisponibili.get(index);
-        }
-
-         */
         // Utilizza longlatScelto come necessario
         //System.out.println("La longitudine e latitudine per l'area scelta (" + areaScelta + ") è: " + longlatScelto);
-        db.inserimentoinDB("ParametriClimatici",longlatScelta,"area",centro,"centro","long nei ParametriClimatici");
         MappavaluNote.put("datainserimento",RestitutoreDataOdierna());
-        db.UpdateDataToDB(MappavaluNote,"ParametriClimatici",longlatScelta,"area");
+        MappavaluNote.put("area",longlatScelta);
+        MappavaluNote.put("centro",centro);
+        db.inserimentoinDB("ParametriClimatici",null,null,null,null,"long nei ParametriClimatici", MappavaluNote);
+        System.out.println(longlatScelta + "riga 127");
+
+
+
+       // db.UpdateDataToDB(MappavaluNote,"ParametriClimatici",longlatScelta,"area");
 
     }
 
@@ -134,57 +102,30 @@ public class GestioneCentri {
         return dataCorrente.format(formatoData);
     }
 
-/*
-    private void aggiuntaParametriIn(Map<String, String> MappavaluNote, String longlatScelto)  {
-        Map<String, String> dataMap = new HashMap<>();
-       // String result;
-
-        MappavaluNote.put("datainserimento", RestitutoreDataOdierna());
-
-        for (int i = 0; i < OutputSchermoParametri.length; i++) {
-            System.out.println("Vuoi inserire "+OutputSchermoParametri[i]+" ? (si/no)");
-            result= scanner.nextLine();
-            if(result.equals("si")){
-                String outputPAR= utente.getInfoFromUser(OutputSchermoParametri[i]);
-                dataMap.put(NomiColonneParametriPAR[i], outputPAR);
-                System.out.println("Vuoi inserire "+OutputSchermoParametriNotes[i]+" ? (si/no)");
-                result= scanner.nextLine();
-                if(result.equals("si")){
-                    String outputNOT= utente.getInfoFromUser(OutputSchermoParametriNotes[i]);
-                    dataMap.put(NomiColonneParametriNOT[i], outputNOT);
-                }
-            }
-        }
-
-
-        db.UpdateDataToDB(dataMap,"ParametriClimatici",longlatScelto,"area");
-
-    }
-
- */
-
 
     /**
      * Metodo per utenti registrati e non.
      * Stampo le mode per l'area o il centro scelto.
-     * @param parametroScelto inserire area o centro in base a che tipo di elemento si vuole inserire
      * @param elementoScelto nome del centro, oppure longitutdine e latitudine dell'area
      */
-    public void restitutoreMode(String parametroScelto, String elementoScelto, DatabaseConnection db) {
+    public void restitutoreMode( String elementoScelto, DatabaseConnection db) {
 
         LinkedList<String> elementiDisponibili;
        // String campoDiricerca = utente.getInfoFromUser("per quale valore di ricerca vuoi visualizzare [centro] o [area]");
+        /*
         if(parametroScelto.equals("centro")){
-            elementiDisponibili = db.mostraElementiDisponibili("CentriMonitoraggio", null, "NomeCentro",false);
+            elementiDisponibili = db.mostraElementiDisponibili("CentriMonitoraggio", "NomeCentro",false);
         }else{
-            elementiDisponibili = db.mostraElementiDisponibili("aree", null, "lonlat",true);
+            elementiDisponibili = db.mostraElementiDisponibili("aree", "lonlat",true);
         }
         for (String elemento : elementiDisponibili) {
             System.out.println(elemento);
         }
        // String elementoScelto= utente.getInfoFromUser("per quale valore le valutazioni inserite");
 
-        GestoreStampe( db.RicercaMode(elementoScelto,NomiColonneParametriPAR, NomiColonneParametriNOT,  parametroScelto ));
+         */
+
+        GestoreStampe( db.RicercaMode(elementoScelto,NomiColonneParametriPAR, NomiColonneParametriNOT ));
 
     }
 

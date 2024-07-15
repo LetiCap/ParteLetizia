@@ -59,7 +59,6 @@ CREATE TABLE IF NOT EXISTS public.aree
 (
     lonlat character varying(50) COLLATE pg_catalog."default" NOT NULL,
     "NomeCentro" character varying(50) COLLATE pg_catalog."default",
-    "NomeArea" character varying(50) COLLATE pg_catalog."default",
     CONSTRAINT table_name_pk PRIMARY KEY (lonlat),
     CONSTRAINT table_name_centri_nomecentro_fk FOREIGN KEY ("NomeCentro")
     REFERENCES public."CentriMonitoraggio" ("NomeCentro") MATCH SIMPLE

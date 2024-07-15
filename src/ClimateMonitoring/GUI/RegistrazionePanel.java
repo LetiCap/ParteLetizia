@@ -8,6 +8,11 @@ import java.rmi.RemoteException;
 import java.util.LinkedList;
 
 public class RegistrazionePanel extends JPanel {
+    private JTextField txtField1;
+    private JTextField txtField2;
+    private JTextField txtField3;
+    private JTextField txtField4;
+    private JTextField txtField5;
 
     public RegistrazionePanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
         setLayout(new GridLayout(8, 2, 10, 10)); // Imposto il layout con margine di 10 pixel
@@ -23,11 +28,11 @@ public class RegistrazionePanel extends JPanel {
         add(new JPanel()); // Aggiungo un pannello vuoto per creare una riga di spazio
 
         // Crea i campi di testo
-        JTextField txtField1 = new JTextField(15);
-        JTextField txtField2 = new JTextField(15);
-        JTextField txtField3 = new JTextField(15);
-        JTextField txtField4 = new JTextField(15);
-        JTextField txtField5 = new JTextField(15);
+        txtField1 = new JTextField(15);
+        txtField2 = new JTextField(15);
+        txtField3 = new JTextField(15);
+        txtField4 = new JTextField(15);
+        txtField5 = new JTextField(15);
 
         // Crea i pulsanti
         JButton btnSalva = new JButton("Inserisci Dati");
@@ -69,7 +74,7 @@ public class RegistrazionePanel extends JPanel {
             try {
                 if (server.registrazione(id, dati)) {
                     JOptionPane.showMessageDialog(this, "Dati salvati con successo!");
-
+                    resetFields();
                     cardLayout.show(mainPanel, "SceltaCentro");
                 } else {
                     JOptionPane.showMessageDialog(this, "Id già registrato, inserirne un altro", "Errore", JOptionPane.ERROR_MESSAGE);
@@ -83,5 +88,12 @@ public class RegistrazionePanel extends JPanel {
 
         // Azione per il pulsante Indietro
         btnIndietro.addActionListener(e -> cardLayout.show(mainPanel, "Home"));
+    }
+    private void resetFields() {
+        txtField1.setText("");
+        txtField2.setText("");
+        txtField3.setText("");
+        txtField4.setText("");
+        txtField5.setText("");
     }
 }

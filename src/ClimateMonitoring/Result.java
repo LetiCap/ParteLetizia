@@ -5,7 +5,9 @@ Francesca Ziggiotto	752504 VA
 */
 
 
-public class Result {
+import java.io.Serializable;
+
+public class Result implements Serializable {
     private Integer geoname;
     private String name;
     private String asciiName;

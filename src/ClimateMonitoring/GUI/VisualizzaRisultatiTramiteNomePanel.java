@@ -1,5 +1,7 @@
-package ClimateMonitoring;
+package ClimateMonitoring.GUI;
 
+import ClimateMonitoring.Result;
+import ClimateMonitoring.ServerInterface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,35 +10,31 @@ import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 
-public class VisualizzaTramiteCoordinatePanel extends JPanel {
+public class VisualizzaRisultatiTramiteNomePanel extends JPanel {
 
-    private final CardLayout cardLayout;
-    private JTextField latitudeField;
-    private JTextField longitudeField;
+    private JTextField searchField;
     private JButton searchButton;
     private JList<ResultWrapper> resultList;
 
-    private JButton backButtonBottom;
-    private JLabel resultCountLabel;
+    private JButton backButtonBottom; // Pulsante "Back" in basso
+    private JLabel resultCountLabel; // JLabel per visualizzare il conteggio dei risultati
 
     private ServerInterface server;
-    private JPanel mainPanel;
 
-    public VisualizzaTramiteCoordinatePanel(ServerInterface server, JPanel mainPanel,CardLayout cardLayout) {
+    private CardLayout cardLayout;
+    private JPanel mainPanel; // Riferimento al pannello principale
+
+    public VisualizzaRisultatiTramiteNomePanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
         this.server = server;
-        this.cardLayout=cardLayout;
-        this.mainPanel = mainPanel;
+        this.cardLayout = cardLayout;
+        this.mainPanel = mainPanel; // Inizializza il riferimento al mainPanel
 
         setLayout(new BorderLayout());
 
         JPanel searchPanel = new JPanel();
-        latitudeField = new JTextField(10);
-        longitudeField = new JTextField(10);
+        searchField = new JTextField(20);
         searchButton = new JButton("Search");
-        searchPanel.add(new JLabel("Latitudine:"));
-        searchPanel.add(latitudeField);
-        searchPanel.add(new JLabel("Longitudine:"));
-        searchPanel.add(longitudeField);
+        searchPanel.add(searchField);
         searchPanel.add(searchButton);
 
         resultList = new JList<>(new DefaultListModel<>());
@@ -45,43 +43,37 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
         add(searchPanel, BorderLayout.NORTH);
         add(resultScrollPane, BorderLayout.CENTER);
 
-        backButtonBottom = new JButton("Back");
+        backButtonBottom = new JButton("Back"); // Pulsante "Back" in basso
         JPanel buttonPanelBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanelBottom.add(backButtonBottom);
         JPanel statusPanel = new JPanel(new BorderLayout());
         statusPanel.add(buttonPanelBottom, BorderLayout.EAST);
-        resultCountLabel = new JLabel("", JLabel.CENTER);
+        resultCountLabel = new JLabel("", JLabel.CENTER); // Inizializzazione del JLabel per il conteggio dei risultati
         statusPanel.add(resultCountLabel, BorderLayout.CENTER);
         add(statusPanel, BorderLayout.SOUTH);
 
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                double latitude, longitude;
-
-                try {
-                    latitude = Double.parseDouble(latitudeField.getText().trim());
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(VisualizzaTramiteCoordinatePanel.this, "Inserisci una latitudine valida.");
-                    return;
-                }
-
-                try {
-                    longitude = Double.parseDouble(longitudeField.getText().trim());
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(VisualizzaTramiteCoordinatePanel.this, "Inserisci una longitudine valida.");
-                    return;
-                }
-
+                String searchTerm = searchField.getText().trim();
+                // Esegui la ricerca in base all'input dell'utente
                 LinkedList<Result> results = null;
-                try {
-                    results = server.cercaAreaGeograficaCoordinate(latitude, longitude);
-                } catch (RemoteException ex) {
-                    throw new RuntimeException(ex);
+                if (searchTerm.length() > 1) {
+                    try {
+                        results =server.ricercaTramiteNome(searchTerm);
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                } else {
+                    // Gestione caso in cui l'input sia troppo corto
+                    JOptionPane.showMessageDialog(VisualizzaRisultatiTramiteNomePanel.this, "Inserisci un nome di città valido.");
+                    return;
                 }
 
+                // Aggiorna il conteggio dei risultati
                 resultCountLabel.setText(String.format("La ricerca ha prodotto %d risultati", results.size()));
 
+                // Aggiorna la lista dei risultati
                 updateResults(results);
             }
         });
@@ -90,8 +82,9 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 JList<ResultWrapper> list = (JList<ResultWrapper>) evt.getSource();
-                if (evt.getClickCount() == 2) {
+                if (evt.getClickCount() == 2) { // Doppio clic
                     ResultWrapper selectedResult = list.getSelectedValue();
+                    // Apri un JOptionPane personalizzato per mostrare i dettagli del risultato
                     openDetailsPanel(selectedResult);
                 }
             }
@@ -100,7 +93,7 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
         backButtonBottom.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
+                // Utilizza il cardLayout passato come argomento per tornare indietro
                 cardLayout.show(mainPanel, "Visualizzazione");
             }
         });
@@ -143,6 +136,8 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
     }
 
 
+
+    // Classe wrapper per risultato con numero
     private static class ResultWrapper extends Result {
         private final int number;
 
@@ -159,8 +154,8 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
     }
 
     public void reset() {
-        latitudeField.setText("");
-        longitudeField.setText("");
+        // Metodo per resettare il pannello quando viene mostrato
+        searchField.setText("");
         DefaultListModel<ResultWrapper> model = (DefaultListModel<ResultWrapper>) resultList.getModel();
         model.clear();
         resultCountLabel.setText("");

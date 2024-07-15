@@ -28,14 +28,14 @@ public class SceltaCentroPanel extends JPanel {
         centerPanel.add(titleLabel, BorderLayout.NORTH);
 
         // TextArea per mostrare la lista di centri disponibili
-        textArea = new JTextArea(10, 30);
+        textArea = new JTextArea(5, 15);
         textArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(textArea);
         centerPanel.add(scrollPane, BorderLayout.CENTER);
 
         // Carica la lista di centri disponibili
         try {
-            listaElementi = server.mostraElementiDisponibili("CentriMonitoraggio", null, "NomeCentro", false);
+            listaElementi = server.mostraElementiDisponibili("CentriMonitoraggio",  "NomeCentro", false);
             StringBuilder sb = new StringBuilder();
             for (String elemento : listaElementi) {
                 sb.append(elemento).append("\n");
@@ -63,8 +63,8 @@ public class SceltaCentroPanel extends JPanel {
 
         // Pannello per il pulsante Indietro
         JPanel buttonPanelIndietro = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton btnIndietro = new JButton("Indietro");
-        buttonPanelIndietro.add(btnIndietro);
+      //  JButton btnIndietro = new JButton("Indietro");
+      //  buttonPanelIndietro.add(btnIndietro);
 
         bottomButtonPanel.add(buttonPanelIndietro, BorderLayout.WEST);
 
@@ -86,9 +86,16 @@ public class SceltaCentroPanel extends JPanel {
                 try {
                     if (server.richiestaInserimentoCentro(nomeCentro, listaElementi)) {
                         JOptionPane.showMessageDialog(this, "Centro inserito con successo!");
+                        centroField.setText("");
+                        cardLayout.show(mainPanel, "Home");
                     } else {
-                        JOptionPane.showMessageDialog(this, "Errore nel centro inserito!");
+
+                        JOptionPane.showMessageDialog(this, "Registrazione centro in corso...");
+                        centroField.setText("");
+                        cardLayout.show(mainPanel, "RegistraCentroNuovo");
                     }
+
+
                 } catch (RemoteException ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(this, "Errore durante l'inserimento del centro", "Errore", JOptionPane.ERROR_MESSAGE);
@@ -99,6 +106,7 @@ public class SceltaCentroPanel extends JPanel {
         });
 
         // Azione per il pulsante Indietro
-        btnIndietro.addActionListener(e -> cardLayout.show(mainPanel, "Registrazione"));
+     //   btnIndietro.addActionListener(e -> cardLayout.show(mainPanel, "Registrazione"));
     }
+
 }

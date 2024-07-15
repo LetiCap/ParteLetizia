@@ -2,12 +2,7 @@ package ClimateMonitoring.GUI;
 import ClimateMonitoring.*;
 
 import javax.swing.*;
-import javax.xml.crypto.Data;
 import java.awt.*;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
 public class VisualizzazionePanel extends JPanel {
 
@@ -60,7 +55,7 @@ public class VisualizzazionePanel extends JPanel {
         });
 
         // Azione per il pulsante "Ricerca tramite coordinate"
-        VisualizzaTramiteCoordinatePanel risultatiTramiteCoordinatePanel = new VisualizzaTramiteCoordinatePanel(server, mainPanel,cardLayout);
+        VisualizzaTramiteCoordinatePanel risultatiTramiteCoordinatePanel = new VisualizzaTramiteCoordinatePanel(server, cardLayout, mainPanel);
         mainPanel.add(risultatiTramiteCoordinatePanel, "VisualizzaTramiteCoordinatePanel");
         btnRicercaCoordinate.addActionListener(e -> {
             cardLayout.show(mainPanel, "VisualizzaTramiteCoordinatePanel");
@@ -68,7 +63,7 @@ public class VisualizzazionePanel extends JPanel {
         });
 
         // Azione per il pulsante "Ricerca tramite stato di appartenenza"
-        VisualizzaTramiteStatoPanel risultatiTramiteStatoPanel = new VisualizzaTramiteStatoPanel(server, mainPanel,cardLayout);
+        VisualizzaTramiteStatoPanel risultatiTramiteStatoPanel = new VisualizzaTramiteStatoPanel(server, cardLayout, mainPanel);
         mainPanel.add(risultatiTramiteStatoPanel, "VisualizzaTramiteStatoPanel");
         btnRicercaStato.addActionListener(e -> {
             cardLayout.show(mainPanel, "VisualizzaTramiteStatoPanel");
@@ -81,6 +76,7 @@ public class VisualizzazionePanel extends JPanel {
         });
     }
 
+    /*
     public static void main(String[] args) {
         ServerInterface server;
         try {
@@ -118,4 +114,6 @@ public class VisualizzazionePanel extends JPanel {
             System.err.println("Client terminato. Server non trovato.");
         }
     }
+
+     */
 }

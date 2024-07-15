@@ -52,12 +52,28 @@ public class MainFrame extends JFrame {
         // Aggiungi il pannello dei pulsanti al centro del homePanel
         homePanel.add(buttonsPanel, BorderLayout.CENTER);
 
+        RegistrazioneNuovoCentroPanel registraCentroPanel = new RegistrazioneNuovoCentroPanel(server, cardLayout, mainPanel);
+        SelezionaCittaPanel selezionaCittaPanel=  new SelezionaCittaPanel(server, cardLayout, mainPanel);
+        SelezionaCoordinatePanel SelezionaCoordinatePanel =  new SelezionaCoordinatePanel(server, cardLayout, mainPanel);
+
+        selezionaCittaPanel.setBackButtonListener(registraCentroPanel);
+        SelezionaCoordinatePanel.setBackButtonListener(registraCentroPanel);
+
         // Aggiungi pannelli al card layout
         mainPanel.add(homePanel, "Home");
         mainPanel.add(new RegistrazionePanel( server,cardLayout, mainPanel), "Registrazione");
         mainPanel.add(new LoginPanel(server,cardLayout, mainPanel), "Login");
         mainPanel.add(new SceltaCentroPanel(server,cardLayout, mainPanel), "SceltaCentro");
         mainPanel.add(new VisualizzazionePanel(server, cardLayout, mainPanel), "Visualizzazione");
+        mainPanel.add(registraCentroPanel, "RegistraCentroNuovo");
+        mainPanel.add(new VisualizzaTramiteCoordinatePanel(server, cardLayout, mainPanel), "VisualizzaCoordinate");
+        mainPanel.add(new VisualizzaRisultatiTramiteNomePanel(server, cardLayout, mainPanel), "VisualizzaNome");
+        mainPanel.add(new VisualizzaTramiteStatoPanel(server, cardLayout, mainPanel), "VisualizzazioneStato");
+        mainPanel.add(new InserimentoParametriPanel(server,cardLayout,mainPanel), "InseritoreParametri");
+        mainPanel.add(selezionaCittaPanel, "AggiuntaCittàCentro");
+        mainPanel.add(SelezionaCoordinatePanel, "AggiuntaCoordinateCentro");
+
+
 
         // Aggiungi azioni ai pulsanti
         btnRegistrazione.addActionListener(e -> cardLayout.show(mainPanel, "Registrazione"));

@@ -1,4 +1,7 @@
-package ClimateMonitoring;
+package ClimateMonitoring.GUI;
+
+import ClimateMonitoring.Result;
+import ClimateMonitoring.ServerInterface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,28 +10,33 @@ import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 
-public class VisualizzaTramiteStatoPanel extends JPanel {
+public class SelezionaCittaPanel extends JPanel {
 
     private JTextField searchField;
     private JButton searchButton;
     private JList<ResultWrapper> resultList;
+    private LinkedList<String> lonlatInserite = new LinkedList<>(); // Lista per memorizzare le coordinate selezionate
 
     private JButton backButtonBottom; // Pulsante "Back" in basso
     private JLabel resultCountLabel; // JLabel per visualizzare il conteggio dei risultati
 
     private ServerInterface server;
+
     private CardLayout cardLayout;
     private JPanel mainPanel; // Riferimento al pannello principale
 
-    public VisualizzaTramiteStatoPanel(ServerInterface server, JPanel mainPanel,CardLayout cardLayout) {
-       this.server=server;
-        this.cardLayout=cardLayout;
+    private BackButtonListener backButtonListener; // Listener per il pulsante "Back"
+
+    public SelezionaCittaPanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
+        this.server = server;
+        this.cardLayout = cardLayout;
         this.mainPanel = mainPanel; // Inizializza il riferimento al mainPanel
 
         setLayout(new BorderLayout());
 
         JPanel searchPanel = new JPanel();
         searchField = new JTextField(20);
+        searchPanel.add(new JLabel("Inserire la città da inserire:"));
         searchButton = new JButton("Search");
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
@@ -48,30 +56,27 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
         statusPanel.add(resultCountLabel, BorderLayout.CENTER);
         add(statusPanel, BorderLayout.SOUTH);
 
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String searchTerm = searchField.getText().trim();
-                // Esegui la ricerca in base all'input dell'utente
-                LinkedList<Result> results = null;
-                if (searchTerm.length() > 1) {
-                    try {
-                        results = server.ricercaTramiteStato(searchTerm);
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                } else {
-                    // Gestione caso in cui l'input sia troppo corto
-                    JOptionPane.showMessageDialog(VisualizzaTramiteStatoPanel.this, "Inserisci un nome di stato valido.");
-                    return;
+        searchButton.addActionListener(e -> {
+            String searchTerm = searchField.getText().trim();
+            // Esegui la ricerca in base all'input dell'utente
+            LinkedList<Result> results = null;
+            if (searchTerm.length() > 1) {
+                try {
+                    results = server.ricercaTramiteNome(searchTerm);
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
                 }
-
-                // Aggiorna il conteggio dei risultati
-                resultCountLabel.setText(String.format("La ricerca ha prodotto %d risultati", results.size()));
-
-                // Aggiorna la lista dei risultati
-                updateResults(results);
+            } else {
+                // Gestione caso in cui l'input sia troppo corto
+                JOptionPane.showMessageDialog(SelezionaCittaPanel.this, "Inserisci un nome di città valido.");
+                return;
             }
+
+            // Aggiorna il conteggio dei risultati
+            resultCountLabel.setText(String.format("La ricerca ha prodotto %d risultati", results.size()));
+
+            // Aggiorna la lista dei risultati
+            updateResults(results);
         });
 
         resultList.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -90,8 +95,11 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Utilizza il cardLayout passato come argomento per tornare indietro
-                CardLayout layout = (CardLayout) mainPanel.getLayout();
-                layout.show(mainPanel, "Visualizzazione"); // Presumendo che "Home" sia il pannello principale
+                cardLayout.show(mainPanel, "RegistraCentroNuovo");
+                // Chiamata al listener per passare lonlatInserite al pannello principale
+                if (backButtonListener != null) {
+                    backButtonListener.onBackButtonClicked(lonlatInserite);
+                }
             }
         });
     }
@@ -109,7 +117,7 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
         String cityName = selectedResult.getName();
         Object[] options = {"Yes", "No"};
         int choice = JOptionPane.showOptionDialog(this,
-                String.format("Si vuole procedere con la visualizzazione dei parametri climatici della zona: %f,%f (%s)",
+                String.format("Si vuole procedere con l'inserimento di questa area? %f,%f (%s)",
                         selectedResult.getLatitude(), selectedResult.getLongitude(), cityName),
                 "Dettagli",
                 JOptionPane.YES_NO_OPTION,
@@ -119,22 +127,15 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
                 options[0]);
 
         if (choice == JOptionPane.YES_OPTION) {
-            // Creazione di una nuova istanza di ClimatePanel
-            ClimatePanel climatePanel = new ClimatePanel(selectedResult.getName(),mainPanel,selectedResult);
-
-            // Aggiunta di climatePanel a mainPanel
-            mainPanel.add(climatePanel, "ClimatePanel");
-
-            // Mostra il nuovo pannello ClimatePanel
-            cardLayout.show(mainPanel, "ClimatePanel");
+            // Aggiungi l'elemento selezionato alla lista lonlatInserite
+            lonlatInserite.add(selectedResult.getLatitude() + "," + selectedResult.getLongitude()+ " ("+ selectedResult.getName()+")");
         } else if (choice == JOptionPane.NO_OPTION) {
             // L'utente ha scelto di non fare nulla
         }
     }
 
-
     // Classe wrapper per risultato con numero
-    static class ResultWrapper extends Result {
+    private static class ResultWrapper extends Result {
         private final int number;
 
         public ResultWrapper(Result result, int number) {
@@ -148,12 +149,7 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
             return String.format("%d. %s", number, super.toString());
         }
     }
-
-    public void reset() {
-        // Metodo per resettare il pannello quando viene mostrato
-        searchField.setText("");
-        DefaultListModel<ResultWrapper> model = (DefaultListModel<ResultWrapper>) resultList.getModel();
-        model.clear();
-        resultCountLabel.setText("");
+    public void setBackButtonListener(BackButtonListener listener) {
+        this.backButtonListener = listener;
     }
 }

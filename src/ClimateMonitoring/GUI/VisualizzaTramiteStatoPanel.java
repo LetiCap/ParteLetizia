@@ -1,4 +1,7 @@
-package ClimateMonitoring;
+package ClimateMonitoring.GUI;
+
+import ClimateMonitoring.Result;
+import ClimateMonitoring.ServerInterface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 
-public class VisualizzaRisultatiTramiteNomePanel extends JPanel {
+public class VisualizzaTramiteStatoPanel extends JPanel {
 
     private JTextField searchField;
     private JButton searchButton;
@@ -17,13 +20,12 @@ public class VisualizzaRisultatiTramiteNomePanel extends JPanel {
     private JLabel resultCountLabel; // JLabel per visualizzare il conteggio dei risultati
 
     private ServerInterface server;
-
     private CardLayout cardLayout;
     private JPanel mainPanel; // Riferimento al pannello principale
 
-    public VisualizzaRisultatiTramiteNomePanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
-        this.server = server;
-        this.cardLayout = cardLayout;
+    public VisualizzaTramiteStatoPanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
+       this.server=server;
+        this.cardLayout=cardLayout;
         this.mainPanel = mainPanel; // Inizializza il riferimento al mainPanel
 
         setLayout(new BorderLayout());
@@ -57,13 +59,13 @@ public class VisualizzaRisultatiTramiteNomePanel extends JPanel {
                 LinkedList<Result> results = null;
                 if (searchTerm.length() > 1) {
                     try {
-                        results =server.ricercaTramiteNome(searchTerm);
+                        results = server.ricercaTramiteStato(searchTerm);
                     } catch (RemoteException ex) {
                         throw new RuntimeException(ex);
                     }
                 } else {
                     // Gestione caso in cui l'input sia troppo corto
-                    JOptionPane.showMessageDialog(VisualizzaRisultatiTramiteNomePanel.this, "Inserisci un nome di città valido.");
+                    JOptionPane.showMessageDialog(VisualizzaTramiteStatoPanel.this, "Inserisci un nome di stato valido.");
                     return;
                 }
 
@@ -91,7 +93,8 @@ public class VisualizzaRisultatiTramiteNomePanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Utilizza il cardLayout passato come argomento per tornare indietro
-                cardLayout.show(mainPanel, "Visualizzazione");
+                CardLayout layout = (CardLayout) mainPanel.getLayout();
+                layout.show(mainPanel, "Visualizzazione"); // Presumendo che "Home" sia il pannello principale
             }
         });
     }
@@ -133,9 +136,8 @@ public class VisualizzaRisultatiTramiteNomePanel extends JPanel {
     }
 
 
-
     // Classe wrapper per risultato con numero
-    private static class ResultWrapper extends Result {
+    static class ResultWrapper extends Result {
         private final int number;
 
         public ResultWrapper(Result result, int number) {
