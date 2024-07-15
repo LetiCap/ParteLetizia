@@ -153,6 +153,14 @@ public class ServerCM extends UnicastRemoteObject implements ServerInterface {
     public LinkedList<Result> cercaAreaGeograficaCoordinate(double latitudine, double longitudine) {
         return db.cercaAreaGeograficaCoordinate(latitudine,longitudine);
     }
+    @Override
+    public String getNote(String cityName, String colonna){
+        return db.getInfoCity(cityName,colonna,false);
+    }
+    @Override
+    public String getMediana(String cityName,String colonna){
+        return db.getInfoCity(cityName,colonna,true);
+    }
 
 
 

@@ -612,6 +612,68 @@ public class DatabaseConnection {
 
 
 
+    public String getInfoCity(String cityName, String colonna,boolean mediana) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        StringBuilder result = new StringBuilder();
+
+
+        try {
+            connection = connect();
+            statement = connection.createStatement();
+            double median=1;
+            // Build the query dynamically based on parameters
+            if(mediana){
+                String query = "SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY " + colonna + ") AS median_value " +
+                        "FROM \"ParametriClimatici\" where area Like '%"+cityName+"%'";
+
+                resultSet = statement.executeQuery(query);
+
+                if (resultSet.next()) {
+                    median = resultSet.getDouble("median_value");
+                }
+                return ""+median;
+            }
+            StringBuilder queryBuilder = new StringBuilder("SELECT ");
+
+            if (colonna != null && !colonna.isEmpty()) {
+                queryBuilder.append("\"").append(colonna).append("\"");
+            } else {
+                queryBuilder.append("*"); // Select all columns if colonna is null or empty
+            }
+
+            queryBuilder.append(" FROM \"ParametriClimatici\" WHERE area LIKE '%").append(cityName).append("%'");
+
+            if (colonna != null && !colonna.isEmpty()) {
+                queryBuilder.append(" AND \"").append(colonna).append("\" IS NOT NULL");
+            }
+
+            String query = queryBuilder.toString();
+            resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()) {
+                if (result.length() > 0) {
+                    result.append("\n");
+                }
+                result.append(resultSet.getString(colonna));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+                closeConnection(connection);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result.toString();
+    }
+
+
 
 
 

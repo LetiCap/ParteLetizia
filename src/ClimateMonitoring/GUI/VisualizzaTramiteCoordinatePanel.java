@@ -95,7 +95,11 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
                 JList<ResultWrapper> list = (JList<ResultWrapper>) evt.getSource();
                 if (evt.getClickCount() == 2) {
                     ResultWrapper selectedResult = list.getSelectedValue();
-                    openDetailsPanel(selectedResult);
+                    try {
+                        openDetailsPanel(selectedResult);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         });
@@ -118,7 +122,7 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
         }
     }
 
-    private void openDetailsPanel(ResultWrapper selectedResult) {
+    private void openDetailsPanel(ResultWrapper selectedResult) throws RemoteException {
         String cityName = selectedResult.getName();
         Object[] options = {"Yes", "No"};
         int choice = JOptionPane.showOptionDialog(this,
@@ -133,7 +137,7 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
 
         if (choice == JOptionPane.YES_OPTION) {
             // Creazione di una nuova istanza di ClimatePanel
-            ClimatePanel climatePanel = new ClimatePanel(selectedResult.getName(),mainPanel,selectedResult);
+            ClimatePanel climatePanel = new ClimatePanel(selectedResult.getName(),mainPanel,selectedResult,server);
 
             // Aggiunta di climatePanel a mainPanel
             mainPanel.add(climatePanel, "ClimatePanel");
