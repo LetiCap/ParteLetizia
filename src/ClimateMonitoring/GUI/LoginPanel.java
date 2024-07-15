@@ -56,7 +56,6 @@ public class LoginPanel extends JPanel {
                     cardLayout.show(mainPanel, "InseritoreParametri");
 
                 } else {
-                    server.statisticaParametri("45.8082,9.0832 (Como)");
                     showMessage("Credenziali errate");
                 }
 
