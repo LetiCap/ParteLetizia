@@ -43,6 +43,7 @@ public class LoginPanel extends JPanel {
         // Aggiungi JTextArea con i messaggi al BorderLayout a sud
         add(scrollPane, BorderLayout.SOUTH);
 
+
         // Azione per il pulsante di accedi
         btnSalva.addActionListener(e -> {
 
@@ -55,6 +56,7 @@ public class LoginPanel extends JPanel {
                     cardLayout.show(mainPanel, "InseritoreParametri");
 
                 } else {
+                    server.statisticaParametri("45.8082,9.0832 (Como)");
                     showMessage("Credenziali errate");
                 }
 

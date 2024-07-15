@@ -351,7 +351,7 @@ public class DatabaseConnection {
             connection = connect();
             Statement statement = connection.createStatement();
             for (String colonna : nomiColonneParametriPAR) {
-                query = "SELECT " + colonna + ", COUNT(" + colonna + ") AS frequenza FROM \"ParametriClimatici\" WHERE  \"NomeCentro\" = '" + parametroscelto + "'  GROUP BY " + colonna + " ORDER BY frequenza DESC LIMIT 1";
+                query = "SELECT " + colonna + ", COUNT(" + colonna + ") AS frequenza FROM \"ParametriClimatici\" WHERE  \"area\" = '" + parametroscelto + "'  GROUP BY " + colonna + " ORDER BY frequenza DESC LIMIT 1";
                 resultSet = statement.executeQuery(query);
                 HashMap<String, String> parResult = new HashMap<>();
                 if (resultSet.next()) {
