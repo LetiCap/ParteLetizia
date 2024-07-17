@@ -52,6 +52,12 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String searchTerm = searchField.getText().trim();
+
+                // Ensure the first letter is uppercase
+                if (searchTerm.length() > 0) {
+                    searchTerm = searchTerm.substring(0, 1).toUpperCase() + searchTerm.substring(1);
+                }
+
                 LinkedList<Result> results = null;
                 if (searchTerm.length() > 1) {
                     try {
@@ -68,6 +74,7 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
                 resultCountLabel.setText(String.format("La ricerca ha prodotto %d risultati", results.size()));
                 adapter.updateResults(results);
             }
+
         });
 
         resultList.addMouseListener(new java.awt.event.MouseAdapter() {
