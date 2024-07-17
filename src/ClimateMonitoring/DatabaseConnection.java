@@ -698,7 +698,7 @@ public class DatabaseConnection {
             }
         }
         if(result.isEmpty()){
-            return "<no notes yet>";
+            return "<no notes yet";
         }
         return result.toString();
     }

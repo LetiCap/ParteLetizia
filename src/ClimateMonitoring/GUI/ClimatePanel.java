@@ -15,31 +15,20 @@ import java.rmi.RemoteException;
 
 public class ClimatePanel extends JPanel {
 
-    private String cityName;
-    private ServerInterface server;
-    private JPanel mainPanel;
-
     public ClimatePanel(String cityName, JPanel mainPanel, Result selectedResult, ServerInterface server) throws RemoteException {
-        this.cityName = cityName;
-        this.mainPanel = mainPanel;
-        this.server = server;
+        InterfaceCreatorComponent creator=new InterfaceCreatorComponent();
 
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(1000, 800)); // Aumenta l'altezza del pannello
         setBackground(Color.WHITE); // Sfondo bianco per il pannello principale
 
         // Titolo del pannello
-        JLabel titleLabel = new JLabel("Parametri climatici per " + cityName);
-        titleLabel.setHorizontalAlignment(JLabel.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 32)); // Font più grande e in grassetto
-        titleLabel.setBorder(new EmptyBorder(20, 0, 20, 0)); // Spaziatura interna intorno al titolo
+        JLabel titleLabel = creator.creatorTileWindow("Parametri climatici per : "+cityName);
+
         add(titleLabel, BorderLayout.NORTH);
 
         // Pulsante "Back"
-        JButton backButton = new JButton("Back");
-        backButton.setFont(new Font("Arial", Font.PLAIN, 18)); // Font per il pulsante
-        backButton.setBackground(new Color(229, 5, 14)); // Colore di sfondo rosso
-        backButton.setForeground(Color.WHITE); // Testo bianco
+        JButton backButton = creator.createButton(true,"Back");
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

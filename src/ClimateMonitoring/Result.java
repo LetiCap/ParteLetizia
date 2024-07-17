@@ -8,13 +8,13 @@ Francesca Ziggiotto	752504 VA
 import java.io.Serializable;
 
 public class Result implements Serializable {
-    private Integer geoname;
-    private String name;
-    private String asciiName;
-    private String countryCode;
-    private String countryName;
-    private Double latitude;
-    private Double longitude;
+    private final Integer geoname;
+    private final String name;
+    private final String asciiName;
+    private final String countryCode;
+    private final String countryName;
+    private final Double latitude;
+    private final Double longitude;
 
     public Result(Integer geoname, String name, String asciiName, String countryCode, String countryName, Double latitude, Double longitude) {
         this.geoname = geoname;
