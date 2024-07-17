@@ -612,7 +612,7 @@ public class DatabaseConnection {
 
 
 
-    public String getInfoCity(String cityName, String colonna,boolean mediana) {
+    public String getInfoCity(String cityName, String colonna,boolean moda) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -622,19 +622,41 @@ public class DatabaseConnection {
         try {
             connection = connect();
             statement = connection.createStatement();
-            double median=1;
             // Build the query dynamically based on parameters
-            if(mediana){
-                String query = "SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY " + colonna + ") AS median_value " +
-                        "FROM \"ParametriClimatici\" where area Like '%"+cityName+"%'";
+            if(moda){
+                String query = "SELECT " + colonna +
+                        " FROM \"ParametriClimatici\" " +
+                        "WHERE area LIKE '%" + cityName + "%' ";
+                List<Double> valori = new ArrayList<>();
+
 
                 resultSet = statement.executeQuery(query);
 
-                if (resultSet.next()) {
-                    median = resultSet.getDouble("median_value");
+                while (resultSet.next()) {
+                    // Supponiamo che la colonna sia di tipo numerico e può essere convertita in double
+                    double valore = resultSet.getDouble(colonna);
+                    valori.add(valore);
                 }
-                return ""+median;
+
+                Map<Double, Integer> conteggi = new HashMap<>();
+                for (double valore : valori) {
+                    conteggi.put(valore, conteggi.getOrDefault(valore, 0) + 1);
+                }
+
+                double valorePiuFrequente = Double.NaN;
+                int maxConteggio = 0;
+                for (Map.Entry<Double, Integer> entry : conteggi.entrySet()) {
+                    if (entry.getValue() > maxConteggio) {
+                        valorePiuFrequente = entry.getKey();
+                        maxConteggio = entry.getValue();
+                    }
+                }
+
+                // Stampa il valore che viene ripetuto più volte
+                System.out.println("Il valore che viene ripetuto più volte è: " + valorePiuFrequente);
+                return ""+valorePiuFrequente;
             }
+
             StringBuilder queryBuilder = new StringBuilder("SELECT ");
 
             if (colonna != null && !colonna.isEmpty()) {

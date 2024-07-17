@@ -158,7 +158,7 @@ public class ServerCM extends UnicastRemoteObject implements ServerInterface {
         return db.getInfoCity(cityName,colonna,false);
     }
     @Override
-    public String getMediana(String cityName,String colonna){
+    public String getModa(String cityName,String colonna){
         return db.getInfoCity(cityName,colonna,true);
     }
 

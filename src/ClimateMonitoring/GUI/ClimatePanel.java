@@ -42,29 +42,16 @@ public class ClimatePanel extends JPanel {
         bottomPanel.add(backButton);
         add(bottomPanel, BorderLayout.SOUTH);
 
-
-        // Ottenere le note del vento
-        String ventoNotes = server.getNote(cityName,"vento_notes");
-        String umitida_notes=server.getNote(cityName,"umidita_notes");
-        String precipitazioni_notes=server.getNote(cityName,"precipitazioni_notes");
-        String pressione_notes=server.getNote(cityName,"pressione_notes");
-        String temperatura_notes=server.getNote(cityName,"temperatura_notes");
-        String altitudineghiacci_notes=server.getNote(cityName,"altitudineghiacci_notes");
-        String massaghiacci_notes=server.getNote(cityName,"massaghiacci_notes");
-
-
-
-
         // Tabella per i parametri climatici
         String[] columnNames = {"Climate Category", "Explanation", "Score", "Notes"};
         Object[][] data = {
-                {"Vento", "Velocità del vento (km/h), suddivisa in fasce",server.getMediana(cityName,"vento_val"), server.getNote(cityName,"vento_notes")},
-                {"Umidità", "% di Umidità, suddivisa in fasce",server.getMediana(cityName,"umidita_val"), server.getNote(cityName,"umidita_notes")},
-                {"Pressione", "In hPa, suddivisa in fasce",server.getMediana(cityName,"pressione_val"), server.getNote(cityName,"pressione_notes")},
-                {"Temperatura", "In °C, suddivisa in fasce", server.getMediana(cityName,"temperatura_val"),server.getNote(cityName,"temperatura_notes")},
-                {"Precipitazioni", "In mm di pioggia, suddivisa in fasce",server.getMediana(cityName,"precipitazioni_val"), server.getNote(cityName,"precipitazioni_notes")},
-                {"Altitudine dei ghiacciai", "In m, suddivisa in fasce",  server.getMediana(cityName,"altitudinegiacci_val"),server.getNote(cityName,"altitudineghiacci_notes")},
-                {"Massa dei ghiacciai", "In kg, suddivisa in fasce",server.getMediana(cityName,"massaghiacci_val"), server.getNote(cityName,"massaghiacci_notes")}
+                {"Vento", "Velocità del vento (km/h), suddivisa in fasce",server.getModa(cityName,"vento_val"), server.getNote(cityName,"vento_notes")},
+                {"Umidità", "% di Umidità, suddivisa in fasce",server.getModa(cityName,"umidita_val"), server.getNote(cityName,"umidita_notes")},
+                {"Pressione", "In hPa, suddivisa in fasce",server.getModa(cityName,"pressione_val"), server.getNote(cityName,"pressione_notes")},
+                {"Temperatura", "In °C, suddivisa in fasce", server.getModa(cityName,"temperatura_val"),server.getNote(cityName,"temperatura_notes")},
+                {"Precipitazioni", "In mm di pioggia, suddivisa in fasce",server.getModa(cityName,"precipitazioni_val"), server.getNote(cityName,"precipitazioni_notes")},
+                {"Altitudine dei ghiacciai", "In m, suddivisa in fasce",  server.getModa(cityName,"altitudineghiacchi_val"),server.getNote(cityName,"altitudineghiacchi_notes")},
+                {"Massa dei ghiacciai", "In kg, suddivisa in fasce",server.getModa(cityName,"massaghiacci_val"), server.getNote(cityName,"massaghiacci_notes")}
         };
 
         DefaultTableModel tableModel = new DefaultTableModel(data, columnNames) {

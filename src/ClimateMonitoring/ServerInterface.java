@@ -26,7 +26,7 @@ public interface ServerInterface extends Remote {
 
     LinkedList<Result> cercaAreaGeograficaCoordinate(double latitudine, double longitudine)throws RemoteException;
 
-    String getNote(String cityName, String ventoNotes)throws RemoteException;
+    String getNote(String cityName, String notesColonna)throws RemoteException;
 
-    String getMediana(String cityName, String colonna)throws RemoteException;
+    String getModa(String cityName, String colonna)throws RemoteException;
 }
