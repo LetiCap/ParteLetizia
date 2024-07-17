@@ -628,33 +628,43 @@ public class DatabaseConnection {
                         " FROM \"ParametriClimatici\" " +
                         " WHERE area LIKE '%" + cityName + "%' ";
 
-                List<Double> valori = new ArrayList<>();
-                resultSet = statement.executeQuery(query);
+                List<Integer> valori = new ArrayList<>();
+                 resultSet = statement.executeQuery(query);
 
                 while (resultSet.next()) {
-                    double valore = resultSet.getDouble(colonna);
-                    valori.add(valore);
+                    int valore = resultSet.getInt(colonna);
+                    if (!resultSet.wasNull() && valore != 0) {
+                        valori.add(valore);
+                    }
                 }
 
                 // Calcolo della moda
-                Map<Double, Integer> conteggi = new HashMap<>();
-                for (double valore : valori) {
+                Map<Integer, Integer> conteggi = new HashMap<>();
+                for (int valore : valori) {
                     conteggi.put(valore, conteggi.getOrDefault(valore, 0) + 1);
                 }
 
-                double valorePiuFrequente = Double.NaN;
                 int maxConteggio = 0;
-                for (Map.Entry<Double, Integer> entry : conteggi.entrySet()) {
+                List<Integer> valoriPiuFrequenti = new ArrayList<>();
+
+                for (Map.Entry<Integer, Integer> entry : conteggi.entrySet()) {
                     if (entry.getValue() > maxConteggio) {
-                        valorePiuFrequente = entry.getKey();
                         maxConteggio = entry.getValue();
+                        valoriPiuFrequenti.clear();
+                        valoriPiuFrequenti.add(entry.getKey());
+                    } else if (entry.getValue() == maxConteggio) {
+                        valoriPiuFrequenti.add(entry.getKey());
                     }
                 }
 
                 // Gestione caso in cui non ci sono valori
-                if (Double.isNaN(valorePiuFrequente)) {
+                if (valoriPiuFrequenti.isEmpty()) {
                     return "<no info yet>";
                 }
+
+                // Seleziona un valore a caso tra i più frequenti
+                Random random = new Random();
+                int valorePiuFrequente = valoriPiuFrequenti.get(random.nextInt(valoriPiuFrequenti.size()));
 
                 return "" + valorePiuFrequente;
             }
