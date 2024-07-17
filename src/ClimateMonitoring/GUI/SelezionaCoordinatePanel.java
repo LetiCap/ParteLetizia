@@ -20,7 +20,7 @@ public class SelezionaCoordinatePanel extends JPanel {
     private JList<ResultWrapper> resultList;
     private LinkedList<String> lonlatInserite = new LinkedList<>(); // Lista per memorizzare le coordinate selezionate
 
-
+    private InterfaceCreatorComponent creator= new InterfaceCreatorComponent();
     private JButton backButtonBottom;
     private JLabel resultCountLabel;
 
@@ -36,9 +36,9 @@ public class SelezionaCoordinatePanel extends JPanel {
         setLayout(new BorderLayout());
 
         JPanel searchPanel = new JPanel();
-        latitudeField = new JTextField(10);
-        longitudeField = new JTextField(10);
-        searchButton = new JButton("Search");
+        latitudeField = creator.createNormaleField(10);
+        longitudeField = creator.createNormaleField(10);
+        searchButton =creator.createButton(false,"Search");
         searchPanel.add(new JLabel("Latitudine:"));
         searchPanel.add(latitudeField);
         searchPanel.add(new JLabel("Longitudine:"));
@@ -51,7 +51,7 @@ public class SelezionaCoordinatePanel extends JPanel {
         add(searchPanel, BorderLayout.NORTH);
         add(resultScrollPane, BorderLayout.CENTER);
 
-        backButtonBottom = new JButton("Back");
+        backButtonBottom = creator.createButton(true,"Back");
         JPanel buttonPanelBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanelBottom.add(backButtonBottom);
         JPanel statusPanel = new JPanel(new BorderLayout());
@@ -95,9 +95,9 @@ public class SelezionaCoordinatePanel extends JPanel {
         resultList.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                JList<SelezionaCoordinatePanel.ResultWrapper> list = (JList<SelezionaCoordinatePanel.ResultWrapper>) evt.getSource();
+                JList<ResultWrapper> list = (JList<ResultWrapper>) evt.getSource();
                 if (evt.getClickCount() == 2) { // Doppio clic
-                    SelezionaCoordinatePanel.ResultWrapper selectedResult = list.getSelectedValue();
+                    ResultWrapper selectedResult = list.getSelectedValue();
                     // Apri un JOptionPane personalizzato per mostrare i dettagli del risultato
                     openDetailsPanel(selectedResult);
                 }
@@ -145,22 +145,6 @@ public class SelezionaCoordinatePanel extends JPanel {
 
         } else if (choice == JOptionPane.NO_OPTION) {
             // L'utente ha scelto di non fare nulla
-        }
-    }
-
-
-    private static class ResultWrapper extends Result {
-        private final int number;
-
-        public ResultWrapper(Result result, int number) {
-            super(result.getGeoname(), result.getName(), result.getAsciiName(), result.getCountryCode(),
-                    result.getCountryName(), result.getLatitude(), result.getLongitude());
-            this.number = number;
-        }
-
-        @Override
-        public String toString() {
-            return String.format("%d. %s", number, super.toString());
         }
     }
 

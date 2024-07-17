@@ -13,30 +13,33 @@ public class RegistrazionePanel extends JPanel {
     private JTextField txtField3;
     private JTextField txtField4;
     private JTextField txtField5;
+    private InterfaceCreatorComponent creator=new InterfaceCreatorComponent();
 
     public RegistrazionePanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
         setLayout(new GridLayout(8, 2, 10, 10)); // Imposto il layout con margine di 10 pixel
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Aggiungo margine esterno
 
         // Testo sopra la tabella
-        JLabel topLabel = new JLabel("Inserisci i dati utente");
-        topLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        topLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        JLabel topLabel= creator.creatorTileWindow("Registrazione");
+    //    JLabel topLabel = new JLabel("Inserisci i dati utente");
+     //   topLabel.setFont(new Font("Arial", Font.BOLD, 18));
+     //   topLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(topLabel); // Aggiungo il label al pannello
 
         // Spazio vuoto per creare una riga di spazio
         add(new JPanel()); // Aggiungo un pannello vuoto per creare una riga di spazio
 
         // Crea i campi di testo
-        txtField1 = new JTextField(15);
-        txtField2 = new JTextField(15);
-        txtField3 = new JTextField(15);
-        txtField4 = new JTextField(15);
-        txtField5 = new JTextField(15);
+        txtField1 = creator.createNormaleField(15);
+        txtField2 = creator.createNormaleField(15);
+        txtField3 = creator.createNormaleField(15);
+        txtField4 = creator.createNormaleField(15);
+        txtField5 = creator.createNormaleField(15);
 
         // Crea i pulsanti
-        JButton btnSalva = new JButton("Inserisci Dati");
-        JButton btnIndietro = new JButton("Indietro");
+
+        JButton btnSalva = creator.createButton(false,"Invio" );
+        JButton btnIndietro = creator.createButton(true,"Back" );
 
         // Aggiungi i campi di testo e i pulsanti al pannello
         add(new JLabel("Id:"));

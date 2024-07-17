@@ -16,13 +16,10 @@ public class SelezionaCittaPanel extends JPanel {
     private JButton searchButton;
     private JList<ResultWrapper> resultList;
     private LinkedList<String> lonlatInserite = new LinkedList<>(); // Lista per memorizzare le coordinate selezionate
-
+    private InterfaceCreatorComponent creator= new InterfaceCreatorComponent();
     private JButton backButtonBottom; // Pulsante "Back" in basso
     private JLabel resultCountLabel; // JLabel per visualizzare il conteggio dei risultati
-
     private ServerInterface server;
-
-
     private BackButtonListener backButtonListener; // Listener per il pulsante "Back"
 
     public SelezionaCittaPanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
@@ -32,9 +29,9 @@ public class SelezionaCittaPanel extends JPanel {
         setLayout(new BorderLayout());
 
         JPanel searchPanel = new JPanel();
-        searchField = new JTextField(20);
+        searchField = creator.createNormaleField(20);
         searchPanel.add(new JLabel("Inserire la città da inserire:"));
-        searchButton = new JButton("Search");
+        searchButton = creator.createButton(false, "Search");
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
 
@@ -44,7 +41,7 @@ public class SelezionaCittaPanel extends JPanel {
         add(searchPanel, BorderLayout.NORTH);
         add(resultScrollPane, BorderLayout.CENTER);
 
-        backButtonBottom = new JButton("Back"); // Pulsante "Back" in basso
+        backButtonBottom = creator.createButton(true,"Back"); // Pulsante "Back" in basso
         JPanel buttonPanelBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanelBottom.add(backButtonBottom);
         JPanel statusPanel = new JPanel(new BorderLayout());
@@ -131,21 +128,6 @@ public class SelezionaCittaPanel extends JPanel {
         }
     }
 
-    // Classe wrapper per risultato con numero
-    private static class ResultWrapper extends Result {
-        private final int number;
-
-        public ResultWrapper(Result result, int number) {
-            super(result.getGeoname(), result.getName(), result.getAsciiName(), result.getCountryCode(),
-                    result.getCountryName(), result.getLatitude(), result.getLongitude());
-            this.number = number;
-        }
-
-        @Override
-        public String toString() {
-            return String.format("%d. %s", number, super.toString());
-        }
-    }
     public void setBackButtonListener(BackButtonListener listener) {
         this.backButtonListener = listener;
     }

@@ -16,7 +16,7 @@ public class RegistrazioneNuovoCentroPanel extends JPanel implements BackButtonL
     private JTextField ViaPiazza;
     private JTextField Provincia;
     private LinkedList<String> inserimenti = new LinkedList<>();
-
+    private InterfaceCreatorComponent creator= new InterfaceCreatorComponent();
     private LinkedList<String> lonlatInserite = new LinkedList<>();
     private CardLayout cardLayout;
     private JPanel mainPanel;
@@ -40,11 +40,11 @@ public class RegistrazioneNuovoCentroPanel extends JPanel implements BackButtonL
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new GridLayout(5, 2, 10, 10)); // Utilizzo di spaziatura tra le celle
 
-        civico = new JTextField(15);
-        CAP = new JTextField(15);
-        Comune = new JTextField(15);
-        ViaPiazza = new JTextField(15);
-        Provincia = new JTextField(15);
+        civico = creator.createNormaleField(15);
+        CAP = creator.createNormaleField(15);
+        Comune = creator.createNormaleField(15);
+        ViaPiazza = creator.createNormaleField(15);
+        Provincia = creator.createNormaleField(15);
 
         inputPanel.add(new JLabel("Numero civico:"));
         inputPanel.add(civico);
@@ -61,13 +61,12 @@ public class RegistrazioneNuovoCentroPanel extends JPanel implements BackButtonL
     }
 
     private JPanel createButtonPanel() {
-        JButton apriPanel1Button = new JButton("Ricerca tramite città");
-        JButton apriPanel2Button = new JButton("Ricerca tramite longitudine latitudine");
+        JButton apriPanel1Button =creator.createButton(false,"Ricerca tramite città");
+        JButton apriPanel2Button =creator.createButton(false,"Ricerca tramite longitudine latitudine");
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        JButton btnIndietro = new JButton("Indietro");
-        JButton mainButton = new JButton("Termina");
-
+        JButton btnIndietro = creator.createButton(true, "Back");
+        JButton mainButton = creator.createButton(false,"Invio");
         buttonPanel.add(btnIndietro);
         buttonPanel.add(mainButton);
         buttonPanel.add(apriPanel1Button);

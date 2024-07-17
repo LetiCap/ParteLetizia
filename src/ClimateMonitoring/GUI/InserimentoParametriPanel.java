@@ -21,6 +21,7 @@ public class InserimentoParametriPanel extends JPanel {
     private JList<String> resultList;
     private String areaScelta;
     private JTable climateTable;
+    private InterfaceCreatorComponent creator= new InterfaceCreatorComponent();
 
     private static String[] NomiColonneParametriPAR = {
             "vento_val",
@@ -62,9 +63,7 @@ public class InserimentoParametriPanel extends JPanel {
         resultList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane resultScrollPane = new JScrollPane(resultList);
 
-        JLabel titleLabel = new JLabel("Selezione dell'area di lavoro", JLabel.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
-
+        JLabel titleLabel = creator.creatorTileWindow("Selezione dell'area di lavoro");
         sceltaAreaDiLavoro.add(titleLabel, BorderLayout.NORTH);
         sceltaAreaDiLavoro.add(resultScrollPane, BorderLayout.CENTER);
 
@@ -109,17 +108,12 @@ public class InserimentoParametriPanel extends JPanel {
         climateTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.out.println("Mouse clicked on table. Click count: " + e.getClickCount());
                 int row = climateTable.rowAtPoint(e.getPoint());
                 int column = climateTable.columnAtPoint(e.getPoint());
-                System.out.println("Clicked row: " + row + ", column: " + column);
-
-
-                    if (row >= 0 && column == 3) {
-
-                        editNotes(row); // Avvia l'editor di popup per le Notes
-                    }
-
+                if (row >= 0 && column == 3) {
+                    // Avvia l'editor di popup per le Notes
+                    editNotes(row);
+                }
             }
         });
 
@@ -134,9 +128,9 @@ public class InserimentoParametriPanel extends JPanel {
 
         // Pannello per i pulsanti
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton invioButton = new JButton("Invio");
+        JButton invioButton = creator.createButton(false,"Invio");
+        JButton backButtonBottom = creator.createButton(true,"Back");
         buttonPanel.add(invioButton);
-        JButton backButtonBottom = new JButton("Back");
         buttonPanel.add(backButtonBottom);
         add(buttonPanel, BorderLayout.SOUTH);
 
@@ -162,7 +156,6 @@ public class InserimentoParametriPanel extends JPanel {
                 JOptionPane.showMessageDialog(this, "Scegliere un'area");
                 return; // Esci dal metodo in caso di areaScelta null
             }
-
             try {
                 server.inserisciParametriClimatici(areaScelta, parametriMap);
                 JOptionPane.showMessageDialog(this, "Parametri salvati con successo!");
@@ -203,18 +196,15 @@ public class InserimentoParametriPanel extends JPanel {
 
     private void editNotes(int row) {
         System.out.println("Editing Notes for row: " + row); // Log di debug
-
         String currentNotes = (String) climateTable.getValueAt(row, 3);
-
         JTextArea textArea = new JTextArea(currentNotes);
         textArea.setRows(4);
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
-
         JScrollPane scrollPane = new JScrollPane(textArea);
         scrollPane.setPreferredSize(new Dimension(300, 150));
 
-        JButton okButton = new JButton("OK");
+        JButton okButton = creator.createButton(false,"OK");
         okButton.addActionListener(e -> {
             String newNotes = textArea.getText();
             climateTable.setValueAt(newNotes, row, 3);
@@ -256,7 +246,6 @@ public class InserimentoParametriPanel extends JPanel {
                 resultList.setModel(listModel);
                 resultList.revalidate();
                 resultList.repaint();
-
                 System.out.println("Elementi nel modello della JList:");
                 for (int i = 0; i < listModel.getSize(); i++) {
                     System.out.println(listModel.getElementAt(i));
@@ -283,8 +272,6 @@ public class InserimentoParametriPanel extends JPanel {
             return false; // Restituisce false se la conversione fallisce (non è un numero)
         }
     }
-
-
 
 
 
