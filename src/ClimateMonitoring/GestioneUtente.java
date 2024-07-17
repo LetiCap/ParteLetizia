@@ -13,25 +13,12 @@ import java.util.*;
      *sia le fasi per fare il login.
      *@author Letizia Capitanio
      */
-
-
-
     public class GestioneUtente  implements Serializable {
         private String id;
-        private String Password;
-        private String NomeCognome;
-        private String CodiceFiscale;
-        private String Email;
         private GestioneCentri gestioneCentri;
-
         private final String[] NomiColonneUtente = {"Password", "NomeCognome", "CodiceFiscale", "Email"};
         private final String[] NomiColonneCentro = {"Civico", "CAP", "Comune", "Via/Piazza", "Provincia"};
-        private final String[] OutputSchermoUtente = {"la Password", "Nome e Cognome", "il codice Fiscale", "l'Email"};
-        private final String[] OutputSchermoCentro = {"il comune", " provincia sottoforma di sigla, ad esempio per Novara-->NO", "la via o la piazza", "il numero civico", "il CAP"};
         private String centro;
-        private final Scanner scanner = new Scanner(System.in);
-        private int quantitaAreeperilCentro;
-        private final DatabaseConnection db = new DatabaseConnection();
 
 
         /*Metodo controllo password e id del login*/
@@ -46,27 +33,19 @@ import java.util.*;
          */
 
         protected boolean login(String id, String password, DatabaseConnection db) {
-
-
             if (db.controlloSegiaPresente(id, "OperatoriRegistrati", "Userid")) {
-                System.out.println("procedo con il login");
-
+                System.out.println("nome presente, controllo password in corso..");
                 this.id = id;
-
                 String result = db.controlloPasswordUtente(this.id, password);
                 if (result != null) {
-                    this.Password = password;
                     this.centro = result;
                     System.out.println("Accesso Effettuato");
                     return true;
                     // Uscita dal while controllo password
-
                 } else {
                     System.out.println("Password incorretta");
                     return false;
                 }
-
-
             } else {
                 System.out.println("Reinserire in quanto nessun id esistente.");
                 return false;
@@ -84,8 +63,6 @@ import java.util.*;
          * @return true se l'id non è gia presente, altrimenti false
          */
         protected boolean controlloId(String id, DatabaseConnection db) {
-
-
             // Verifica se il ResultSet ha dei risultati
             if (db.controlloSegiaPresente(id, "OperatoriRegistrati", "Userid")) {
                 // Se c'è almeno un record, significa che l'utente è già presente
@@ -93,13 +70,9 @@ import java.util.*;
                 return false;
             } else {
                 // Se non ci sono risultati, l'utente non è presente
-
                 this.id = id;
                 return true;
-
             }
-
-
         }
 
         /*Metodo che richiede tutti i dati */
@@ -130,25 +103,13 @@ import java.util.*;
          */
         protected void ControlloDatiPrimadiInserire(LinkedList<String> inserimenti, boolean datiUtente, DatabaseConnection db) {
             String[] Nomicolonne;
-
-            if (datiUtente) {
-                Nomicolonne = NomiColonneUtente;
-            } else {
-                Nomicolonne = NomiColonneCentro;
-            }
+            if (datiUtente) {Nomicolonne = NomiColonneUtente;} else {Nomicolonne = NomiColonneCentro;}
             Map<String, Object> dataMap = new HashMap<>();
             for (int i = 0; i < Nomicolonne.length; i++) {
 
                 dataMap.put(Nomicolonne[i], inserimenti.get(i));
             }
             if (datiUtente) {
-                // Assegna i valori alle variabili della classe
-
-                this.Password = dataMap.get("Password").toString();
-                this.NomeCognome = dataMap.get("NomeCognome").toString();
-                this.CodiceFiscale = dataMap.get("CodiceFiscale").toString();
-                this.Email = dataMap.get("Email").toString();
-
                 db.UpdateDataToDB(dataMap, "OperatoriRegistrati", this.id, "Userid");
             } else {
                 db.UpdateDataToDB(dataMap, "CentriMonitoraggio", this.centro, "NomeCentro");
@@ -163,19 +124,7 @@ import java.util.*;
          * @param  nomeDatodaInserire è la stringa che si aggiunge all'output "inserisci" per completare la richiesta.
          * @return il valore inserito da tastiera dall'utente, in formato <strong>String</strong>.
          */
-/*
-    protected String getInfoFromUser(String nomeDatodaInserire) {
-        String inserimento;
-        do {
-            System.out.print("Inserisci " + nomeDatodaInserire + " > ");
-               inserimento = scanner.nextLine();
-            if (nomeDatodaInserire.isEmpty()) {
-                System.out.println("Nessun inserimento... inserire nuovamente  ");
-            }
-        } while (inserimento.isEmpty());
-        return inserimento;
-    }
-*/
+
 
         /*Metodo di richiesta specifica del centro. Vengono visualizzati i centri già registrati
          * l'utente puo scegliere tra quelli oppure registrarne uno nuovo*/
@@ -195,7 +144,6 @@ import java.util.*;
             if (elementiDisponibili.contains(centro)) {
                 db.UpdateDataToDB("NomeCentro", centro, id);
                 return true;
-
             } else {
                 db.inserimentoinDB("CentriMonitoraggio", centro, "NomeCentro", null, null, "centro", null);
                 db.UpdateDataToDB("NomeCentro", centro, id);
@@ -203,16 +151,7 @@ import java.util.*;
             }
         }
 
-/*
-    private void RichiestaDatidelCentrodaRegistrare() {
-        ControlloDatiPrimadiInserire( false);
-        gestioneCentri = new ClimateMonitoring.GestioneCentri();
-        gestioneCentri.setCentroId(centro, id);
-        gestioneCentri.inserimentoAree(quantitaAreeperilCentro);
 
-    }
-
- */
 
 
         //metodo che fa scegliere le aree e fa inserire per il login
@@ -249,15 +188,9 @@ import java.util.*;
     in caso si faccia cosi, invertire i nomi dei metodi registracentroaree e richiestadatidelcentroda regsitrare
     richiestadatidelcentroda non è necessario che venga implememntato nel server*/
         protected void registraCentroAree(LinkedList<String> inserimenti, LinkedList<String> lonlatInserite, DatabaseConnection db) {
-            //  centro = getInfoFromUser("il nome del centro");
-
             ControlloDatiPrimadiInserire(inserimenti, false, db);
             gestioneCentri = new GestioneCentri();
             gestioneCentri.setCentroId(centro, id);
-            //  gestioneCentri.inserimentoAree(quantitaAreeperilCentro);
-            System.out.println(centro + " riga 326 gestioneutente");
-            System.out.println(id + " riga 327 gestioneutente");
-
             gestioneCentri.inserimentoAree(lonlatInserite, db);
         }
     }

@@ -22,15 +22,12 @@ public class SelezionaCittaPanel extends JPanel {
 
     private ServerInterface server;
 
-    private CardLayout cardLayout;
-    private JPanel mainPanel; // Riferimento al pannello principale
 
     private BackButtonListener backButtonListener; // Listener per il pulsante "Back"
 
     public SelezionaCittaPanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
         this.server = server;
-        this.cardLayout = cardLayout;
-        this.mainPanel = mainPanel; // Inizializza il riferimento al mainPanel
+
 
         setLayout(new BorderLayout());
 

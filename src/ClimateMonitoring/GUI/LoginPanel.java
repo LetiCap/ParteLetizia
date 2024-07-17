@@ -62,9 +62,6 @@ public class LoginPanel extends JPanel {
             } catch (RemoteException ex) {
                 showMessage("Errore durante il login: " + ex.getMessage());
             }
-
-
-
         });
 
         // Azione per il pulsante Indietro

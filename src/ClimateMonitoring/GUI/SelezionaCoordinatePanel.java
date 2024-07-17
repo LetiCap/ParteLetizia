@@ -13,7 +13,7 @@ import java.util.LinkedList;
 
 public class SelezionaCoordinatePanel extends JPanel {
 
-    private final CardLayout cardLayout;
+
     private JTextField latitudeField;
     private JTextField longitudeField;
     private JButton searchButton;
@@ -25,14 +25,13 @@ public class SelezionaCoordinatePanel extends JPanel {
     private JLabel resultCountLabel;
 
     private ServerInterface server;
-    private JPanel mainPanel;
+
     private BackButtonListener backButtonListener; // Listener per il pulsante "Back"
 
 
     public SelezionaCoordinatePanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
         this.server = server;
-        this.cardLayout=cardLayout;
-        this.mainPanel = mainPanel;
+
 
         setLayout(new BorderLayout());
 

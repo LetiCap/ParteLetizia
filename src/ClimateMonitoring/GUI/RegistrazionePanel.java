@@ -82,8 +82,6 @@ public class RegistrazionePanel extends JPanel {
             } catch (RemoteException ex) {
                 ex.printStackTrace();
             }
-
-            // cardLayout.show(mainPanel, "Home"); // Torna alla schermata principale
         });
 
         // Azione per il pulsante Indietro

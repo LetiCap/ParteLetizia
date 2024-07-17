@@ -28,7 +28,7 @@ public class InserimentoParametriPanel extends JPanel {
             "precipitazioni_val",
             "pressione_val",
             "temperatura_val",
-            "altitudineghiacchi_val",
+            "altitudineghiacci_val",
             "massaghiacci_val"
     };
     private static String[] NomiColonneParametriNOT = {
@@ -37,7 +37,7 @@ public class InserimentoParametriPanel extends JPanel {
             "precipitazioni_notes",
             "pressione_notes",
             "temperatura_notes",
-            "altitudineghiacchi_notes",
+            "altitudineghiacci_notes",
             "massaghiacci_notes"
     };
     private static String[] columnNames = {"Climate Category", "Explanation", "Score: 1 ….. 5", "Notes"};

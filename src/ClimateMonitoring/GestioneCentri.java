@@ -18,20 +18,17 @@ import java.util.*;
 public class GestioneCentri {
     private String centro;
     private String id;
-    private int centquantitàAree;
-    private String lonlat;
-    private String areaScelta;
-    private GestioneUtente utente = new GestioneUtente();
-    private static String[] NomiColonneParametriPAR = {"vento_val" ,"umidita_val", "precipitazioni_val" ,"pressione_val" ,"temperatura_val" ,"altitudineghiacchi_val" ,"massaghiacci_val" };
+    private static String[] NomiColonneParametriPAR = {
+            "vento_val" ,"umidita_val",
+            "precipitazioni_val" ,"pressione_val" ,
+            "temperatura_val" ,"altitudineghiacchi_val" ,
+            "massaghiacci_val" };
     private static String[] NomiColonneParametriNOT = {
             "vento_notes","umidita_notes",
             "precipitazioni_notes" , "pressione_notes",
             "temperatura_notes",
             "altitudineghiacchi_notes","massaghiacci_notes" };
-    private Scanner scanner= new Scanner(System.in);
-    private DatabaseConnection db = new DatabaseConnection();
-    private LinkedList<String> elementiDisponibili = new LinkedList<>();
-    private LinkedList<String> longlatDisponibili = new LinkedList<>();
+
 
 
     /**
@@ -50,10 +47,6 @@ public class GestioneCentri {
      * @param lonlatInserite lista contenente longitudini e latitutidini come unico formato delle aree
      */
     public void inserimentoAree(LinkedList<String> lonlatInserite, DatabaseConnection db)  {
-
-        String input;
-        Map<String, String> dataMap = new HashMap<>();
-
         for (int i = 0; i < lonlatInserite.size();) {
             // Ottieni l'elemento corrente
             String lonlat = lonlatInserite.get(i);
@@ -63,10 +56,7 @@ public class GestioneCentri {
             }else{
                 db.inserimentoinDB("aree",lonlat ,"lonlat", centro, "NomeCentro","lonlat", null);
                 i++; }// Passa all'elemento successivo solo se non viene rimosso
-
         }
-
-
     }
 
 
@@ -78,19 +68,12 @@ public class GestioneCentri {
      * @param db
      */
     public void selezioneAreadiLavoroeInserimento(String longlatScelta, Map<String, Object> MappavaluNote, DatabaseConnection db) {
-
-
         // Utilizza longlatScelto come necessario
         //System.out.println("La longitudine e latitudine per l'area scelta (" + areaScelta + ") è: " + longlatScelto);
         MappavaluNote.put("datainserimento",RestitutoreDataOdierna());
         MappavaluNote.put("area",longlatScelta);
         MappavaluNote.put("centro",centro);
         db.inserimentoinDB("ParametriClimatici",null,null,null,null,"long nei ParametriClimatici", MappavaluNote);
-        System.out.println(longlatScelta + "riga 127");
-
-
-
-       // db.UpdateDataToDB(MappavaluNote,"ParametriClimatici",longlatScelta,"area");
 
     }
 
@@ -109,22 +92,6 @@ public class GestioneCentri {
      * @param elementoScelto nome del centro, oppure longitutdine e latitudine dell'area
      */
     public void restitutoreMode( String elementoScelto, DatabaseConnection db) {
-
-        LinkedList<String> elementiDisponibili;
-       // String campoDiricerca = utente.getInfoFromUser("per quale valore di ricerca vuoi visualizzare [centro] o [area]");
-        /*
-        if(parametroScelto.equals("centro")){
-            elementiDisponibili = db.mostraElementiDisponibili("CentriMonitoraggio", "NomeCentro",false);
-        }else{
-            elementiDisponibili = db.mostraElementiDisponibili("aree", "lonlat",true);
-        }
-        for (String elemento : elementiDisponibili) {
-            System.out.println(elemento);
-        }
-       // String elementoScelto= utente.getInfoFromUser("per quale valore le valutazioni inserite");
-
-         */
-
         GestoreStampe( db.RicercaMode(elementoScelto,NomiColonneParametriPAR, NomiColonneParametriNOT ));
 
     }

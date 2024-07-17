@@ -63,8 +63,7 @@ public class SceltaCentroPanel extends JPanel {
 
         // Pannello per il pulsante Indietro
         JPanel buttonPanelIndietro = new JPanel(new FlowLayout(FlowLayout.LEFT));
-      //  JButton btnIndietro = new JButton("Indietro");
-      //  buttonPanelIndietro.add(btnIndietro);
+
 
         bottomButtonPanel.add(buttonPanelIndietro, BorderLayout.WEST);
 
@@ -105,8 +104,6 @@ public class SceltaCentroPanel extends JPanel {
             }
         });
 
-        // Azione per il pulsante Indietro
-     //   btnIndietro.addActionListener(e -> cardLayout.show(mainPanel, "Registrazione"));
     }
 
 }
