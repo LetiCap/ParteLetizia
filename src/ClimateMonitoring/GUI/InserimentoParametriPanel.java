@@ -3,17 +3,24 @@ package ClimateMonitoring.GUI;
 import ClimateMonitoring.ServerInterface;
 
 import javax.swing.*;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.rmi.RemoteException;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.EventObject;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -24,7 +31,7 @@ public class InserimentoParametriPanel extends JPanel {
     private JList<String> resultList;
     private String areaScelta;
     private JTable climateTable;
-    private Map<String, Object> para = new HashMap<>(); // Mappa per memorizzare i valori modificati nella tabella
+
 
     private static String[] NomiColonneParametriPAR = {
             "vento_val",
@@ -64,7 +71,7 @@ public class InserimentoParametriPanel extends JPanel {
         // Pannello per la selezione dell'area di lavoro
         JPanel sceltaAreaDiLavoro = new JPanel(new BorderLayout());
         resultList = new JList<>(new DefaultListModel<>());
-        resultList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Permette una sola selezione
+        resultList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane resultScrollPane = new JScrollPane(resultList);
 
         JLabel titleLabel = new JLabel("Selezione dell'area di lavoro", JLabel.CENTER);
@@ -82,7 +89,7 @@ public class InserimentoParametriPanel extends JPanel {
         DefaultTableModel tableModel = new DefaultTableModel(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 2 || column == 3; // Rendi modificabili solo le colonne "Score" e "Notes"
+                return column == 2 || column == 3; // Rende editabile solo le colonne "Score" e "Notes"
             }
         };
 
@@ -90,16 +97,18 @@ public class InserimentoParametriPanel extends JPanel {
 
         // Disabilita il ridimensionamento delle colonne
         climateTable.getTableHeader().setResizingAllowed(false);
-        // Disabilita la selezione delle colonne
         climateTable.setColumnSelectionAllowed(false);
         climateTable.getTableHeader().setReorderingAllowed(false);
 
-        // Imposta un editor personalizzato per le colonne "Score" e "Notes"
-        climateTable.getColumnModel().getColumn(2).setCellEditor(new JTextFieldEditor());
-        climateTable.getColumnModel().getColumn(3).setCellEditor(new JTextFieldEditor());
-        // Imposta un renderer personalizzato per le colonne "Score" e "Notes"
-        climateTable.getColumnModel().getColumn(2).setCellRenderer(new JTextFieldRenderer());
-        climateTable.getColumnModel().getColumn(3).setCellRenderer(new JTextFieldRenderer());
+
+
+        TableCellEditor scoreEditor = new ScoreCellEditor(new JTextField());
+
+        // Applica il TableCellEditor alla colonna "Score"
+        climateTable.getColumnModel().getColumn(2).setCellEditor(scoreEditor);
+
+
+
         JScrollPane scrollTable = new JScrollPane(climateTable);
         add(scrollTable, BorderLayout.CENTER);
 
@@ -142,7 +151,7 @@ public class InserimentoParametriPanel extends JPanel {
 
         // Listener per la selezione nella JList
         resultList.addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) { // Assicura che l'evento sia completato
+            if (!e.getValueIsAdjusting()) {
                 int selectedIndex = resultList.getSelectedIndex();
                 if (selectedIndex != -1) {
                     areaScelta = resultList.getModel().getElementAt(selectedIndex);
@@ -156,11 +165,10 @@ public class InserimentoParametriPanel extends JPanel {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {
-                // Imposta le larghezze preferite delle colonne dopo che il pannello è stato visualizzato
-                climateTable.getColumnModel().getColumn(0).setPreferredWidth(10); // Climate Category
-                climateTable.getColumnModel().getColumn(1).setPreferredWidth(10); // Explanation
-                climateTable.getColumnModel().getColumn(2).setPreferredWidth(10); // Score
-                climateTable.getColumnModel().getColumn(3).setPreferredWidth(10); // Notes
+                climateTable.getColumnModel().getColumn(0).setPreferredWidth(10);
+                climateTable.getColumnModel().getColumn(1).setPreferredWidth(10);
+                climateTable.getColumnModel().getColumn(2).setPreferredWidth(10);
+                climateTable.getColumnModel().getColumn(3).setPreferredWidth(10);
                 loadAndDisplayData();
             }
         });
@@ -174,20 +182,18 @@ public class InserimentoParametriPanel extends JPanel {
                 for (String elemento : listaElementi) {
                     listModel.addElement(elemento);
                 }
-                resultList.setModel(listModel); // Imposta il modello sulla JList
+                resultList.setModel(listModel);
                 resultList.revalidate();
                 resultList.repaint();
 
-                // Aggiorna la JTextArea con il testo desiderato
                 StringBuilder sb = new StringBuilder();
                 for (String elemento : listaElementi) {
-                    sb.append(elemento).append("\n"); // Aggiungi ogni elemento alla JTextArea
+                    sb.append(elemento).append("\n");
                 }
                 textArea.setText(sb.toString());
                 textArea.revalidate();
                 textArea.repaint();
 
-                // Verifica il contenuto del modello
                 System.out.println("Elementi nel modello della JList:");
                 for (int i = 0; i < listModel.getSize(); i++) {
                     System.out.println(listModel.getElementAt(i));
@@ -200,130 +206,104 @@ public class InserimentoParametriPanel extends JPanel {
     }
 
     private void inviaParametri(Map<String, Object> parametriMap) {
-        // Implementa l'azione desiderata con la mappa dei parametri
         System.out.println("Parametri inviati:");
         for (Map.Entry<String, Object> entry : parametriMap.entrySet()) {
             System.out.println(entry.getKey() + ": " + entry.getValue());
         }
     }
 
-    // Editor personalizzato per supportare l'editing di JTextField nelle colonne "Score" e "Notes"
-    public class JTextFieldEditor extends DefaultCellEditor {
+    // TableCellEditor personalizzato per la colonna "Score"
+    private class ScoreCellEditor extends DefaultCellEditor {
         private JTextField textField;
-        private int maxCharacters = 250; // Limite massimo di caratteri per la colonna "Notes"
+        private String originalValue;
+        private boolean editingStarted; // Flag per indicare se l'editing è iniziato
 
-        public JTextFieldEditor() {
-            super(new JTextField());
-            textField = (JTextField) getComponent();
-            textField.setBorder(null);
-            textField.setOpaque(true); // Assicura che il background sia visibile
+        public ScoreCellEditor(JTextField textField) {
+            super(textField);
+            this.textField = textField;
 
-            // Aggiungi un listener per catturare i cambiamenti nel testo
+            // Inizializza il flag a false perché l'editing non è ancora iniziato
+            editingStarted = false;
+
+            // Aggiungi un listener per controllare l'input durante l'editing
             textField.getDocument().addDocumentListener(new DocumentListener() {
                 @Override
                 public void insertUpdate(DocumentEvent e) {
-                    updateData();
+                    if (editingStarted) {
+                        validateInput();
+                    }
                 }
 
                 @Override
                 public void removeUpdate(DocumentEvent e) {
-                    updateData();
+                    if (editingStarted) {
+                        validateInput();
+                    }
                 }
 
                 @Override
                 public void changedUpdate(DocumentEvent e) {
-                    updateData();
-                }
-
-                private void updateData() {
-                    SwingUtilities.invokeLater(() -> {
-                        String input = textField.getText().trim();
-                        if (textField.getName().equals("score")) { // Verifica se l'editor è per "Score"
-                            if (!isValidScore(input)) {
-                                // Mostra un messaggio di errore
-                                JOptionPane.showMessageDialog(climateTable, "Inserire un numero tra 1 e 5", "Errore di input", JOptionPane.ERROR_MESSAGE);
-                                // Annulla l'editing e rimani nella cella
-                                cancelCellEditing();
-                            } else {
-                                // Notifica il modello della tabella che l'editing è stato completato
-                                fireEditingStopped();
-                            }
-                        } else if (textField.getName().equals("notes")) { // Verifica se l'editor è per "Notes"
-                            if (input.length() > maxCharacters) {
-                                // Limita il testo inserito al massimo di 250 caratteri
-                                textField.setText(input.substring(0, maxCharacters));
-                                // Mostra un messaggio di avviso se il limite viene superato
-                                JOptionPane.showMessageDialog(climateTable, "Massimo " + maxCharacters + " caratteri per la nota", "Limite superato", JOptionPane.WARNING_MESSAGE);
-                            }
-                            // Notifica il modello della tabella che l'editing è stato completato
-                            fireEditingStopped();
-                        }
-
-                        // Aggiorna il tooltip per mostrare il testo completo
-                        updateTooltip();
-                    });
-                }
-
-                private boolean isValidScore(String input) {
-                    try {
-                        int value = Integer.parseInt(input);
-                        return value >= 1 && value <= 5;
-                    } catch (NumberFormatException e) {
-                        return false;
+                    if (editingStarted) {
+                        validateInput();
                     }
                 }
 
-
-            });
-
-            // Aggiungi un listener KeyListener per aggiornare il testo mentre si scrive
-            textField.addKeyListener(new KeyAdapter() {
-                @Override
-                public void keyPressed(KeyEvent e) {
-                    SwingUtilities.invokeLater(() -> {
-                        // Aggiorna la visualizzazione del testo mentre si sta scrivendo
-                        updateTooltip();
-                    });
+                private void validateInput() {
+                    String scoreStr = textField.getText().trim();
+                    if (!isValidScore(scoreStr)) {
+                        // Mostra un messaggio di errore o esegui azioni appropriate
+                        JOptionPane.showMessageDialog(InserimentoParametriPanel.this,
+                                "Inserisci un valore numerico compreso tra 1 e 5 per Score",
+                                "Input non valido", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             });
 
-        }
+            // Aggiungi un listener per il focus per monitorare quando l'utente inizia a editare
+            textField.addFocusListener(new FocusAdapter() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    editingStarted = true;
+                }
 
-        @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            textField.setText(value != null ? value.toString() : "");
-            // Imposta un nome per identificare se l'editor è per "Score" o "Notes"
-            textField.setName(column == 2 ? "score" : "notes");
-            // Imposta il tooltip con il testo completo attualmente inserito
-            textField.setToolTipText(textField.getText().trim());
-            return textField;
-        }
-        // Metodo per aggiornare il tooltip con il testo completo
-        private void updateTooltip() {
-            SwingUtilities.invokeLater(() -> {
-                String input = textField.getText().trim();
-                textField.setToolTipText(input); // Imposta il tooltip con il testo completo attualmente inserito
-                climateTable.repaint(); // Ridisegna la tabella per aggiornare il tooltip
+                @Override
+                public void focusLost(FocusEvent e) {
+                    editingStarted = false;
+                }
             });
         }
-    }
 
-
-    // Renderer personalizzato per visualizzare JTextField nelle colonne "Score" e "Notes"
-    private static class JTextFieldRenderer extends JTextField implements TableCellRenderer {
-        public JTextFieldRenderer() {
-            setBorder(null);
-            setOpaque(true); // Assicura che il background sia visibile
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                                                     boolean isSelected, int row, int column) {
+            // Imposta il valore originale per il confronto successivo
+            originalValue = (value == null) ? "" : value.toString();
+            return super.getTableCellEditorComponent(table, value, isSelected, row, column);
         }
 
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            setText(value != null ? value.toString() : "");
+        public boolean stopCellEditing() {
+            // Esegui ulteriori controlli se necessario prima di confermare l'editing
+            String scoreStr = textField.getText().trim();
+            if (!isValidScore(scoreStr)) {
+                // Se il valore non è valido, ripristina il valore originale
+                textField.setText(originalValue);
+                return false; // Annulla l'editing senza confermare il cambiamento
+            }
+            return super.stopCellEditing(); // Prosegui con la conferma dell'editing
+        }
 
-            // Imposta un tool tip con il testo completo quando il mouse passa sopra la cella
-            setToolTipText(getText());
-
-            return this;
+        // Metodo per validare il valore di Score
+        private boolean isValidScore(String scoreStr) {
+            try {
+                int score = Integer.parseInt(scoreStr); // Converti la stringa in int
+                return score >= 1 && score <= 5; // Restituisce true se il valore è nel range 1-5
+            } catch (NumberFormatException ex) {
+                return false; // Restituisce false se la conversione fallisce (non è un numero)
+            }
         }
     }
+
+
+
 }

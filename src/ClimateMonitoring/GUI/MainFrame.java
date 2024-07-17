@@ -84,7 +84,7 @@ public class MainFrame extends JFrame {
         add(mainPanel);
         setTitle("Climate Monitoring");
         setSize(800, 600);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
     }
