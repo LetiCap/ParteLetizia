@@ -3,35 +3,24 @@ package ClimateMonitoring.GUI;
 import ClimateMonitoring.ServerInterface;
 
 import javax.swing.*;
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.rmi.RemoteException;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.EventObject;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
 public class InserimentoParametriPanel extends JPanel {
     private ServerInterface server;
-    private JTextArea textArea;
     private JList<String> resultList;
     private String areaScelta;
     private JTable climateTable;
-
 
     private static String[] NomiColonneParametriPAR = {
             "vento_val",
@@ -61,7 +50,6 @@ public class InserimentoParametriPanel extends JPanel {
             {"Altitudine dei ghiacciai", "In m, suddivisa in fasce", "", ""},
             {"Massa dei ghiacciai", "In kg, suddivisa in fasce", "", ""}
     };
-    private LinkedList<String> listaElementi;
 
     public InserimentoParametriPanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
         this.server = server;
@@ -77,9 +65,6 @@ public class InserimentoParametriPanel extends JPanel {
         JLabel titleLabel = new JLabel("Selezione dell'area di lavoro", JLabel.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
 
-        textArea = new JTextArea(10, 10);
-        textArea.setEditable(false);
-
         sceltaAreaDiLavoro.add(titleLabel, BorderLayout.NORTH);
         sceltaAreaDiLavoro.add(resultScrollPane, BorderLayout.CENTER);
 
@@ -89,7 +74,20 @@ public class InserimentoParametriPanel extends JPanel {
         DefaultTableModel tableModel = new DefaultTableModel(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 2 || column == 3; // Rende editabile solo le colonne "Score" e "Notes"
+                if (column == 2) {
+                    return true; // La colonna "Score" è sempre modificabile
+                } else if (column == 3) {
+                    String score = (String) getValueAt(row, 2);
+                    if (!isValidScore(score)) {
+                        // Mostra un messaggio di avviso se lo score non è valido
+                        JOptionPane.showMessageDialog(InserimentoParametriPanel.this,
+                                "Inserisci uno Score valido (1-5) per poter inserire una nota",
+                                "Score non valido", JOptionPane.WARNING_MESSAGE);
+                        return false; // La cella delle "Notes" non è modificabile se lo score non è valido
+                    }
+                    return true; // La cella delle "Notes" è modificabile solo se lo score è valido
+                }
+                return false; // Altre colonne non sono modificabili
             }
         };
 
@@ -100,15 +98,37 @@ public class InserimentoParametriPanel extends JPanel {
         climateTable.setColumnSelectionAllowed(false);
         climateTable.getTableHeader().setReorderingAllowed(false);
 
-
-
-        TableCellEditor scoreEditor = new ScoreCellEditor(new JTextField());
-
         // Applica il TableCellEditor alla colonna "Score"
-        climateTable.getColumnModel().getColumn(2).setCellEditor(scoreEditor);
+        climateTable.getColumnModel().getColumn(2).setCellEditor(new ScoreCellEditor(new JTextField()));
 
 
 
+
+
+        // Aggiungi il listener per avviare l'editor di popup per le Notes
+        climateTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("Mouse clicked on table. Click count: " + e.getClickCount());
+                int row = climateTable.rowAtPoint(e.getPoint());
+                int column = climateTable.columnAtPoint(e.getPoint());
+                System.out.println("Clicked row: " + row + ", column: " + column);
+
+
+                    if (row >= 0 && column == 3) {
+
+                        editNotes(row); // Avvia l'editor di popup per le Notes
+                    }
+
+            }
+        });
+
+
+
+
+
+
+        // Aggiungi la tabella al pannello centrale
         JScrollPane scrollTable = new JScrollPane(climateTable);
         add(scrollTable, BorderLayout.CENTER);
 
@@ -134,13 +154,20 @@ public class InserimentoParametriPanel extends JPanel {
                     parametriMap.put(NomiColonneParametriNOT[row], notes);
                 }
             }
+
             // Invia i parametri al server
             inviaParametri(parametriMap);
+
+            if (areaScelta == null) {
+                JOptionPane.showMessageDialog(this, "Scegliere un'area");
+                return; // Esci dal metodo in caso di areaScelta null
+            }
 
             try {
                 server.inserisciParametriClimatici(areaScelta, parametriMap);
                 JOptionPane.showMessageDialog(this, "Parametri salvati con successo!");
                 cardLayout.show(mainPanel, "Home");
+
             } catch (RemoteException ex) {
                 throw new RuntimeException(ex);
             }
@@ -174,10 +201,54 @@ public class InserimentoParametriPanel extends JPanel {
         });
     }
 
+    private void editNotes(int row) {
+        System.out.println("Editing Notes for row: " + row); // Log di debug
+
+        String currentNotes = (String) climateTable.getValueAt(row, 3);
+
+        JTextArea textArea = new JTextArea(currentNotes);
+        textArea.setRows(4);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setPreferredSize(new Dimension(300, 150));
+
+        JButton okButton = new JButton("OK");
+        okButton.addActionListener(e -> {
+            String newNotes = textArea.getText();
+            climateTable.setValueAt(newNotes, row, 3);
+            JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(okButton);
+            dialog.dispose(); // Chiudi il dialogo dopo aver applicato le modifiche
+        });
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.add(okButton);
+
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.add(scrollPane, BorderLayout.CENTER);
+        contentPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Notes", true);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.getContentPane().add(contentPanel);
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+
+
+        // Quando si chiude il dialog, controlla se è stato premuto OK
+        if (!dialog.isVisible()) {
+            String newNotes = textArea.getText();
+            climateTable.setValueAt(newNotes, row, 3);
+        }
+
+    }
+
     private void loadAndDisplayData() {
         SwingUtilities.invokeLater(() -> {
             try {
-                listaElementi = server.mostraElementiDisponibili("aree", "lonlat", false);
+                LinkedList<String> listaElementi = server.mostraElementiDisponibili("aree", "lonlat", false);
                 DefaultListModel<String> listModel = new DefaultListModel<>();
                 for (String elemento : listaElementi) {
                     listModel.addElement(elemento);
@@ -185,14 +256,6 @@ public class InserimentoParametriPanel extends JPanel {
                 resultList.setModel(listModel);
                 resultList.revalidate();
                 resultList.repaint();
-
-                StringBuilder sb = new StringBuilder();
-                for (String elemento : listaElementi) {
-                    sb.append(elemento).append("\n");
-                }
-                textArea.setText(sb.toString());
-                textArea.revalidate();
-                textArea.repaint();
 
                 System.out.println("Elementi nel modello della JList:");
                 for (int i = 0; i < listModel.getSize(); i++) {
@@ -212,70 +275,38 @@ public class InserimentoParametriPanel extends JPanel {
         }
     }
 
-    // TableCellEditor personalizzato per la colonna "Score"
+    private boolean isValidScore(String scoreStr) {
+        try {
+            int score = Integer.parseInt(scoreStr); // Converti la stringa in int
+            return score >= 1 && score <= 5; // Restituisce true se il valore è nel range 1-5
+        } catch (NumberFormatException ex) {
+            return false; // Restituisce false se la conversione fallisce (non è un numero)
+        }
+    }
+
+
+
+
+
     private class ScoreCellEditor extends DefaultCellEditor {
         private JTextField textField;
         private String originalValue;
-        private boolean editingStarted; // Flag per indicare se l'editing è iniziato
 
         public ScoreCellEditor(JTextField textField) {
             super(textField);
             this.textField = textField;
 
-            // Inizializza il flag a false perché l'editing non è ancora iniziato
-            editingStarted = false;
-
-            // Aggiungi un listener per controllare l'input durante l'editing
-            textField.getDocument().addDocumentListener(new DocumentListener() {
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    if (editingStarted) {
-                        validateInput();
-                    }
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    if (editingStarted) {
-                        validateInput();
-                    }
-                }
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    if (editingStarted) {
-                        validateInput();
-                    }
-                }
-
-                private void validateInput() {
-                    String scoreStr = textField.getText().trim();
-                    if (!isValidScore(scoreStr)) {
-                        // Mostra un messaggio di errore o esegui azioni appropriate
-                        JOptionPane.showMessageDialog(InserimentoParametriPanel.this,
-                                "Inserisci un valore numerico compreso tra 1 e 5 per Score",
-                                "Input non valido", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            });
-
             // Aggiungi un listener per il focus per monitorare quando l'utente inizia a editare
             textField.addFocusListener(new FocusAdapter() {
                 @Override
-                public void focusGained(FocusEvent e) {
-                    editingStarted = true;
-                }
-
-                @Override
                 public void focusLost(FocusEvent e) {
-                    editingStarted = false;
+                    validateAndStopEditing();
                 }
             });
         }
 
         @Override
-        public Component getTableCellEditorComponent(JTable table, Object value,
-                                                     boolean isSelected, int row, int column) {
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
             // Imposta il valore originale per il confronto successivo
             originalValue = (value == null) ? "" : value.toString();
             return super.getTableCellEditorComponent(table, value, isSelected, row, column);
@@ -283,27 +314,31 @@ public class InserimentoParametriPanel extends JPanel {
 
         @Override
         public boolean stopCellEditing() {
-            // Esegui ulteriori controlli se necessario prima di confermare l'editing
-            String scoreStr = textField.getText().trim();
-            if (!isValidScore(scoreStr)) {
-                // Se il valore non è valido, ripristina il valore originale
-                textField.setText(originalValue);
-                return false; // Annulla l'editing senza confermare il cambiamento
-            }
+            validateAndStopEditing();
             return super.stopCellEditing(); // Prosegui con la conferma dell'editing
         }
 
-        // Metodo per validare il valore di Score
-        private boolean isValidScore(String scoreStr) {
-            try {
-                int score = Integer.parseInt(scoreStr); // Converti la stringa in int
-                return score >= 1 && score <= 5; // Restituisce true se il valore è nel range 1-5
-            } catch (NumberFormatException ex) {
-                return false; // Restituisce false se la conversione fallisce (non è un numero)
+        // Metodo per validare il valore di Score e terminare l'editing se valido
+        private void validateAndStopEditing() {
+            String scoreStr = textField.getText().trim();
+            if (isValidScore(scoreStr)) {
+                // Aggiorna il modello della tabella solo se stai editando una cella valida
+                int editingRow = climateTable.getEditingRow();
+                int editingColumn = climateTable.getEditingColumn();
+                if (editingRow != -1 && editingColumn != -1) {
+                    climateTable.getModel().setValueAt(scoreStr, editingRow, editingColumn);
+                }
+            } else {
+                // Mostra il messaggio di errore
+                JOptionPane.showMessageDialog(InserimentoParametriPanel.this,
+                        "Inserisci un valore numerico compreso tra 1 e 5 per Score",
+                        "Input non valido", JOptionPane.ERROR_MESSAGE);
+
+                // Ripristina il valore originale nella cella
+                textField.setText(originalValue);
+                textField.requestFocusInWindow(); // Rimetti il focus nella cella per permettere la modifica
+
             }
         }
     }
-
-
-
 }
