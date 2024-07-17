@@ -1,10 +1,10 @@
 package ClimateMonitoring.GUI;
 
-
 import ClimateMonitoring.Result;
 import ClimateMonitoring.ServerInterface;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,33 +27,76 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
 
     public VisualizzaTramiteCoordinatePanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
         this.server = server;
-        this.cardLayout=cardLayout;
+        this.cardLayout = cardLayout;
         this.mainPanel = mainPanel;
 
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(10, 10));
+        setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        JPanel searchPanel = new JPanel();
+        // Aggiungi un titolo
+        JLabel titleLabel = new JLabel("Ricerca area tramite coordinate", JLabel.CENTER);
+        titleLabel.setFont(new Font("Serif", Font.BOLD, 22));
+        titleLabel.setForeground(new Color(0x2E86C1));
+        add(titleLabel, BorderLayout.NORTH);
+
+        // Pannello di ricerca con layout GridBagLayout
+        JPanel searchPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        searchPanel.add(new JLabel("Latitudine:"), gbc);
+
+        gbc.gridx = 1;
         latitudeField = new JTextField(10);
+        latitudeField.setFont(new Font("Serif", Font.PLAIN, 18));
+         searchPanel.add(latitudeField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        searchPanel.add(new JLabel("Longitudine:"), gbc);
+
+        gbc.gridx = 1;
         longitudeField = new JTextField(10);
+        longitudeField.setFont(new Font("Serif", Font.PLAIN, 18));
+        searchPanel.add(longitudeField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
         searchButton = new JButton("Search");
-        searchPanel.add(new JLabel("Latitudine:"));
-        searchPanel.add(latitudeField);
-        searchPanel.add(new JLabel("Longitudine:"));
-        searchPanel.add(longitudeField);
-        searchPanel.add(searchButton);
+        searchButton.setFont(new Font("Serif", Font.BOLD, 18));
+        searchButton.setBackground(new Color(0x5DADE2));
+        searchButton.setForeground(Color.WHITE);
+        searchPanel.add(searchButton, gbc);
 
         resultList = new JList<>(new DefaultListModel<>());
+        resultList.setFont(new Font("Serif", Font.PLAIN, 16));
+        resultList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        resultList.setBackground(new Color(0xEBF5FB));
         JScrollPane resultScrollPane = new JScrollPane(resultList);
 
-        add(searchPanel, BorderLayout.NORTH);
-        add(resultScrollPane, BorderLayout.CENTER);
+        JPanel centerPanel = new JPanel(new BorderLayout(10, 10));
+        centerPanel.add(searchPanel, BorderLayout.NORTH);
+        centerPanel.add(resultScrollPane, BorderLayout.CENTER);
+        add(centerPanel, BorderLayout.CENTER);
 
         backButtonBottom = new JButton("Back");
+        backButtonBottom.setFont(new Font("Serif", Font.BOLD, 18));
+        backButtonBottom.setBackground(new Color(0xE5050E));
+        backButtonBottom.setForeground(Color.WHITE);
+
         JPanel buttonPanelBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanelBottom.add(backButtonBottom);
+
+        resultCountLabel = new JLabel("", JLabel.CENTER);
+        resultCountLabel.setFont(new Font("Serif", Font.ITALIC, 16));
+        resultCountLabel.setForeground(new Color(0x2E86C1));
+
         JPanel statusPanel = new JPanel(new BorderLayout());
         statusPanel.add(buttonPanelBottom, BorderLayout.EAST);
-        resultCountLabel = new JLabel("", JLabel.CENTER);
         statusPanel.add(resultCountLabel, BorderLayout.CENTER);
         add(statusPanel, BorderLayout.SOUTH);
 
@@ -107,7 +150,6 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
         backButtonBottom.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
                 cardLayout.show(mainPanel, "Visualizzazione");
             }
         });
@@ -136,19 +178,13 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
                 options[0]);
 
         if (choice == JOptionPane.YES_OPTION) {
-            // Creazione di una nuova istanza di ClimatePanel
-            ClimatePanel climatePanel = new ClimatePanel(selectedResult.getName(),mainPanel,selectedResult,server);
-
-            // Aggiunta di climatePanel a mainPanel
+            ClimatePanel climatePanel = new ClimatePanel(selectedResult.getName(), mainPanel, selectedResult, server);
             mainPanel.add(climatePanel, "ClimatePanel");
-
-            // Mostra il nuovo pannello ClimatePanel
             cardLayout.show(mainPanel, "ClimatePanel");
         } else if (choice == JOptionPane.NO_OPTION) {
             // L'utente ha scelto di non fare nulla
         }
     }
-
 
     private static class ResultWrapper extends Result {
         private final int number;

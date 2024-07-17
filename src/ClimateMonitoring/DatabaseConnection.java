@@ -612,32 +612,31 @@ public class DatabaseConnection {
 
 
 
-    public String getInfoCity(String cityName, String colonna,boolean moda) {
+    public String getInfoCity(String cityName, String colonna, boolean moda) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
         StringBuilder result = new StringBuilder();
 
-
         try {
             connection = connect();
             statement = connection.createStatement();
+
             // Build the query dynamically based on parameters
-            if(moda){
+            if (moda) {
                 String query = "SELECT " + colonna +
                         " FROM \"ParametriClimatici\" " +
-                        "WHERE area LIKE '%" + cityName + "%' ";
+                        " WHERE area LIKE '%" + cityName + "%' ";
+
                 List<Double> valori = new ArrayList<>();
-
-
                 resultSet = statement.executeQuery(query);
 
                 while (resultSet.next()) {
-                    // Supponiamo che la colonna sia di tipo numerico e può essere convertita in double
                     double valore = resultSet.getDouble(colonna);
                     valori.add(valore);
                 }
 
+                // Calcolo della moda
                 Map<Double, Integer> conteggi = new HashMap<>();
                 for (double valore : valori) {
                     conteggi.put(valore, conteggi.getOrDefault(valore, 0) + 1);
@@ -652,9 +651,12 @@ public class DatabaseConnection {
                     }
                 }
 
-                // Stampa il valore che viene ripetuto più volte
-                System.out.println("Il valore che viene ripetuto più volte è: " + valorePiuFrequente);
-                return ""+valorePiuFrequente;
+                // Gestione caso in cui non ci sono valori
+                if (Double.isNaN(valorePiuFrequente)) {
+                    return "<no info yet>";
+                }
+
+                return "" + valorePiuFrequente;
             }
 
             StringBuilder queryBuilder = new StringBuilder("SELECT ");
@@ -678,7 +680,11 @@ public class DatabaseConnection {
                 if (result.length() > 0) {
                     result.append("\n");
                 }
-                result.append(resultSet.getString(colonna));
+                String value = resultSet.getString(colonna);
+                if (value == null) {
+                    value = "<no info yet>";
+                }
+                result.append(value);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -691,7 +697,9 @@ public class DatabaseConnection {
                 e.printStackTrace();
             }
         }
-
+        if(result.isEmpty()){
+            return "<no notes yet>";
+        }
         return result.toString();
     }
 

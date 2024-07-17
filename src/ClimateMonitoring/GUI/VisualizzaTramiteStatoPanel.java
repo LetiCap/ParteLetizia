@@ -4,6 +4,7 @@ import ClimateMonitoring.Result;
 import ClimateMonitoring.ServerInterface;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,38 +17,62 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
     private JButton searchButton;
     private JList<ResultWrapper> resultList;
 
-    private JButton backButtonBottom; // Pulsante "Back" in basso
-    private JLabel resultCountLabel; // JLabel per visualizzare il conteggio dei risultati
+    private JButton backButtonBottom;
+    private JLabel resultCountLabel;
 
     private ServerInterface server;
     private CardLayout cardLayout;
-    private JPanel mainPanel; // Riferimento al pannello principale
+    private JPanel mainPanel;
 
     public VisualizzaTramiteStatoPanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
-       this.server=server;
-        this.cardLayout=cardLayout;
-        this.mainPanel = mainPanel; // Inizializza il riferimento al mainPanel
+        this.server = server;
+        this.cardLayout = cardLayout;
+        this.mainPanel = mainPanel;
 
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(10, 10));
+        setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        JPanel searchPanel = new JPanel();
+        JLabel subtitleLabel = new JLabel("Ricerca area tramite stato:", JLabel.CENTER);
+        subtitleLabel.setFont(new Font("Serif", Font.BOLD, 22));
+        subtitleLabel.setForeground(new Color(0x2E86C1));
+        add(subtitleLabel, BorderLayout.NORTH);
+
+        JPanel searchPanel = new JPanel(new BorderLayout(5, 5));
         searchField = new JTextField(20);
+        searchField.setFont(new Font("Serif", Font.PLAIN, 18));
         searchButton = new JButton("Search");
-        searchPanel.add(searchField);
-        searchPanel.add(searchButton);
+        searchButton.setFont(new Font("Serif", Font.BOLD, 18));
+        searchButton.setBackground(new Color(0x5DADE2));
+        searchButton.setForeground(Color.WHITE);
+
+        searchPanel.add(searchField, BorderLayout.CENTER);
+        searchPanel.add(searchButton, BorderLayout.EAST);
 
         resultList = new JList<>(new DefaultListModel<>());
+        resultList.setFont(new Font("Serif", Font.PLAIN, 16));
+        resultList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        resultList.setBackground(new Color(0xEBF5FB));
         JScrollPane resultScrollPane = new JScrollPane(resultList);
 
-        add(searchPanel, BorderLayout.NORTH);
-        add(resultScrollPane, BorderLayout.CENTER);
+        JPanel centerPanel = new JPanel(new BorderLayout(10, 10));
+        centerPanel.add(searchPanel, BorderLayout.NORTH);
+        centerPanel.add(resultScrollPane, BorderLayout.CENTER);
+        add(centerPanel, BorderLayout.CENTER);
 
-        backButtonBottom = new JButton("Back"); // Pulsante "Back" in basso
+        backButtonBottom = new JButton("Back");
+        backButtonBottom.setFont(new Font("Serif", Font.BOLD, 18));
+        backButtonBottom.setBackground(new Color(0xE50A00));
+        backButtonBottom.setForeground(Color.WHITE);
+
         JPanel buttonPanelBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanelBottom.add(backButtonBottom);
+
+        resultCountLabel = new JLabel("", JLabel.CENTER);
+        resultCountLabel.setFont(new Font("Serif", Font.ITALIC, 16));
+        resultCountLabel.setForeground(new Color(0x2E86C1));
+
         JPanel statusPanel = new JPanel(new BorderLayout());
         statusPanel.add(buttonPanelBottom, BorderLayout.EAST);
-        resultCountLabel = new JLabel("", JLabel.CENTER); // Inizializzazione del JLabel per il conteggio dei risultati
         statusPanel.add(resultCountLabel, BorderLayout.CENTER);
         add(statusPanel, BorderLayout.SOUTH);
 
@@ -55,7 +80,6 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String searchTerm = searchField.getText().trim();
-                // Esegui la ricerca in base all'input dell'utente
                 LinkedList<Result> results = null;
                 if (searchTerm.length() > 1) {
                     try {
@@ -64,15 +88,12 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
                         throw new RuntimeException(ex);
                     }
                 } else {
-                    // Gestione caso in cui l'input sia troppo corto
-                    JOptionPane.showMessageDialog(VisualizzaTramiteStatoPanel.this, "Inserisci un nome di stato valido.");
+                    JOptionPane.showMessageDialog(VisualizzaTramiteStatoPanel.this,
+                            "Inserisci un nome di stato valido.");
                     return;
                 }
 
-                // Aggiorna il conteggio dei risultati
                 resultCountLabel.setText(String.format("La ricerca ha prodotto %d risultati", results.size()));
-
-                // Aggiorna la lista dei risultati
                 updateResults(results);
             }
         });
@@ -81,13 +102,12 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 JList<ResultWrapper> list = (JList<ResultWrapper>) evt.getSource();
-                if (evt.getClickCount() == 2) { // Doppio clic
+                if (evt.getClickCount() == 2) { // Double-click detected
                     ResultWrapper selectedResult = list.getSelectedValue();
-                    // Apri un JOptionPane personalizzato per mostrare i dettagli del risultato
                     try {
                         openDetailsPanel(selectedResult);
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
                     }
                 }
             }
@@ -96,9 +116,7 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
         backButtonBottom.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Utilizza il cardLayout passato come argomento per tornare indietro
-                CardLayout layout = (CardLayout) mainPanel.getLayout();
-                layout.show(mainPanel, "Visualizzazione"); // Presumendo che "Home" sia il pannello principale
+                cardLayout.show(mainPanel, "Visualizzazione");
             }
         });
     }
@@ -126,21 +144,14 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
                 options[0]);
 
         if (choice == JOptionPane.YES_OPTION) {
-            // Creazione di una nuova istanza di ClimatePanel
-            ClimatePanel climatePanel = new ClimatePanel(selectedResult.getName(),mainPanel,selectedResult,server);
-
-            // Aggiunta di climatePanel a mainPanel
+            ClimatePanel climatePanel = new ClimatePanel(selectedResult.getName(), mainPanel, selectedResult, server);
             mainPanel.add(climatePanel, "ClimatePanel");
-
-            // Mostra il nuovo pannello ClimatePanel
             cardLayout.show(mainPanel, "ClimatePanel");
         } else if (choice == JOptionPane.NO_OPTION) {
-            // L'utente ha scelto di non fare nulla
+            // User chose not to proceed
         }
     }
 
-
-    // Classe wrapper per risultato con numero
     static class ResultWrapper extends Result {
         private final int number;
 
@@ -157,7 +168,6 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
     }
 
     public void reset() {
-        // Metodo per resettare il pannello quando viene mostrato
         searchField.setText("");
         DefaultListModel<ResultWrapper> model = (DefaultListModel<ResultWrapper>) resultList.getModel();
         model.clear();

@@ -4,6 +4,7 @@ import ClimateMonitoring.Result;
 import ClimateMonitoring.ServerInterface;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,26 +30,52 @@ public class VisualizzaRisultatiTramiteNomePanel extends JPanel {
         this.cardLayout = cardLayout;
         this.mainPanel = mainPanel; // Inizializza il riferimento al mainPanel
 
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(10, 10));
+        setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        JPanel searchPanel = new JPanel();
+        // Aggiungi un sottotitolo
+        JLabel subtitleLabel = new JLabel("Ricerca area tramite nome:", JLabel.CENTER);
+        subtitleLabel.setFont(new Font("Serif", Font.BOLD, 22));
+        subtitleLabel.setForeground(new Color(0x2E86C1));
+        add(subtitleLabel, BorderLayout.NORTH);
+
+        JPanel searchPanel = new JPanel(new BorderLayout(5, 5));
         searchField = new JTextField(20);
-        searchButton = new JButton("Search");
-        searchPanel.add(searchField);
-        searchPanel.add(searchButton);
+        searchField.setFont(new Font("Serif", Font.PLAIN, 18));
+         searchButton = new JButton("Search");
+        searchButton.setFont(new Font("Serif", Font.BOLD, 18));
+        searchButton.setBackground(new Color(0x5DADE2));
+        searchButton.setForeground(Color.WHITE);
+
+        searchPanel.add(searchField, BorderLayout.CENTER);
+        searchPanel.add(searchButton, BorderLayout.EAST);
 
         resultList = new JList<>(new DefaultListModel<>());
+        resultList.setFont(new Font("Serif", Font.PLAIN, 16));
+        resultList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        resultList.setBackground(new Color(0xEBF5FB));
         JScrollPane resultScrollPane = new JScrollPane(resultList);
 
-        add(searchPanel, BorderLayout.NORTH);
-        add(resultScrollPane, BorderLayout.CENTER);
+        JPanel centerPanel = new JPanel(new BorderLayout(10, 10));
+        centerPanel.add(searchPanel, BorderLayout.NORTH);
+        centerPanel.add(resultScrollPane, BorderLayout.CENTER);
+        add(centerPanel, BorderLayout.CENTER);
+
 
         backButtonBottom = new JButton("Back"); // Pulsante "Back" in basso
+        backButtonBottom.setFont(new Font("Serif", Font.BOLD, 18));
+        backButtonBottom.setBackground(Color.RED); // Impostazione del colore rosso
+        backButtonBottom.setForeground(Color.WHITE);
+
         JPanel buttonPanelBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanelBottom.add(backButtonBottom);
+
+        resultCountLabel = new JLabel("", JLabel.CENTER); // Inizializzazione del JLabel per il conteggio dei risultati
+        resultCountLabel.setFont(new Font("Serif", Font.ITALIC, 16));
+        resultCountLabel.setForeground(new Color(0x2E86C1));
+
         JPanel statusPanel = new JPanel(new BorderLayout());
         statusPanel.add(buttonPanelBottom, BorderLayout.EAST);
-        resultCountLabel = new JLabel("", JLabel.CENTER); // Inizializzazione del JLabel per il conteggio dei risultati
         statusPanel.add(resultCountLabel, BorderLayout.CENTER);
         add(statusPanel, BorderLayout.SOUTH);
 
@@ -60,7 +87,7 @@ public class VisualizzaRisultatiTramiteNomePanel extends JPanel {
                 LinkedList<Result> results = null;
                 if (searchTerm.length() > 1) {
                     try {
-                        results =server.ricercaTramiteNome(searchTerm);
+                        results = server.ricercaTramiteNome(searchTerm);
                     } catch (RemoteException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -127,7 +154,7 @@ public class VisualizzaRisultatiTramiteNomePanel extends JPanel {
 
         if (choice == JOptionPane.YES_OPTION) {
             // Creazione di una nuova istanza di ClimatePanel
-            ClimatePanel climatePanel = new ClimatePanel(selectedResult.getName(),mainPanel,selectedResult,server);
+            ClimatePanel climatePanel = new ClimatePanel(selectedResult.getName(), mainPanel, selectedResult, server);
 
             // Aggiunta di climatePanel a mainPanel
             mainPanel.add(climatePanel, "ClimatePanel");
@@ -138,8 +165,6 @@ public class VisualizzaRisultatiTramiteNomePanel extends JPanel {
             // L'utente ha scelto di non fare nulla
         }
     }
-
-
 
     // Classe wrapper per risultato con numero
     private static class ResultWrapper extends Result {
