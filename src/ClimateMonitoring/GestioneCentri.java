@@ -21,13 +21,13 @@ public class GestioneCentri {
     private static String[] NomiColonneParametriPAR = {
             "vento_val" ,"umidita_val",
             "precipitazioni_val" ,"pressione_val" ,
-            "temperatura_val" ,"altitudineghiacchi_val" ,
+            "temperatura_val" ,"altitudineghiacci_val" ,
             "massaghiacci_val" };
     private static String[] NomiColonneParametriNOT = {
             "vento_notes","umidita_notes",
             "precipitazioni_notes" , "pressione_notes",
             "temperatura_notes",
-            "altitudineghiacchi_notes","massaghiacci_notes" };
+            "altitudineghiacci_notes","massaghiacci_notes" };
 
 
 

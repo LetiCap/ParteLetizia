@@ -415,7 +415,7 @@ public class DatabaseConnection {
             statement = connection.createStatement();
 
             // Query SQL iniziale per selezionare geoname dove name = nomeCitta
-            String query = "SELECT * FROM CoordinateMonitoraggioDati WHERE name = '" + nomeCitta + "'";
+            String query = "SELECT * FROM coordinatemonitoraggio WHERE name = '" + nomeCitta + "'";
 
             resultSet = statement.executeQuery(query);
 
@@ -432,7 +432,7 @@ public class DatabaseConnection {
             // Se non ci sono risultati, riduci gradualmente la lunghezza di nomeCitta e riprova
             while (risultati.isEmpty() && nomeCitta.length() > 1) {
                 nomeCitta = nomeCitta.substring(0, nomeCitta.length() - 1);
-                query = "SELECT * FROM CoordinateMonitoraggioDati WHERE name LIKE '%" + nomeCitta + "%'";
+                query = "SELECT * FROM coordinatemonitoraggio WHERE name LIKE '%" + nomeCitta + "%'";
                 resultSet = statement.executeQuery(query);
 
                 while (resultSet.next()) {
@@ -476,7 +476,7 @@ public class DatabaseConnection {
             statement = connection.createStatement();
 
             // Query SQL iniziale per selezionare geoname dove name = nomeCitta
-            String query = "SELECT * FROM CoordinateMonitoraggioDati WHERE countryname= '" + statoAppartenenza + "'";
+            String query = "SELECT * FROM coordinatemonitoraggio WHERE countryname= '" + statoAppartenenza + "'";
 
             resultSet = statement.executeQuery(query);
 
@@ -493,7 +493,7 @@ public class DatabaseConnection {
             // Se non ci sono risultati, riduci gradualmente la lunghezza di nomeCitta e riprova
             while (risultati.isEmpty() && statoAppartenenza.length() > 1) {
                 statoAppartenenza = statoAppartenenza.substring(0, statoAppartenenza.length() - 1);
-                query = "SELECT * FROM CoordinateMonitoraggioDati WHERE countryname LIKE '%" + statoAppartenenza + "%'";
+                query = "SELECT * FROM coordinatemonitoraggio WHERE countryname LIKE '%" + statoAppartenenza + "%'";
                 resultSet = statement.executeQuery(query);
 
                 while (resultSet.next()) {
@@ -553,10 +553,10 @@ public class DatabaseConnection {
                 String query;
 
                 if (i == 0) {
-                    query = "SELECT * FROM CoordinateMonitoraggioDati WHERE latitude BETWEEN " + latitudeMin +
+                    query = "SELECT * FROM coordinatemonitoraggio WHERE latitude BETWEEN " + latitudeMin +
                             " AND " + latitudeMax + " AND longitude BETWEEN " + longitudeMin + " AND " + longitudeMax;
                 } else {
-                    query = "SELECT * FROM CoordinateMonitoraggioDati WHERE latitude BETWEEN " + latitudeMin +
+                    query = "SELECT * FROM coordinatemonitoraggio WHERE latitude BETWEEN " + latitudeMin +
                             " AND " + latitudeMax + " OR longitude BETWEEN " + longitudeMin + " AND " + longitudeMax;
                 }
                 resultSet = statement.executeQuery(query);

@@ -25,12 +25,7 @@ public class ServerCM extends UnicastRemoteObject implements ServerInterface {
     private JTextField dbHostField;
     private JTextField dbUsernameField;
     private JPasswordField dbPasswordField;
-    private static String[] NomiColonneParametriPAR = {"vento_val" ,"umidita_val", "precipitazioni_val" ,"pressione_val" ,"temperatura_val" ,"altitudineghiacchi_val" ,"massaghiacci_val" };
-    private static String[] NomiColonneParametriNOT = {
-            "vento_notes","umidita_notes",
-            "precipitazioni_notes" , "pressione_notes",
-            "temperatura_notes",
-            "altitudineghiacchi_notes","massaghiacci_notes" };
+
 
 
     public ServerCM() throws RemoteException {
