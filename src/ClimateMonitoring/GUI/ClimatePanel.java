@@ -49,7 +49,7 @@ public class ClimatePanel extends JPanel {
                 {"Pressione", "In hPa, suddivisa in fasce", server.getModa(cityName, "pressione_val"), server.getNote(cityName, "pressione_notes")},
                 {"Temperatura", "In °C, suddivisa in fasce", server.getModa(cityName, "temperatura_val"), server.getNote(cityName, "temperatura_notes")},
                 {"Precipitazioni", "In mm di pioggia, suddivisa in fasce", server.getModa(cityName, "precipitazioni_val"), server.getNote(cityName, "precipitazioni_notes")},
-                {"Altitudine ghiacciai", "In m, suddivisa in fasce", server.getModa(cityName, "altitudineghiacchi_val"), server.getNote(cityName, "altitudineghiacchi_notes")},
+                {"Altitudine ghiacciai", "In m, suddivisa in fasce", server.getModa(cityName, "altitudineghiacci_val"), server.getNote(cityName, "altitudineghiacci_notes")},
                 {"Massa ghiacciai", "In kg, suddivisa in fasce", server.getModa(cityName, "massaghiacci_val"), server.getNote(cityName, "massaghiacci_notes")}
         };
 
