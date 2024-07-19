@@ -5,6 +5,7 @@ Letizia Capitanio 752465 VA
 Alessandro D'Urso 753578 VA
 Francesca Ziggiotto 752504 VA
 */
+
 import ClimateMonitoring.Result;
 import ClimateMonitoring.ServerInterface;
 
@@ -17,12 +18,14 @@ import java.util.LinkedList;
  * Adapter per gestire e visualizzare i risultati climatici in un'interfaccia utente Swing.
  * Questo adapter si occupa di aggiornare la lista dei risultati, aprire il pannello dei dettagli
  * e ripristinare lo stato dell'interfaccia.
+ *
+ * @author Tahir Agalliu
  */
 public class AdapterResults {
-    private final ServerInterface server;//istanza server per chiamata metodi
-    private final CardLayout cardLayout;//campi per interfaccia...
+    private final ServerInterface server; //istanza server per chiamata metodi
+    private final CardLayout cardLayout; //campi per interfaccia...
     private final JPanel mainPanel;
-    private final JList<ResultWrapper> resultList;//result list per visualizzazione risultati
+    private final JList<ResultWrapper> resultList; //result list per visualizzazione risultati
 
     /**
      * Costruttore per inizializzare l'adapter con le dipendenze necessarie.
@@ -31,6 +34,7 @@ public class AdapterResults {
      * @param cardLayout   Il layout a schede per la navigazione tra i pannelli.
      * @param mainPanel    Il pannello principale dell'applicazione per la navigazione.
      * @param resultList   La lista dei risultati da visualizzare.
+     * @author Tahir Agalliu
      */
     public AdapterResults(ServerInterface server, CardLayout cardLayout, JPanel mainPanel, JList<ResultWrapper> resultList) {
         this.server = server;
@@ -43,6 +47,7 @@ public class AdapterResults {
      * Aggiorna la lista dei risultati con i nuovi dati forniti.
      *
      * @param results Una lista di risultati climatici da visualizzare.
+     * @author Tahir Agalliu
      */
     void updateResults(LinkedList<Result> results) {
         DefaultListModel<ResultWrapper> model = (DefaultListModel<ResultWrapper>) resultList.getModel();
@@ -59,6 +64,7 @@ public class AdapterResults {
      * @param parentFrame  La finestra principale dell'applicazione.
      * @param selectedResult L'oggetto ResultWrapper che contiene i dettagli climatici selezionati.
      * @throws RemoteException Se si verifica un errore nella comunicazione con il server.
+     * @author Tahir Agalliu
      */
     void openDetailsPanel(JFrame parentFrame, ResultWrapper selectedResult) throws RemoteException {
         String cityName = selectedResult.getName();
@@ -86,6 +92,7 @@ public class AdapterResults {
      *
      * @param searchField   Il campo di testo utilizzato per la ricerca.
      * @param resultCountLabel Il label che mostra il numero di risultati.
+     * @author Tahir Agalliu
      */
     public void reset(JTextField searchField, JLabel resultCountLabel) {
         searchField.setText("");

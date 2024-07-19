@@ -1,10 +1,12 @@
 package ClimateMonitoring.GUI;
+
 /*
 Tahir Agalliu 753550 VA
 Letizia Capitanio 752465 VA
 Alessandro D'Urso 753578 VA
 Francesca Ziggiotto 752504 VA
 */
+
 import ClimateMonitoring.Result;
 import ClimateMonitoring.ServerInterface;
 import javax.swing.*;
@@ -20,13 +22,15 @@ import java.util.LinkedList;
  * aree geografiche e visualizzare i risultati in una lista. Gli utenti possono anche
  * tornare al pannello di visualizzazione principale.
  * </p>
+ *
+ * @author Tahir Agalliu
  */
 public class VisualizzaTramiteCoordinatePanel extends JPanel {
 
-    private final AdapterResults adapter;//adapter per risultati ottenuti
-    private final JTextField latitudeField;//campo per inserimento latitudine
-    private final JTextField longitudeField;//campo per inserimento longitudine
-    private final JLabel resultCountLabel;//counter risultati
+    private final AdapterResults adapter; // Adapter per risultati ottenuti
+    private final JTextField latitudeField; // Campo per inserimento latitudine
+    private final JTextField longitudeField; // Campo per inserimento longitudine
+    private final JLabel resultCountLabel; // Counter risultati
 
     /**
      * Costruisce un pannello per la visualizzazione tramite coordinate geografiche.
@@ -38,6 +42,7 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
      * @param server       l'interfaccia del server da cui ottenere i risultati della ricerca
      * @param cardLayout   il layout del pannello che consente di passare tra i pannelli
      * @param mainPanel    il pannello principale in cui visualizzare la scheda
+     * @author Tahir Agalliu
      */
     public VisualizzaTramiteCoordinatePanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
         InterfaceCreatorComponent creator = new InterfaceCreatorComponent(); // Istanza per la creazione dei componenti GUI
@@ -115,6 +120,7 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
      *
      * @param server l'interfaccia del server da cui ottenere i risultati della ricerca
      * @return l'ActionListener creato per il pulsante di ricerca
+     * @author Tahir Agalliu
      */
     private ActionListener createSearchActionListener(ServerInterface server) {
         return e -> {
@@ -154,7 +160,7 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
             } catch (RemoteException ex) {
                 throw new RuntimeException(ex);
             }
-            //aggiorniamo la GUI per visualizzazione counter e risultati
+            // Aggiorniamo la GUI per visualizzazione counter e risultati
             resultCountLabel.setText(String.format("La ricerca ha prodotto %d %s", results.size(), results.size() == 1 ? "risultato" : "risultati"));
             adapter.updateResults(results);
         };
@@ -168,6 +174,7 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
      * </p>
      *
      * @return il MouseListener creato per la lista dei risultati
+     * @author Tahir Agalliu
      */
     private java.awt.event.MouseListener createResultListMouseListener() {
         return new java.awt.event.MouseAdapter() {
@@ -177,11 +184,11 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
                     JList<ResultWrapper> list = (JList<ResultWrapper>) evt.getSource();
                     ResultWrapper selectedResult = list.getSelectedValue();
                     try {
-                        adapter.openDetailsPanel((JFrame) SwingUtilities.getWindowAncestor(list), selectedResult);//visualizziamo panel per visualizzazione result
+                        adapter.openDetailsPanel((JFrame) SwingUtilities.getWindowAncestor(list), selectedResult); // Visualizziamo panel per visualizzazione result
 
-                        //doppio reset in quanto abbiamo due campi di inserimento e NON aggiunto metodo con segnatura diversa in quanto questo e unico caso
+                        // Doppio reset in quanto abbiamo due campi di inserimento e NON aggiunto metodo con segnatura diversa in quanto questo e unico caso
                         adapter.reset(longitudeField, resultCountLabel);
-                        adapter.reset(latitudeField, resultCountLabel);//
+                        adapter.reset(latitudeField, resultCountLabel);
                     } catch (RemoteException e) {
                         throw new RuntimeException(e);
                     }
@@ -199,6 +206,7 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
      *
      * @param cardLayout il layout del pannello che consente di passare tra i pannelli
      * @param mainPanel  il pannello principale in cui visualizzare la scheda
+     * @author Tahir Agalliu
      */
     private void handleBackButtonAction(CardLayout cardLayout, JPanel mainPanel) {
         adapter.reset(longitudeField, resultCountLabel);

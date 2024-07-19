@@ -14,6 +14,12 @@ import java.awt.*;
  * Il pannello di visualizzazione principale per la sezione di ricerca.
  * Questo pannello consente all'utente di selezionare il tipo di ricerca da effettuare
  * e navigare verso i pannelli di ricerca specifici.
+ *
+ * <p>Il pannello include pulsanti per la ricerca basata su nome città, coordinate o stato.
+ * Inoltre, fornisce un pulsante "Back" per tornare alla schermata principale e gestisce la navigazione tra i pannelli
+ * utilizzando un {@link CardLayout}.</p>
+ *
+ * @author Tahir Agalliu
  */
 public class VisualizzazionePanel extends JPanel {
 
@@ -24,6 +30,7 @@ public class VisualizzazionePanel extends JPanel {
      * @param server       L'interfaccia con il server per la comunicazione dei dati.
      * @param cardLayout   Il layout delle schede utilizzato per la navigazione tra i pannelli.
      * @param mainPanel    Il pannello principale che contiene tutti i pannelli delle schede.
+     * @author Tahir Agalliu
      */
     public VisualizzazionePanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
         // Creazione dell'oggetto per generare componenti dell'interfaccia

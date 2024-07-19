@@ -1,4 +1,5 @@
 package ClimateMonitoring.GUI;
+
 /*
 Tahir Agalliu 753550 VA
 Letizia Capitanio 752465 VA
@@ -20,17 +21,20 @@ import java.rmi.RemoteException;
 /**
  * Pannello Swing per visualizzare i parametri climatici di una città selezionata.
  * Questo pannello mostra una tabella con i parametri climatici e un pulsante per tornare al pannello principale.
+ *
+ * @author Tahir Agalliu
  */
 public class ClimatePanel extends JPanel {
 
     /**
      * Costruttore per creare un pannello di visualizzazione dei parametri climatici.
      *
-     * @param cityName      Il nome della città per la quale visualizzare i parametri climatici.
-     * @param mainPanel     Il pannello principale dell'applicazione per la navigazione.
+     * @param cityName       Il nome della città per la quale visualizzare i parametri climatici.
+     * @param mainPanel      Il pannello principale dell'applicazione per la navigazione.
      * @param selectedResult Il risultato selezionato contenente i dati climatici.
-     * @param server        L'interfaccia del server per ottenere i dati climatici.
+     * @param server         L'interfaccia del server per ottenere i dati climatici.
      * @throws RemoteException Se si verifica un errore nella comunicazione con il server.
+     * @author Tahir Agalliu
      */
     public ClimatePanel(String cityName, JPanel mainPanel, Result selectedResult, ServerInterface server) throws RemoteException {
         setLayout(new BorderLayout());
@@ -40,7 +44,7 @@ public class ClimatePanel extends JPanel {
         InterfaceCreatorComponent creator = new InterfaceCreatorComponent();
 
         // Titolo del pannello
-        JLabel titleLabel = creator.creatorTileWindow("Parametri climatici per : " + cityName);
+        JLabel titleLabel = creator.creatorTileWindow("Parametri climatici per: " + cityName);
         add(titleLabel, BorderLayout.NORTH);
 
         // Pulsante "Back"
@@ -66,6 +70,7 @@ public class ClimatePanel extends JPanel {
      *
      * @param backButton Il pulsante "Back" da aggiungere al pannello.
      * @return Il pannello inferiore configurato.
+     * @author Tahir Agalliu
      */
     private JPanel createBottomPanel(JButton backButton) {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -81,6 +86,7 @@ public class ClimatePanel extends JPanel {
      * @param server   L'interfaccia del server per ottenere i dati climatici.
      * @return La tabella configurata.
      * @throws RemoteException Se si verifica un errore nella comunicazione con il server.
+     * @author Tahir Agalliu
      */
     private JTable createClimateTable(String cityName, ServerInterface server) throws RemoteException {
         String[] columnNames = {"Categoria", "Descrizione", "Valore", "Note"};
@@ -136,6 +142,7 @@ public class ClimatePanel extends JPanel {
      * @param data         I dati da visualizzare nella tabella.
      * @param columnNames  I nomi delle colonne della tabella.
      * @return La tabella configurata.
+     * @author Tahir Agalliu
      */
     private static JTable getTable(Object[][] data, String[] columnNames) {
         DefaultTableModel tableModel = new DefaultTableModel(data, columnNames) {
@@ -159,6 +166,8 @@ public class ClimatePanel extends JPanel {
     /**
      * Renderer personalizzato per supportare il wrapping del testo nella colonna "Note".
      * Estende JTextArea per consentire il wrapping del testo e l'adeguamento dell'altezza delle righe.
+     *
+     * @author Tahir Agalliu
      */
     private static class TextAreaRenderer extends JTextArea implements javax.swing.table.TableCellRenderer {
         /**
@@ -174,9 +183,16 @@ public class ClimatePanel extends JPanel {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             setText(value != null ? value.toString() : "");
-            setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
-            if (table.getRowHeight(row) != getPreferredSize().height) {
-                table.setRowHeight(row, getPreferredSize().height);
+            // Imposta l'altezza della riga in base al testo
+            int rowHeight = getPreferredSize().height;
+            if (rowHeight < table.getRowHeight()) {
+                rowHeight = table.getRowHeight();
+            }
+            table.setRowHeight(row, rowHeight);
+            if (isSelected) {
+                setBackground(new Color(255, 215, 0)); // Colore di sfondo per la riga selezionata
+            } else {
+                setBackground(row % 2 == 0 ? new Color(240, 240, 240) : Color.WHITE); // Colore alternato delle righe
             }
             return this;
         }

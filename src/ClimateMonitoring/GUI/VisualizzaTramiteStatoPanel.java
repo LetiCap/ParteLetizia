@@ -24,10 +24,12 @@ import java.util.stream.Collectors;
  * Include un campo di testo per l'inserimento dello stato, un pulsante per avviare la ricerca e un'etichetta
  * che mostra il conteggio dei risultati trovati. Inoltre, gestisce la selezione di un risultato per visualizzare
  * i dettagli e la navigazione tra i pannelli.</p>
+ *
+ * @author Tahir Agalliu
  */
 public class VisualizzaTramiteStatoPanel extends JPanel {
 
-    private final JTextField searchField; // Campo di testo per inserire lo stato da ricercare (minimo due lettere)
+    private final JTextField searchField; // Campo di testo per inserire lo stato da ricercare
     private final JLabel resultCountLabel; // Etichetta per mostrare il conteggio dei risultati ottenuti
     private final AdapterResults adapter; // Adapter per la visualizzazione dei risultati
 
@@ -37,6 +39,7 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
      * @param server      L'interfaccia del server per effettuare la ricerca.
      * @param cardLayout  Il layout manager del pannello principale.
      * @param mainPanel   Il pannello principale dell'applicazione.
+     * @author Tahir Agalliu
      */
     public VisualizzaTramiteStatoPanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
         InterfaceCreatorComponent creator = new InterfaceCreatorComponent(); // Componenti generali per l'interfaccia utente
@@ -114,6 +117,7 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
      * Ogni valore di ricerca deve essere almeno di due caratteri e possibilmente con lettera iniziale maiuscola.
      *
      * @param server L'interfaccia del server per effettuare la ricerca.
+     * @author Tahir Agalliu
      */
     private void performSearch(ServerInterface server) {
         try {
@@ -157,6 +161,7 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
      * Mostra un dialogo di errore con il messaggio specificato.
      *
      * @param message Il messaggio di errore da visualizzare.
+     * @author Tahir Agalliu
      */
     private void showErrorDialog(String message) {
         showErrorDialog(message, JOptionPane.ERROR_MESSAGE); // Mostra un dialogo di errore con tipo di messaggio predefinito
@@ -167,6 +172,7 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
      *
      * @param message     Il messaggio di errore da visualizzare.
      * @param messageType Il tipo di messaggio (ad esempio, JOptionPane.ERROR_MESSAGE).
+     * @author Tahir Agalliu
      */
     private void showErrorDialog(String message, int messageType) {
         JOptionPane.showMessageDialog(this, message, "Errore", messageType); // Mostra un dialogo di errore con tipo di messaggio specificato
@@ -177,6 +183,7 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
      *
      * @param searchTerm La stringa di ricerca da formattare.
      * @return La stringa formattata.
+     * @author Tahir Agalliu
      */
     private String formatSearchTerm(String searchTerm) {
         return Arrays.stream(searchTerm.split(" ")) // Suddivide la stringa in parole

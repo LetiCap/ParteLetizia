@@ -11,21 +11,30 @@ import java.awt.*;
 
 /**
  * Classe per la creazione e personalizzazione di componenti dell'interfaccia utente.
+ *
+ * <p>Questa classe fornisce metodi per creare e configurare componenti grafici come etichette, pannelli, campi di testo,
+ * pulsanti e liste. I componenti sono personalizzati per adattarsi all'aspetto dell'applicazione.</p>
+ *
+ * @author Tahir Agalliu
+ * @author Letizia Capitanio
  */
-public class InterfaceCreatorComponent {//classe per creazione di componenti predefiniti
+public class InterfaceCreatorComponent {
 
     /**
      * Crea un'etichetta per il titolo della finestra con il testo specificato.
-     * Viene utilizzata per ottimizzazione codice e per pesonalizzazione ottimizzata
+     * Viene utilizzata per ottimizzazione codice e per personalizzazione ottimizzata.
+     *
      * @param title Il testo del titolo.
      * @return Un {@link JLabel} configurato con il testo del titolo.
+     * @author Tahir Agalliu
      */
     public JLabel creatorTileWindow(String title) {
-        JLabel titleLabel = new JLabel(title, JLabel.CENTER);//creazione finestra personalizzata
+        JLabel titleLabel = new JLabel(title, JLabel.CENTER); // Creazione finestra personalizzata
         titleLabel.setFont(new Font("Serif", Font.BOLD, 22));
         titleLabel.setForeground(new Color(0x2E86C1));
         return titleLabel;
     }
+
     /**
      * Configura il layout e il bordo per il pannello specificato.
      * <p>
@@ -34,9 +43,9 @@ public class InterfaceCreatorComponent {//classe per creazione di componenti pre
      * su tutti i lati del pannello.
      * </p>
      *
-     * @param panel il pannello da configurare; non può essere {@code null}
-     *
-     * @throws NullPointerException se {@code panel} è {@code null}
+     * @param panel Il pannello da configurare; non può essere {@code null}.
+     * @throws NullPointerException se {@code panel} è {@code null}.
+     * @author Tahir Agalliu
      */
     public void setLayoutCustom(JPanel panel) {
         if (panel == null) {
@@ -46,16 +55,16 @@ public class InterfaceCreatorComponent {//classe per creazione di componenti pre
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
     }
 
-
     /**
      * Modifica le impostazioni del {@link GridBagConstraints} con le coordinate specificate.
      *
      * @param gbc L'oggetto {@link GridBagConstraints} da modificare.
      * @param x   La posizione x nella griglia.
      * @param y   La posizione y nella griglia.
+     * @author Tahir Agalliu
      */
     public void modifyGridBagConstraints(GridBagConstraints gbc, int x, int y) {
-        gbc.gridx = x;//modifica valore posizionale di un elemento di una classe su cui viene usato
+        gbc.gridx = x; // Modifica valore posizionale di un elemento di una classe su cui viene usato
         gbc.gridy = y;
     }
 
@@ -64,9 +73,10 @@ public class InterfaceCreatorComponent {//classe per creazione di componenti pre
      *
      * @param column Il numero di colonne del campo di testo.
      * @return Un {@link JTextField} configurato con il numero di colonne.
+     * @author Tahir Agalliu
      */
     public JTextField createNormaleField(int column) {
-        JTextField field = new JTextField(column);//colonne create diepndenti da argomento passato
+        JTextField field = new JTextField(column); // Colonne create dipendenti da argomento passato
         field.setFont(new Font("Serif", Font.PLAIN, 18));
         return field;
     }
@@ -77,16 +87,17 @@ public class InterfaceCreatorComponent {//classe per creazione di componenti pre
      * @param backButton Se true, crea un pulsante "Indietro" con uno stile specifico. Altrimenti, crea un pulsante normale.
      * @param text       Il testo del pulsante.
      * @return Un {@link JButton} configurato con il testo e il colore specificati.
+     * @author Tahir Agalliu
      */
     public JButton createButton(boolean backButton, String text) {
-        JButton returner = new JButton(text);//crea un botton personalizzato
+        JButton returner = new JButton(text); // Crea un bottone personalizzato
         returner.setFont(new Font("Serif", Font.BOLD, 18));
         returner.setForeground(Color.WHITE);
-        if (backButton) {//se back button sfondo rosso
+        if (backButton) { // Se back button sfondo rosso
             returner.setBackground(new Color(0xE5050E));
-            return returner;
+        } else {
+            returner.setBackground(new Color(0x5DADE2));
         }
-        returner.setBackground(new Color(0x5DADE2));
         return returner;
     }
 
@@ -94,10 +105,11 @@ public class InterfaceCreatorComponent {//classe per creazione di componenti pre
      * Crea una lista di risultati configurata con un modello predefinito e impostazioni di visualizzazione.
      *
      * @return Un {@link JList} configurato per contenere oggetti di tipo {@link ResultWrapper}.
+     * @author Tahir Agalliu
      */
     public JList<ResultWrapper> createResultList() {
-        JList<ResultWrapper> resultList = new JList<>(new DefaultListModel<>());//inizializziamo lista contenimento result
-        resultList.setFont(new Font("Serif", Font.PLAIN, 16));//modello predefinito
+        JList<ResultWrapper> resultList = new JList<>(new DefaultListModel<>()); // Inizializziamo lista contenimento result
+        resultList.setFont(new Font("Serif", Font.PLAIN, 16)); // Modello predefinito
         resultList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         resultList.setBackground(new Color(0x5DE2D2));
         return resultList;

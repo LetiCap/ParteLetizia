@@ -32,6 +32,7 @@ import java.io.Serializable;
  * <p>Per una rappresentazione in formato stringa dell'oggetto, viene utilizzato il metodo {@link #toString()}.</p>
  *
  * @see java.io.Serializable
+ * @author Tahir Agalliu
  */
 public class Result implements Serializable {
     @Serial
@@ -68,6 +69,7 @@ public class Result implements Serializable {
      * @param countryName  Il nome del paese in cui si trova la località.
      * @param latitude     La latitudine della località.
      * @param longitude    La longitudine della località.
+     * @author Tahir Agalliu
      */
     public Result(Integer geoname, String name, String asciiName, String countryCode, String countryName, Double latitude, Double longitude) {
         this.geoname = geoname;
@@ -83,6 +85,7 @@ public class Result implements Serializable {
      * Restituisce l'identificatore univoco della località.
      *
      * @return L'identificatore univoco della località.
+     * @author Tahir Agalliu
      */
     public Integer getGeoname() {
         return geoname;
@@ -92,6 +95,7 @@ public class Result implements Serializable {
      * Restituisce il nome della località.
      *
      * @return Il nome della località.
+     * @author Tahir Agalliu
      */
     public String getName() {
         return name;
@@ -101,6 +105,7 @@ public class Result implements Serializable {
      * Restituisce il nome della località in formato ASCII.
      *
      * @return Il nome della località in formato ASCII.
+     * @author Tahir Agalliu
      */
     public String getAsciiName() {
         return asciiName;
@@ -110,6 +115,7 @@ public class Result implements Serializable {
      * Restituisce il codice del paese in cui si trova la località.
      *
      * @return Il codice del paese.
+     * @author Tahir Agalliu
      */
     public String getCountryCode() {
         return countryCode;
@@ -119,6 +125,7 @@ public class Result implements Serializable {
      * Restituisce il nome del paese in cui si trova la località.
      *
      * @return Il nome del paese.
+     * @author Tahir Agalliu
      */
     public String getCountryName() {
         return countryName;
@@ -128,6 +135,7 @@ public class Result implements Serializable {
      * Restituisce la latitudine della località.
      *
      * @return La latitudine della località.
+     * @author Tahir Agalliu
      */
     public Double getLatitude() {
         return latitude;
@@ -137,6 +145,7 @@ public class Result implements Serializable {
      * Restituisce la longitudine della località.
      *
      * @return La longitudine della località.
+     * @author Tahir Agalliu
      */
     public Double getLongitude() {
         return longitude;
@@ -147,6 +156,7 @@ public class Result implements Serializable {
      * La rappresentazione include la latitudine, la longitudine e il nome della località.
      *
      * @return Una stringa che rappresenta l'oggetto Result.
+     * @author Tahir Agalliu
      */
     @Override
     public String toString() {

@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
  * Include anche un campo di testo per l'inserimento del nome, un pulsante per avviare la ricerca, e un'etichetta
  * che mostra il conteggio dei risultati trovati. Inoltre, gestisce la selezione di un risultato per visualizzare
  * i dettagli e la navigazione tra i pannelli.</p>
+ *
+ * @author Tahir Agalliu
  */
 public class VisualizzaTramiteNomePanel extends JPanel {
     private final JTextField searchField; // Campo di testo per inserire il nome dell'area da ricercare
@@ -36,6 +38,7 @@ public class VisualizzaTramiteNomePanel extends JPanel {
      * @param server      L'interfaccia del server per effettuare la ricerca.
      * @param cardLayout  Il layout manager del pannello principale.
      * @param mainPanel   Il pannello principale dell'applicazione.
+     * @author Tahir Agalliu
      */
     public VisualizzaTramiteNomePanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
         // Imposta il layout del pannello con uno spazio di 10 pixel tra i componenti
@@ -102,11 +105,11 @@ public class VisualizzaTramiteNomePanel extends JPanel {
                     adapter.updateResults(results);
                 } catch (RemoteException ex) {
                     // Mostra un messaggio di errore se la comunicazione con il server fallisce
-                    JOptionPane.showMessageDialog(this, "Errore nella comunicazione con il server.");
+                    showErrorDialog("Errore nella comunicazione con il server.");
                 }
             } else {
                 // Mostra un messaggio di errore se il campo di ricerca è vuoto
-                JOptionPane.showMessageDialog(this, "Inserisci un nome di città.");
+                showErrorDialog("Inserisci un nome di città.");
             }
         });
 
@@ -122,7 +125,7 @@ public class VisualizzaTramiteNomePanel extends JPanel {
                         adapter.reset(searchField, resultCountLabel);
                     } catch (RemoteException e) {
                         // Mostra un messaggio di errore se la comunicazione con il server fallisce
-                        JOptionPane.showMessageDialog(VisualizzaTramiteNomePanel.this, "Errore nella comunicazione con il server.");
+                        showErrorDialog("Errore nella comunicazione con il server.");
                     }
                 }
             }
@@ -141,10 +144,32 @@ public class VisualizzaTramiteNomePanel extends JPanel {
      *
      * @param searchTerm Il termine di ricerca da formattare.
      * @return Il termine di ricerca formattato con la prima lettera di ogni parola in maiuscolo.
+     * @author Tahir Agalliu
      */
     private String formatSearchTerm(String searchTerm) {
         return Arrays.stream(searchTerm.split(" ")) // Suddivide la stringa in parole
                 .map(word -> word.isEmpty() ? word : Character.toUpperCase(word.charAt(0)) + word.substring(1).toLowerCase()) // Capitalizza la prima lettera di ogni parola e rende il resto minuscolo
                 .collect(Collectors.joining(" ")); // Riunisce le parole formattate in una singola stringa
+    }
+
+    /**
+     * Mostra un dialogo di errore con il messaggio specificato.
+     *
+     * @param message Il messaggio di errore da visualizzare.
+     * @author Tahir Agalliu
+     */
+    private void showErrorDialog(String message) {
+        showErrorDialog(message, JOptionPane.ERROR_MESSAGE); // Mostra un dialogo di errore con tipo di messaggio predefinito
+    }
+
+    /**
+     * Mostra un dialogo di errore con il messaggio e il tipo di messaggio specificati.
+     *
+     * @param message     Il messaggio di errore da visualizzare.
+     * @param messageType Il tipo di messaggio (ad esempio, JOptionPane.ERROR_MESSAGE).
+     * @author Tahir Agalliu
+     */
+    private void showErrorDialog(String message, int messageType) {
+        JOptionPane.showMessageDialog(this, message, "Errore", messageType); // Mostra un dialogo di errore con tipo di messaggio specificato
     }
 }

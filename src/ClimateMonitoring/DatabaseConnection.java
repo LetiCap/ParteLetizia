@@ -1,5 +1,10 @@
 package ClimateMonitoring;
-
+/*
+Tahir Agalliu 753550 VA
+Letizia Capitanio 752465 VA
+Alessandro D'Urso 753578 VA
+Francesca Ziggiotto 752504 VA
+*/
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -404,6 +409,14 @@ public class DatabaseConnection {
 
 
 
+    /**
+     * Cerca aree geografiche basate sul nome della città fornito.
+     * Inizialmente cerca una corrispondenza esatta con il nome della città. Se non trova risultati,
+     * riduce gradualmente la lunghezza del nome della città e riprova la ricerca con il nome parziale.
+     *
+     * @param nomeCitta Il nome della città per cui cercare le aree geografiche.
+     * @return Una lista di risultati che corrispondono al nome della città o ai nomi parziali della città.
+     */
     public LinkedList<Result> cercaAreaGeograficaNomeCitta(String nomeCitta) {
         LinkedList<Result> risultati = new LinkedList<>();
         Connection connection = null;
@@ -411,51 +424,58 @@ public class DatabaseConnection {
         ResultSet resultSet = null;
 
         try {
+            // Connessione al database
             connection = connect();
             statement = connection.createStatement();
 
-            // Query SQL iniziale per selezionare geoname dove name = nomeCitta
+            // Query SQL iniziale per selezionare le aree geografiche con il nome della città esatto
             String query = "SELECT * FROM coordinatemonitoraggio WHERE name = '" + nomeCitta + "'";
 
             resultSet = statement.executeQuery(query);
 
-            // Itera sui risultati della query e aggiungi i geoname alla lista risultati
+            // Itera sui risultati della query e aggiungi i risultati alla lista
             while (resultSet.next()) {
-                Result risultato=new Result(resultSet.getInt("geoname"),resultSet.getString("name"),
-                        resultSet.getString("asciiname"),resultSet.getString("countrycode")
-                        ,resultSet.getString("countryname"), resultSet.getDouble("latitude"),
+                Result risultato = new Result(
+                        resultSet.getInt("geoname"),
+                        resultSet.getString("name"),
+                        resultSet.getString("asciiname"),
+                        resultSet.getString("countrycode"),
+                        resultSet.getString("countryname"),
+                        resultSet.getDouble("latitude"),
                         resultSet.getDouble("longitude")
                 );
                 risultati.add(risultato);
             }
 
-            // Se non ci sono risultati, riduci gradualmente la lunghezza di nomeCitta e riprova
+            // Se non sono stati trovati risultati, riduci gradualmente la lunghezza del nome della città e riprova
             while (risultati.isEmpty() && nomeCitta.length() > 1) {
+                // Riduci il nome della città di un carattere alla volta
                 nomeCitta = nomeCitta.substring(0, nomeCitta.length() - 1);
                 query = "SELECT * FROM coordinatemonitoraggio WHERE name LIKE '%" + nomeCitta + "%'";
                 resultSet = statement.executeQuery(query);
 
                 while (resultSet.next()) {
-                    Result risultato=new Result(resultSet.getInt("geoname"),resultSet.getString("name"),
-                            resultSet.getString("asciiname"),resultSet.getString("countrycode")
-                            ,resultSet.getString("countryname"), resultSet.getDouble("latitude"),
+                    Result risultato = new Result(
+                            resultSet.getInt("geoname"),
+                            resultSet.getString("name"),
+                            resultSet.getString("asciiname"),
+                            resultSet.getString("countrycode"),
+                            resultSet.getString("countryname"),
+                            resultSet.getDouble("latitude"),
                             resultSet.getDouble("longitude")
                     );
-
-
                     risultati.add(risultato);
                 }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
-            // Gestisci eventuali eccezioni o errori di connessione al database
+            // Gestione delle eccezioni o errori di connessione al database
         } finally {
-            // Chiudi resultSet, statement e connection nel blocco finally
+            // Chiusura delle risorse nel blocco finally per garantire che vengano sempre chiuse
             try {
                 if (resultSet != null) resultSet.close();
                 if (statement != null) statement.close();
-                DatabaseConnection.closeConnection(connection);
+                if (connection != null) DatabaseConnection.closeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -465,6 +485,14 @@ public class DatabaseConnection {
     }
 
 
+    /**
+     * Ricerca le aree geografiche basate sul nome dello stato di appartenenza fornito.
+     * Prima cerca una corrispondenza esatta con il nome dello stato. Se non trova risultati,
+     * riduce gradualmente la lunghezza del nome dello stato e riprova la ricerca con il nome parziale.
+     *
+     * @param statoAppartenenza Il nome dello stato per cui cercare le aree geografiche.
+     * @return Una lista di risultati che corrispondono al nome dello stato o ai nomi parziali dello stato.
+     */
     public LinkedList<Result> ricercaTramiteStato(String statoAppartenenza) {
         LinkedList<Result> risultati = new LinkedList<>();
         Connection connection = null;
@@ -472,51 +500,58 @@ public class DatabaseConnection {
         ResultSet resultSet = null;
 
         try {
+            // Connessione al database
             connection = connect();
             statement = connection.createStatement();
 
-            // Query SQL iniziale per selezionare geoname dove name = nomeCitta
-            String query = "SELECT * FROM coordinatemonitoraggio WHERE countryname= '" + statoAppartenenza + "'";
+            // Query SQL iniziale per selezionare le aree geografiche con il nome dello stato esatto
+            String query = "SELECT * FROM coordinatemonitoraggio WHERE countryname = '" + statoAppartenenza + "'";
 
             resultSet = statement.executeQuery(query);
 
-            // Itera sui risultati della query e aggiungi i geoname alla lista risultati
+            // Itera sui risultati della query e aggiungi i risultati alla lista
             while (resultSet.next()) {
-                Result risultato=new Result(resultSet.getInt("geoname"),resultSet.getString("name"),
-                        resultSet.getString("asciiname"),resultSet.getString("countrycode")
-                        ,resultSet.getString("countryname"), resultSet.getDouble("latitude"),
+                Result risultato = new Result(
+                        resultSet.getInt("geoname"),
+                        resultSet.getString("name"),
+                        resultSet.getString("asciiname"),
+                        resultSet.getString("countrycode"),
+                        resultSet.getString("countryname"),
+                        resultSet.getDouble("latitude"),
                         resultSet.getDouble("longitude")
                 );
                 risultati.add(risultato);
             }
 
-            // Se non ci sono risultati, riduci gradualmente la lunghezza di nomeCitta e riprova
+            // Se non sono stati trovati risultati, riduci gradualmente la lunghezza del nome dello stato e riprova
             while (risultati.isEmpty() && statoAppartenenza.length() > 1) {
+                // Riduci il nome dello stato di un carattere alla volta
                 statoAppartenenza = statoAppartenenza.substring(0, statoAppartenenza.length() - 1);
                 query = "SELECT * FROM coordinatemonitoraggio WHERE countryname LIKE '%" + statoAppartenenza + "%'";
                 resultSet = statement.executeQuery(query);
 
                 while (resultSet.next()) {
-                    Result risultato=new Result(resultSet.getInt("geoname"),resultSet.getString("name"),
-                            resultSet.getString("asciiname"),resultSet.getString("countrycode")
-                            ,resultSet.getString("countryname"), resultSet.getDouble("latitude"),
+                    Result risultato = new Result(
+                            resultSet.getInt("geoname"),
+                            resultSet.getString("name"),
+                            resultSet.getString("asciiname"),
+                            resultSet.getString("countrycode"),
+                            resultSet.getString("countryname"),
+                            resultSet.getDouble("latitude"),
                             resultSet.getDouble("longitude")
                     );
-
-
                     risultati.add(risultato);
                 }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
             // Gestisci eventuali eccezioni o errori di connessione al database
         } finally {
-            // Chiudi resultSet, statement e connection nel blocco finally
+            // Chiusura delle risorse nel blocco finally per garantire che vengano sempre chiuse
             try {
                 if (resultSet != null) resultSet.close();
                 if (statement != null) statement.close();
-                DatabaseConnection.closeConnection(connection);
+                if (connection != null) DatabaseConnection.closeConnection(connection);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -525,33 +560,37 @@ public class DatabaseConnection {
         return risultati;
     }
 
-
-
-
-
-
-
-
+    /**
+     * Cerca le aree geografiche in base alle coordinate di latitudine e longitudine fornite, utilizzando vari intervalli di ricerca.
+     * Restituisce una lista di risultati che corrispondono alle coordinate specificate.
+     * Se vengono trovati duplicati, restituisce solo il risultato del duplicato.
+     *
+     * @param latitudine La latitudine centrale per la ricerca.
+     * @param longitudine La longitudine centrale per la ricerca.
+     * @return Una lista di risultati che corrispondono alle coordinate specificate. Se ci sono duplicati, restituisce solo il risultato del duplicato.
+     */
     public LinkedList<Result> cercaAreaGeograficaCoordinate(double latitudine, double longitudine) {
         LinkedList<Result> risultati = new LinkedList<>();
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
-        double[] range = {0.00001, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0};
+        double[] range = {0.00001, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0};//possibile anche aumento range di ricerca a scapito di precisione
 
         try {
+            // Connessione al database
             connection = connect();
             statement = connection.createStatement();
 
             double latitudeMin, latitudeMax, longitudeMin, longitudeMax;
             for (int i = 0; i < range.length; i++) {
-                // Applichiamo il range di ricerca
+                // Calcola i limiti minimi e massimi per la ricerca in base all'intervallo corrente
                 latitudeMin = latitudine - range[i];
                 latitudeMax = latitudine + range[i];
                 longitudeMin = longitudine - range[i];
                 longitudeMax = longitudine + range[i];
                 String query;
 
+                // Costruzione della query basata sull'intervallo
                 if (i == 0) {
                     query = "SELECT * FROM coordinatemonitoraggio WHERE latitude BETWEEN " + latitudeMin +
                             " AND " + latitudeMax + " AND longitude BETWEEN " + longitudeMin + " AND " + longitudeMax;
@@ -561,16 +600,20 @@ public class DatabaseConnection {
                 }
                 resultSet = statement.executeQuery(query);
 
-                // Utilizziamo un Set per verificare i duplicati di geoname
+                // Utilizza un Set per gestire i duplicati basati sul geoname
                 Set<Integer> geonameSet = new HashSet<>();
 
-                // Itera sui risultati della query e aggiungi i Result alla lista risultati
+                // Itera sui risultati della query
                 while (resultSet.next()) {
                     int geoname = resultSet.getInt("geoname");
-                    // Creare un oggetto Result per ogni riga
-                    Result result = new Result(geoname,resultSet.getString("name"),
-                            resultSet.getString("asciiname"),resultSet.getString("countrycode")
-                            ,resultSet.getString("countryname"), resultSet.getDouble("latitude"),
+                    // Crea un oggetto Result per ogni riga
+                    Result result = new Result(
+                            geoname,
+                            resultSet.getString("name"),
+                            resultSet.getString("asciiname"),
+                            resultSet.getString("countrycode"),
+                            resultSet.getString("countryname"),
+                            resultSet.getDouble("latitude"),
                             resultSet.getDouble("longitude")
                     );
 
@@ -579,25 +622,24 @@ public class DatabaseConnection {
                         geonameSet.add(geoname);
                         risultati.add(result);
                     } else {
-                        // Se troviamo un duplicato, restituire una lista con solo quel geoname
+                        // Se troviamo un duplicato, restituiamo una lista con solo quel geoname
                         LinkedList<Result> risultatoSingolo = new LinkedList<>();
                         risultatoSingolo.add(result);
                         closeConnection(connection);
-
                         return risultatoSingolo;
                     }
                 }
 
-                // Se abbiamo trovato risultati, restituiamo la lista completa
+                // Se sono stati trovati risultati, restituiamo la lista completa
                 if (!risultati.isEmpty()) {
                     return risultati;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Gestisci eventuali eccezioni o errori di connessione al database
+            // Gestione delle eccezioni o errori di connessione al database
         } finally {
-            // Chiudi resultSet, statement e connection nel blocco finally
+            // Chiusura delle risorse nel blocco finally per garantire che vengano sempre chiuse
             try {
                 if (resultSet != null) resultSet.close();
                 if (statement != null) statement.close();
@@ -612,6 +654,16 @@ public class DatabaseConnection {
 
 
 
+    /**
+     * Recupera informazioni climatiche per una città specificata dalla tabella "ParametriClimatici".
+     * Il tipo di informazione restituita dipende dal valore del parametro {@code moda}.
+     *
+     * @param cityName Il nome della città per cui recuperare le informazioni climatiche.
+     * @param colonna Il nome della colonna da cui estrarre i dati. Se è {@code null} o vuoto, viene selezionata tutte le colonne.
+     * @param moda Se {@code true}, calcola e restituisce la moda (valore più frequente) della colonna specificata.
+     *             Se {@code false}, restituisce tutti i valori della colonna come una stringa separata da nuove righe.
+     * @return Una stringa contenente le informazioni climatiche richieste. Se non ci sono informazioni, restituisce "<no info yet>".
+     */
     public String getInfoCity(String cityName, String colonna, boolean moda) {
         Connection connection = null;
         Statement statement = null;
@@ -619,18 +671,21 @@ public class DatabaseConnection {
         StringBuilder result = new StringBuilder();
 
         try {
+            // Connessione al database
             connection = connect();
             statement = connection.createStatement();
 
-            // Build the query dynamically based on parameters
+            // Costruzione della query dinamicamente in base ai parametri
             if (moda) {
+                // Costruzione della query per ottenere i valori della colonna specificata
                 String query = "SELECT " + colonna +
                         " FROM \"ParametriClimatici\" " +
                         " WHERE area LIKE '%" + cityName + "%' ";
 
                 List<Integer> valori = new ArrayList<>();
-                 resultSet = statement.executeQuery(query);
+                resultSet = statement.executeQuery(query);
 
+                // Estrazione dei valori e aggiunta alla lista se non nulli e diversi da zero
                 while (resultSet.next()) {
                     int valore = resultSet.getInt(colonna);
                     if (!resultSet.wasNull() && valore != 0) {
@@ -647,6 +702,7 @@ public class DatabaseConnection {
                 int maxConteggio = 0;
                 List<Integer> valoriPiuFrequenti = new ArrayList<>();
 
+                // Trova i valori con il conteggio massimo
                 for (Map.Entry<Integer, Integer> entry : conteggi.entrySet()) {
                     if (entry.getValue() > maxConteggio) {
                         maxConteggio = entry.getValue();
@@ -669,12 +725,13 @@ public class DatabaseConnection {
                 return "" + valorePiuFrequente;
             }
 
+            // Costruzione della query per ottenere tutti i valori della colonna specificata
             StringBuilder queryBuilder = new StringBuilder("SELECT ");
 
             if (colonna != null && !colonna.isEmpty()) {
                 queryBuilder.append("\"").append(colonna).append("\"");
             } else {
-                queryBuilder.append("*"); // Select all columns if colonna is null or empty
+                queryBuilder.append("*"); // Se colonna è null o vuota, seleziona tutte le colonne
             }
 
             queryBuilder.append(" FROM \"ParametriClimatici\" WHERE area LIKE '%").append(cityName).append("%'");
@@ -686,8 +743,9 @@ public class DatabaseConnection {
             String query = queryBuilder.toString();
             resultSet = statement.executeQuery(query);
 
+            // Estrazione dei valori e costruzione della stringa di risultato
             while (resultSet.next()) {
-                if (result.length() > 0) {
+                if (!result.isEmpty()) {
                     result.append("\n");
                 }
                 String value = resultSet.getString(colonna);
@@ -697,35 +755,26 @@ public class DatabaseConnection {
                 result.append(value);
             }
         } catch (SQLException e) {
+            // Stampa l'errore in caso di eccezione
             e.printStackTrace();
         } finally {
             try {
+                // Chiusura delle risorse nel blocco finally per garantire che vengano sempre chiuse
                 if (resultSet != null) resultSet.close();
                 if (statement != null) statement.close();
                 closeConnection(connection);
             } catch (SQLException e) {
+                // Stampa l'errore in caso di eccezione durante la chiusura delle risorse
                 e.printStackTrace();
             }
         }
-        if(result.isEmpty()){
-            return "<no notes yet";
+
+        // Gestione del caso in cui non ci sono risultati
+        if (result.isEmpty()) {
+            return "<no info yet>";
         }
+
         return result.toString();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
