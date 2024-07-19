@@ -129,11 +129,7 @@ public class ServerCM extends UnicastRemoteObject implements ServerInterface {
         ute.inserisciParametriClimatici(longlatScelta,  MappavaluNote, db);
     }
 
-    @Override
-    public synchronized void statisticaParametri( String elementoScelto)throws RemoteException {
-        centro.restitutoreMode(elementoScelto,db);
 
-    }
     @Override
     public synchronized  LinkedList<Result>ricercaTramiteNome(String nome){
         return db.cercaAreaGeograficaNomeCitta(nome);

@@ -1,14 +1,17 @@
-package ClimateMonitoring;/*Tahir Agalliu	753550 VA
+/*Tahir Agalliu	753550 VA
 Letizia Capitanio 752465 VA
 Alessandro D'Urso 753578 VA
 Francesca Ziggiotto	752504 VA
 */
 
+package ClimateMonitoring;
+
+
 import java.io.Serializable;
 import java.util.*;
     /**
      *
-     *La classe <strong>ClimateMonitoring.GestioneUtente</strong> si occupa degli aspetti relativi ai dati dell'utente.
+     *La classe <strong>GestioneUtente</strong> si occupa degli aspetti relativi ai dati dell'utente.
      *Sia le fasi per registrarsi all'interno del programma <strong>Climate Monitoring</strong>,
      *sia le fasi per fare il login.
      *@author Letizia Capitanio
@@ -24,14 +27,12 @@ import java.util.*;
         /*Metodo controllo password e id del login*/
 
         /**
-         * Viene controllato che sia presente quella corrispondenza nel db <strong>OperatoriRegistrati</strong>.
-         *
-         * @param id       da controllare
-         * @param password password associata all'id
-         * @param db
-         * @return true login effettuato, false rifiutato
+         * Viene controllato che sia presente quella corrispondenza user, password nel db <strong>OperatoriRegistrati</strong
+         * @param id Username
+         * @param password password associata all'username
+         * @param db oggetto della classe DatabaseConnection
+         * @return true se presente
          */
-
         protected boolean login(String id, String password, DatabaseConnection db) {
             if (db.controlloSegiaPresente(id, "OperatoriRegistrati", "Userid")) {
                 System.out.println("nome presente, controllo password in corso..");
@@ -56,10 +57,9 @@ import java.util.*;
 
         /**
          * Metodo di controllo dell'id in fase di <strong>registrazione</strong>..
-         * Viene controllato che <strong>non</strong> sia presente l'id nel db <strong>OperatoriRegistrati</strong>
-         *
-         * @param id id da verificare
-         * @param db
+         * Viene controllato che <strong>non</strong> non sia presente l'id nel db <strong>OperatoriRegistrati</strong>
+         * @param id che si vuole registrare
+         * @param db oggetto della classe DatabaseConnection
          * @return true se l'id non è gia presente, altrimenti false
          */
         protected boolean controlloId(String id, DatabaseConnection db) {
@@ -80,14 +80,13 @@ import java.util.*;
         /**
          * Metodo per la fase di <strong>registrazione</strong>.
          * È costituito da più metodi singoli. Usando questo metodo si facilita la parte di registrazione con un metodo solo.
-         * Vengono passati i dati per la registrazione: Email, Codice Fiscale, Nome e Cognome
-         *
+         * Vengono passati i dati per la registrazione: Email, Codice Fiscale, Nome e Cognome attraverso la lista di Stringhe
          * @param inserimenti lista con elementi da inserire associati all'utente
-         * @param db
+         * @param db oggetto della classe DatabaseConnection
          */
         protected void RichiestaDatiPerRegistrazione(LinkedList<String> inserimenti, DatabaseConnection db) {
             db.inserimentoinDB("OperatoriRegistrati", this.id, "Userid", null, null, "User", null);
-            ControlloDatiPrimadiInserire(inserimenti, true, db);
+            InserimentoDatiAggiuntivi(inserimenti, true, db);
 
         }
 
@@ -97,16 +96,15 @@ import java.util.*;
         /**
          * Metodo per la fase di <strong>registrazione</strong>.
          * Metodo che passando i dati da inserire, gli inserisce al centro o all'utente
-         *
          * @param datiUtente  è un booleano. se impostato su true, richiede i dati per l'utente, se false richiede i dati per registrare un nuovo centro
          * @param inserimenti lista con elementi da inserire
+         * @param db oggetto della classe DatabaseConnection
          */
-        protected void ControlloDatiPrimadiInserire(LinkedList<String> inserimenti, boolean datiUtente, DatabaseConnection db) {
+        protected void InserimentoDatiAggiuntivi(LinkedList<String> inserimenti, boolean datiUtente, DatabaseConnection db) {
             String[] Nomicolonne;
             if (datiUtente) {Nomicolonne = NomiColonneUtente;} else {Nomicolonne = NomiColonneCentro;}
             Map<String, Object> dataMap = new HashMap<>();
             for (int i = 0; i < Nomicolonne.length; i++) {
-
                 dataMap.put(Nomicolonne[i], inserimenti.get(i));
             }
             if (datiUtente) {
@@ -116,29 +114,17 @@ import java.util.*;
             }
         }
 
-
-        /*Metodo generico di richiesta dati. largomento viene immesso nella scritta che vedrà lutente insieme a inserisci*/
-        /**
-         *Metodo generale che richiede di inserire un dato. La stringa passata come parametro infulenza la scritta che vedrà l'utente.
-         * Ad esempio il parametro inserito è Email, quindi questo metodo richiederà all'utente "inserisci Email >
-         * @param  nomeDatodaInserire è la stringa che si aggiunge all'output "inserisci" per completare la richiesta.
-         * @return il valore inserito da tastiera dall'utente, in formato <strong>String</strong>.
-         */
-
-
-        /*Metodo di richiesta specifica del centro. Vengono visualizzati i centri già registrati
-         * l'utente puo scegliere tra quelli oppure registrarne uno nuovo*/
+        /*Metodo di selezione,del centro tramite parametro. controllo se è presente tra quelli già registrati oppure no.
+        * i primi dati del centro vengono registrati se nuovo*/
 
         /**
          * Metodo per la fase di <strong>registrazione</strong>.
-         * Terzo metodo del metodo <strong>RichiestaDatiPerRegistrazione</strong>.
-         * Vengono visualizzati i centri già registrati, se presenti. L'utente può sceglierne uno tra quelli presenti, oppure registrarne uno nuovo.
-         *
-         * @param centro nome del centro a cui ci si vuole associare
+         * Metodo che verifica se il centro a cui si vuole associare è già presente tra quelli registrati oppure no.
+         * @param elementiDisponibili lista d centri già registrati
+         * @param centro nome del centro a cui ci si vuole associare o registrare
+         * @param db oggetto della classe DatabaseConnection
          * @return true se il centro era già esistente, false se va creato
          */
-
-
         protected boolean richiestaInserimentoCentro(String centro, LinkedList<String> elementiDisponibili, DatabaseConnection db) {
             this.centro = centro;
             if (elementiDisponibili.contains(centro)) {
@@ -160,35 +146,29 @@ import java.util.*;
          * Metodo della sezione<strong>Login</strong>
          * Metodo che permette di inserire le valutazioni e le note, presenti nella Map, nell'area passata come argomento "longScelta"
          * Per poter utilizzare questo metodo è necessario non utilizzarlo da solo, ma soltanto in seguito ad aver richiamato il metodo <strong>login</strong>.
-         * in alternativa usare direttamente il metodo <strong>Login</strong> che racchiude entrambi i metodi citati
-         *
-         * @param longlatScelta
-         * @param MappavaluNote
+         * @param longlatScelta area scelta del proprio centro dove aggiungere valutazoni e note climatiche
+         * @param mappaNoteValutazioni mappa con key con nome della colonna e value come valutazioni e note
+         * @param db oggetto della classe DatabaseConnection
          */
-        protected void inserisciParametriClimatici(String longlatScelta, Map<String, Object> MappavaluNote, DatabaseConnection db) {
+        protected void inserisciParametriClimatici(String longlatScelta, Map<String, Object> mappaNoteValutazioni, DatabaseConnection db) {
             gestioneCentri = new GestioneCentri();
             gestioneCentri.setCentroId(centro, id);
-            gestioneCentri.selezioneAreadiLavoroeInserimento(longlatScelta, MappavaluNote, db);
+            gestioneCentri.selezioneAreadiLavoroeInserimento(longlatScelta, mappaNoteValutazioni, db);
 
         }
 
-        //metodo registrazione centro RICHIESTO
-        //RegistrazioneNuovoCentroConRichiestaNomeCentro
+
+        //inserisce i dati specifici del centro nuovo e registra le aree a se associate
 
         /**
          * metodo da usare dopo richiestaInserimentoCentro
-         * Va ad inserire i dati passati come lista inserimenti al centro, e le aree passando le longitutidine e  latituidni di esse come lista
-         *
-         * @param inserimenti    dati del centro
-         * @param lonlatInserite longitutidini e latituidini delle aree
+         * Va ad inserire i dati specifici del centro, passati come lista, e le aree passando le longitutidine e  latituidni di esse come lista
+         * @param inserimenti dati del centro
+         * @param lonlatInserite nome delle aree associate al centro che si vogliono registrare
+         * @param db oggetto della classe DatabaseConnection
          */
-    /* fai visualizzare la lista di elementi
-    modficare in modo che nella schermata ci sia un solo pulsante. prememndolo vieen fatto il controollo. se entra nell'if, fa ludate e restituisce true.
-    se invece entra nellelse, restituisce false e dato che ce false, si apre una nuova schermata dove poi parte il metodo RichiestaDatidelCentrodaRegistrare
-    in caso si faccia cosi, invertire i nomi dei metodi registracentroaree e richiestadatidelcentroda regsitrare
-    richiestadatidelcentroda non è necessario che venga implememntato nel server*/
         protected void registraCentroAree(LinkedList<String> inserimenti, LinkedList<String> lonlatInserite, DatabaseConnection db) {
-            ControlloDatiPrimadiInserire(inserimenti, false, db);
+            InserimentoDatiAggiuntivi(inserimenti, false, db);
             gestioneCentri = new GestioneCentri();
             gestioneCentri.setCentroId(centro, id);
             gestioneCentri.inserimentoAree(lonlatInserite, db);

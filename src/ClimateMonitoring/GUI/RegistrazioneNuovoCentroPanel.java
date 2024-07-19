@@ -39,6 +39,8 @@ public class RegistrazioneNuovoCentroPanel extends JPanel implements BackButtonL
     private JPanel createInputPanel() {
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new GridLayout(5, 2, 10, 10)); // Utilizzo di spaziatura tra le celle
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Aggiungo margine esterno
+
 
         civico = creator.createNormaleField(15);
         CAP = creator.createNormaleField(15);
