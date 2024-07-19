@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+import static javax.swing.UIManager.setLookAndFeel;
+
 public class MainFrame extends JFrame {
     private ArrayList<String[]> registrazioni;
     private CardLayout cardLayout;
@@ -67,7 +69,7 @@ public class MainFrame extends JFrame {
         mainPanel.add(new VisualizzazionePanel(server, cardLayout, mainPanel), "Visualizzazione");
         mainPanel.add(registraCentroPanel, "RegistraCentroNuovo");
         mainPanel.add(new VisualizzaTramiteCoordinatePanel(server, cardLayout, mainPanel), "VisualizzaCoordinate");
-        mainPanel.add(new VisualizzaRisultatiTramiteNomePanel(server, cardLayout, mainPanel), "VisualizzaNome");
+        mainPanel.add(new VisualizzaTramiteNomePanel(server, cardLayout, mainPanel), "VisualizzaNome");
         mainPanel.add(new VisualizzaTramiteStatoPanel(server, cardLayout, mainPanel), "VisualizzazioneStato");
         mainPanel.add(new InserimentoParametriPanel(server,cardLayout,mainPanel), "InseritoreParametri");
         mainPanel.add(selezionaCittaPanel, "AggiuntaCittàCentro");
