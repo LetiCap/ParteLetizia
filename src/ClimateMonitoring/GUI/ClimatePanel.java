@@ -19,7 +19,7 @@ import java.awt.*;
 import java.rmi.RemoteException;
 
 /**
- * Pannello Swing per visualizzare i parametri climatici di una città selezionata.
+ * <strong>Pannello Swing per visualizzare i parametri climatici di una città selezionata</strong>.
  * Questo pannello mostra una tabella con i parametri climatici e un pulsante per tornare al pannello principale.
  *
  * @author Tahir Agalliu
@@ -29,11 +29,11 @@ public class ClimatePanel extends JPanel {
     /**
      * Costruttore per creare un pannello di visualizzazione dei parametri climatici.
      *
-     * @param cityName       Il nome della città per la quale visualizzare i parametri climatici.
-     * @param mainPanel      Il pannello principale dell'applicazione per la navigazione.
-     * @param selectedResult Il risultato selezionato contenente i dati climatici.
-     * @param server         L'interfaccia del server per ottenere i dati climatici.
-     * @throws RemoteException Se si verifica un errore nella comunicazione con il server.
+     * @param cityName       <strong>Il nome della città</strong> per la quale visualizzare i parametri climatici.
+     * @param mainPanel      <strong>Il pannello principale</strong> dell'applicazione per la navigazione.
+     * @param selectedResult <strong>Il risultato selezionato</strong> contenente i dati climatici.
+     * @param server         <strong>L'interfaccia del server</strong> per ottenere i dati climatici.
+     * @throws RemoteException <strong>Se si verifica un errore</strong> nella comunicazione con il server.
      * @author Tahir Agalliu
      */
     public ClimatePanel(String cityName, JPanel mainPanel, Result selectedResult, ServerInterface server) throws RemoteException {
@@ -68,7 +68,7 @@ public class ClimatePanel extends JPanel {
     /**
      * Crea il pannello inferiore con il pulsante "Back".
      *
-     * @param backButton Il pulsante "Back" da aggiungere al pannello.
+     * @param backButton <strong>Il pulsante "Back"</strong> da aggiungere al pannello.
      * @return Il pannello inferiore configurato.
      * @author Tahir Agalliu
      */
@@ -80,12 +80,12 @@ public class ClimatePanel extends JPanel {
     }
 
     /**
-     * Crea e configura la tabella dei parametri climatici.
+     * <strong>Crea e configura la tabella</strong> dei parametri climatici.
      *
-     * @param cityName Il nome della città per la quale visualizzare i parametri climatici.
-     * @param server   L'interfaccia del server per ottenere i dati climatici.
+     * @param cityName Il nome della <strong>città</strong> per la quale visualizzare i parametri climatici.
+     * @param server   <strong>L'interfaccia del server</strong> per ottenere i dati climatici.
      * @return La tabella configurata.
-     * @throws RemoteException Se si verifica un errore nella comunicazione con il server.
+     * @throws RemoteException Se si <strong>verifica un errore</strong> nella comunicazione con il server.
      * @author Tahir Agalliu
      */
     private JTable createClimateTable(String cityName, ServerInterface server) throws RemoteException {
@@ -137,11 +137,11 @@ public class ClimatePanel extends JPanel {
     }
 
     /**
-     * Crea una tabella configurata con i dati e i nomi delle colonne forniti.
+     * <strong>Crea una tabella configurata</strong> con i dati e i nomi delle colonne forniti.
      *
-     * @param data         I dati da visualizzare nella tabella.
-     * @param columnNames  I nomi delle colonne della tabella.
-     * @return La tabella configurata.
+     * @param data         <strong>I dati</strong> da visualizzare nella tabella.
+     * @param columnNames  <strong>I nomi delle colonne</strong> della tabella.
+     * @return <strong>La tabella</strong> configurata.
      * @author Tahir Agalliu
      */
     private static JTable getTable(Object[][] data, String[] columnNames) {
@@ -164,8 +164,8 @@ public class ClimatePanel extends JPanel {
     }
 
     /**
-     * Renderer personalizzato per supportare il wrapping del testo nella colonna "Note".
-     * Estende JTextArea per consentire il wrapping del testo e l'adeguamento dell'altezza delle righe.
+     * Renderer personalizzato per <strong>supportare il wrapping</strong> del testo nella colonna "Note".
+     * <strong>Estende JTextArea</strong> per consentire il wrapping del testo e l'adeguamento dell'altezza delle righe.
      *
      * @author Tahir Agalliu
      */

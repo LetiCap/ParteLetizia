@@ -33,15 +33,15 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
     private final JLabel resultCountLabel; // Counter risultati
 
     /**
-     * Costruisce un pannello per la visualizzazione tramite coordinate geografiche.
+     * <strong>Costruisce un pannello </strong>per la visualizzazione tramite coordinate geografiche.
      * <p>
-     * <strong>Inizializza i componenti dell'interfaccia grafica e configura i layout e i listener
-     * per gestire l'interazione dell'utente.</strong>
+     * <strong>Inizializza i componenti</strong> dell'interfaccia grafica e configura i layout e i listener
+     * per gestire l'interazione dell'utente.
      * </p>
      *
-     * @param server       <strong>l'interfaccia del server da cui ottenere i risultati della ricerca</strong>
-     * @param cardLayout   <strong>il layout del pannello che consente di passare tra i pannelli</strong>
-     * @param mainPanel    <strong>il pannello principale in cui visualizzare la scheda</strong>
+     * @param server       <strong>l'interfaccia del server</strong> da cui ottenere i risultati della ricerca.
+     * @param cardLayout   <strong>il layout del pannello</strong> che consente di passare tra i pannelli.
+     * @param mainPanel    <strong>il pannello principale</strong> in cui visualizzare la scheda.
      * @author Tahir Agalliu
      */
     public VisualizzaTramiteCoordinatePanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
@@ -118,8 +118,8 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
      * e aggiorna la lista dei risultati e il conteggio dei risultati.
      * </p>
      *
-     * @param server <strong>l'interfaccia del server da cui ottenere i risultati della ricerca</strong>
-     * @return <strong>l'ActionListener creato per il pulsante di ricerca</strong>
+     * @param server <strong>l'interfaccia del server</strong> da cui ottenere i risultati della ricerca.
+     * @return <strong>l'ActionListener creato</strong> per il pulsante di ricerca.
      * @author Tahir Agalliu
      */
     private ActionListener createSearchActionListener(ServerInterface server) {
@@ -169,8 +169,8 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
     /**
      * Crea un {@link java.awt.event.MouseListener} per la lista dei risultati.
      * <p>
-     * <strong>Questo listener gestisce il doppio clic sugli elementi della lista dei risultati
-     * per aprire i dettagli dell'elemento selezionato.</strong>
+     * <strong>Questo listener gestisce il doppio clic sugli elementi</strong> della lista dei risultati
+     * per aprire i dettagli dell'elemento selezionato.
      * </p>
      *
      * @return <strong>il MouseListener creato per la lista dei risultati</strong>
@@ -200,12 +200,12 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
     /**
      * Gestisce l'azione del pulsante "Back".
      * <p>
-     * <strong>Questo metodo resetta i campi di input e il conteggio dei risultati,
-     * e mostra il pannello di visualizzazione principale.</strong>
+     * <strong>Questo metodo resetta i campi di input e il conteggio dei risultati</strong>,
+     * e mostra il pannello di visualizzazione principale.
      * </p>
      *
-     * @param cardLayout <strong>il layout del pannello che consente di passare tra i pannelli</strong>
-     * @param mainPanel  <strong>il pannello principale in cui visualizzare la scheda</strong>
+     * @param cardLayout <strong>il layout del pannello</strong> che consente di passare tra i pannelli
+     * @param mainPanel  <strong>il pannello principale</strong> in cui visualizzare la scheda
      * @author Tahir Agalliu
      */
     private void handleBackButtonAction(CardLayout cardLayout, JPanel mainPanel) {

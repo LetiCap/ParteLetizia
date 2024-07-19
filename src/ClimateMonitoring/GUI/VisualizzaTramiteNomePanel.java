@@ -35,9 +35,9 @@ public class VisualizzaTramiteNomePanel extends JPanel {
     /**
      * Costruttore per creare il pannello di visualizzazione dei risultati tramite nome dell'area.
      *
-     * @param server      <strong>L'interfaccia del server per effettuare la ricerca.</strong>
-     * @param cardLayout  <strong>Il layout manager del pannello principale.</strong>
-     * @param mainPanel   <strong>Il pannello principale dell'applicazione.</strong>
+     * @param server      <strong>L'interfaccia del server</strong> per effettuare la ricerca.
+     * @param cardLayout  <strong>Il layout manager</strong> del pannello principale.
+     * @param mainPanel   <strong>Il pannello principale</strong> dell'applicazione.
      * @author Tahir Agalliu
      */
     public VisualizzaTramiteNomePanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
@@ -140,10 +140,10 @@ public class VisualizzaTramiteNomePanel extends JPanel {
     }
 
     /**
-     * Format il termine di ricerca per garantire che la prima lettera di ogni parola sia maiuscola.
+     * <strong>Format il termine di ricerca</strong> per garantire che la prima lettera di ogni parola sia maiuscola.
      *
-     * @param searchTerm <strong>Il termine di ricerca da formattare.</strong>
-     * @return <strong>Il termine di ricerca formattato con la prima lettera di ogni parola in maiuscolo.</strong>
+     * @param searchTerm <strong>Il termine di ricerca</strong> da formattare.
+     * @return <strong>Il termine di ricerca</strong> formattato con la prima lettera di ogni parola in maiuscolo.
      * @author Tahir Agalliu
      */
     private String formatSearchTerm(String searchTerm) {
@@ -153,9 +153,9 @@ public class VisualizzaTramiteNomePanel extends JPanel {
     }
 
     /**
-     * Mostra un dialogo di errore con il messaggio specificato.
+     * Mostra un <strong>dialogo</strong> di errore con il messaggio specificato.
      *
-     * @param message <strong>Il messaggio di errore da visualizzare.</strong>
+     * @param message <strong>Il messaggio di errore</strong> da visualizzare.
      * @author Tahir Agalliu
      */
     private void showErrorDialog(String message) {
@@ -165,7 +165,7 @@ public class VisualizzaTramiteNomePanel extends JPanel {
     /**
      * Mostra un dialogo di errore con il messaggio e il tipo di messaggio specificati.
      *
-     * @param message     <strong>Il messaggio di errore da visualizzare.</strong>
+     * @param message     <strong>Il messaggio di errore</strong> da visualizzare.
      * @param messageType <strong>Il tipo di messaggio (ad esempio, JOptionPane.ERROR_MESSAGE).</strong>
      * @author Tahir Agalliu
      */

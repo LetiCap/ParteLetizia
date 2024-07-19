@@ -23,11 +23,11 @@ public class ResultWrapper extends Result {
     /**
      * Costruttore per creare un'istanza di {@link ResultWrapper}.
      * <p>
-     * <strong>Inizializza il risultato avvolto e imposta il numero di indice associato al risultato.</strong>
+     * <strong>Inizializza il risultato avvolto</strong> e imposta il numero di indice associato al risultato.
      * </p>
      *
-     * @param result Il risultato originale da avvolgere.
-     * @param number Il numero di indice associato al risultato.
+     * @param result <strong>Il risultato originale</strong> da avvolgere.
+     * @param number <strong>Il numero di indice</strong> associato al risultato.
      *
      * @author Tahir Agalliu
      */
@@ -44,7 +44,7 @@ public class ResultWrapper extends Result {
      * <strong>La stringa include il numero di indice e la rappresentazione stringa del risultato originale.</strong>
      * </p>
      *
-     * @return Una stringa che rappresenta il risultato con il numero di indice.
+     * @return Una stringa che rappresenta il <strong>risultato con il numero di indice</strong>.
      *
      * @author Tahir Agalliu
      */

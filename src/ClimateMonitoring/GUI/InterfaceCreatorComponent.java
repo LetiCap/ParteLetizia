@@ -40,9 +40,9 @@ public class InterfaceCreatorComponent {
     /**
      * Configura il layout e il bordo per il pannello specificato.
      * <p>
-     * <strong>Questo metodo imposta il layout del pannello su {@link BorderLayout} con
+     * <strong>Questo metodo imposta il layout del pannello</strong> su {@link BorderLayout} con
      * spaziatura di 10 pixel tra i componenti e applica un bordo vuoto di 10 pixel
-     * su tutti i lati del pannello.</strong>
+     * su tutti i lati del pannello.
      * </p>
      *
      * @param panel Il pannello da configurare; non può essere {@code null}.
@@ -61,8 +61,8 @@ public class InterfaceCreatorComponent {
      * Modifica le impostazioni del {@link GridBagConstraints} con le coordinate specificate.
      *
      * @param gbc L'oggetto {@link GridBagConstraints} da modificare.
-     * @param x   La posizione x nella griglia.
-     * @param y   La posizione y nella griglia.
+     * @param x   La posizione <strong>x</strong> nella griglia.
+     * @param y   La posizione <strong>y</strong> nella griglia.
      * @author Tahir Agalliu
      */
     public void modifyGridBagConstraints(GridBagConstraints gbc, int x, int y) {
@@ -74,7 +74,7 @@ public class InterfaceCreatorComponent {
      * Crea un campo di testo con il numero di colonne specificato.
      *
      * @param column Il numero di colonne del campo di testo.
-     * @return Un {@link JTextField} configurato con il numero di colonne.
+     * @return Un {@link JTextField} configurato con il <strong>numero di colonne</strong>.
      * @author Tahir Agalliu
      */
     public JTextField createNormaleField(int column) {
@@ -86,8 +86,8 @@ public class InterfaceCreatorComponent {
     /**
      * Crea un pulsante con il testo specificato. Il pulsante può essere configurato come un pulsante "Indietro" o un pulsante normale.
      *
-     * @param backButton Se true, crea un pulsante "Indietro" con uno stile specifico. Altrimenti, crea un pulsante normale.
-     * @param text       Il testo del pulsante.
+     * @param backButton Se true,crea un <strong> pulsante "Indietro" con uno stile specifico</strong>. Altrimenti, crea un <strong>pulsante normale</strong>.
+     * @param text       Il <strong>testo</strong> del pulsante.
      * @return Un {@link JButton} configurato con il testo e il colore specificati.
      * @author Tahir Agalliu
      */
@@ -104,9 +104,9 @@ public class InterfaceCreatorComponent {
     }
 
     /**
-     * Crea una lista di risultati configurata con un modello predefinito e impostazioni di visualizzazione.
+     * <strong>Crea una lista di risultati</strong> configurata con un modello predefinito e impostazioni di visualizzazione.
      *
-     * @return Un {@link JList} configurato per contenere oggetti di tipo {@link ResultWrapper}.
+     * @return Un {@link JList} configurato per contenere <strong> oggetti di tipo {@link ResultWrapper}</strong>.
      * @author Tahir Agalliu
      */
     public JList<ResultWrapper> createResultList() {
