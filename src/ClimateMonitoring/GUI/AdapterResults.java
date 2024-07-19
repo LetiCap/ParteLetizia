@@ -15,7 +15,7 @@ import java.rmi.RemoteException;
 import java.util.LinkedList;
 
 /**
- * Adapter per gestire e visualizzare i risultati climatici in un'interfaccia utente Swing.
+ * <strong>Adapter per gestire e visualizzare i risultati climatici in un'interfaccia utente Swing.</strong>
  * Questo adapter si occupa di aggiornare la lista dei risultati, aprire il pannello dei dettagli
  * e ripristinare lo stato dell'interfaccia.
  *
@@ -28,12 +28,12 @@ public class AdapterResults {
     private final JList<ResultWrapper> resultList; //result list per visualizzazione risultati
 
     /**
-     * Costruttore per inizializzare l'adapter con le dipendenze necessarie.
+     * <strong>Costruttore per inizializzare l'adapter con le dipendenze necessarie.</strong>
      *
-     * @param server       L'interfaccia del server per ottenere i dati climatici.
-     * @param cardLayout   Il layout a schede per la navigazione tra i pannelli.
-     * @param mainPanel    Il pannello principale dell'applicazione per la navigazione.
-     * @param resultList   La lista dei risultati da visualizzare.
+     * @param server       <strong>L'interfaccia del server per ottenere i dati climatici.</strong>
+     * @param cardLayout   <strong>Il layout a schede per la navigazione tra i pannelli.</strong>
+     * @param mainPanel    <strong>Il pannello principale dell'applicazione per la navigazione.</strong>
+     * @param resultList   <strong>La lista dei risultati da visualizzare.</strong>
      * @author Tahir Agalliu
      */
     public AdapterResults(ServerInterface server, CardLayout cardLayout, JPanel mainPanel, JList<ResultWrapper> resultList) {
@@ -44,9 +44,9 @@ public class AdapterResults {
     }
 
     /**
-     * Aggiorna la lista dei risultati con i nuovi dati forniti.
+     * <strong>Aggiorna la lista dei risultati con i nuovi dati forniti.</strong>
      *
-     * @param results Una lista di risultati climatici da visualizzare.
+     * @param results <strong>Una lista di risultati climatici da visualizzare.</strong>
      * @author Tahir Agalliu
      */
     void updateResults(LinkedList<Result> results) {
@@ -59,11 +59,11 @@ public class AdapterResults {
     }
 
     /**
-     * Apre il pannello dei dettagli per visualizzare i parametri climatici della città selezionata.
+     * <strong>Apre il pannello dei dettagli per visualizzare i parametri climatici della città selezionata.</strong>
      *
-     * @param parentFrame  La finestra principale dell'applicazione.
-     * @param selectedResult L'oggetto ResultWrapper che contiene i dettagli climatici selezionati.
-     * @throws RemoteException Se si verifica un errore nella comunicazione con il server.
+     * @param parentFrame  <strong>La finestra principale dell'applicazione.</strong>
+     * @param selectedResult <strong>L'oggetto ResultWrapper che contiene i dettagli climatici selezionati.</strong>
+     * @throws RemoteException <strong>Se si verifica un errore nella comunicazione con il server.</strong>
      * @author Tahir Agalliu
      */
     void openDetailsPanel(JFrame parentFrame, ResultWrapper selectedResult) throws RemoteException {
@@ -88,10 +88,10 @@ public class AdapterResults {
     }
 
     /**
-     * Ripristina il campo di ricerca e la lista dei risultati.
+     * <strong>Ripristina il campo di ricerca e la lista dei risultati.</strong>
      *
-     * @param searchField   Il campo di testo utilizzato per la ricerca.
-     * @param resultCountLabel Il label che mostra il numero di risultati.
+     * @param searchField   <strong>Il campo di testo utilizzato per la ricerca.</strong>
+     * @param resultCountLabel <strong>Il label che mostra il numero di risultati.</strong>
      * @author Tahir Agalliu
      */
     public void reset(JTextField searchField, JLabel resultCountLabel) {

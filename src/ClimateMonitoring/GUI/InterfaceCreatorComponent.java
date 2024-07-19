@@ -1,10 +1,12 @@
 package ClimateMonitoring.GUI;
+
 /*
 Tahir Agalliu 753550 VA
 Letizia Capitanio 752465 VA
 Alessandro D'Urso 753578 VA
 Francesca Ziggiotto 752504 VA
 */
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -12,8 +14,8 @@ import java.awt.*;
 /**
  * Classe per la creazione e personalizzazione di componenti dell'interfaccia utente.
  *
- * <p>Questa classe fornisce metodi per creare e configurare componenti grafici come etichette, pannelli, campi di testo,
- * pulsanti e liste. I componenti sono personalizzati per adattarsi all'aspetto dell'applicazione.</p>
+ * <p><strong>Questa classe fornisce metodi per creare e configurare componenti grafici come etichette, pannelli, campi di testo,
+ * pulsanti e liste. I componenti sono personalizzati per adattarsi all'aspetto dell'applicazione.</strong></p>
  *
  * @author Tahir Agalliu
  * @author Letizia Capitanio
@@ -22,7 +24,7 @@ public class InterfaceCreatorComponent {
 
     /**
      * Crea un'etichetta per il titolo della finestra con il testo specificato.
-     * Viene utilizzata per ottimizzazione codice e per personalizzazione ottimizzata.
+     * <p><strong>Viene utilizzata per ottimizzazione codice e per personalizzazione ottimizzata.</strong></p>
      *
      * @param title Il testo del titolo.
      * @return Un {@link JLabel} configurato con il testo del titolo.
@@ -38,9 +40,9 @@ public class InterfaceCreatorComponent {
     /**
      * Configura il layout e il bordo per il pannello specificato.
      * <p>
-     * Questo metodo imposta il layout del pannello su {@link BorderLayout} con
+     * <strong>Questo metodo imposta il layout del pannello su {@link BorderLayout} con
      * spaziatura di 10 pixel tra i componenti e applica un bordo vuoto di 10 pixel
-     * su tutti i lati del pannello.
+     * su tutti i lati del pannello.</strong>
      * </p>
      *
      * @param panel Il pannello da configurare; non può essere {@code null}.
@@ -49,7 +51,7 @@ public class InterfaceCreatorComponent {
      */
     public void setLayoutCustom(JPanel panel) {
         if (panel == null) {
-            throw new NullPointerException("Il pannello non può essere null.");
+            throw new NullPointerException("<strong>Il pannello non può essere null.</strong>");
         }
         panel.setLayout(new BorderLayout(10, 10));
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));

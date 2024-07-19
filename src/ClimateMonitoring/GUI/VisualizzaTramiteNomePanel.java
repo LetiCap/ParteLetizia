@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * Pannello Swing per visualizzare i risultati della ricerca tramite nome dell'area.
  *
- * <p>Questo pannello consente all'utente di cercare aree tramite il loro nome e visualizza i risultati in una lista.
+ * <p><strong>Questo pannello consente all'utente di cercare aree tramite il loro nome e visualizza i risultati in una lista.</strong>
  * Include anche un campo di testo per l'inserimento del nome, un pulsante per avviare la ricerca, e un'etichetta
  * che mostra il conteggio dei risultati trovati. Inoltre, gestisce la selezione di un risultato per visualizzare
  * i dettagli e la navigazione tra i pannelli.</p>
@@ -35,9 +35,9 @@ public class VisualizzaTramiteNomePanel extends JPanel {
     /**
      * Costruttore per creare il pannello di visualizzazione dei risultati tramite nome dell'area.
      *
-     * @param server      L'interfaccia del server per effettuare la ricerca.
-     * @param cardLayout  Il layout manager del pannello principale.
-     * @param mainPanel   Il pannello principale dell'applicazione.
+     * @param server      <strong>L'interfaccia del server per effettuare la ricerca.</strong>
+     * @param cardLayout  <strong>Il layout manager del pannello principale.</strong>
+     * @param mainPanel   <strong>Il pannello principale dell'applicazione.</strong>
      * @author Tahir Agalliu
      */
     public VisualizzaTramiteNomePanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
@@ -142,8 +142,8 @@ public class VisualizzaTramiteNomePanel extends JPanel {
     /**
      * Format il termine di ricerca per garantire che la prima lettera di ogni parola sia maiuscola.
      *
-     * @param searchTerm Il termine di ricerca da formattare.
-     * @return Il termine di ricerca formattato con la prima lettera di ogni parola in maiuscolo.
+     * @param searchTerm <strong>Il termine di ricerca da formattare.</strong>
+     * @return <strong>Il termine di ricerca formattato con la prima lettera di ogni parola in maiuscolo.</strong>
      * @author Tahir Agalliu
      */
     private String formatSearchTerm(String searchTerm) {
@@ -155,7 +155,7 @@ public class VisualizzaTramiteNomePanel extends JPanel {
     /**
      * Mostra un dialogo di errore con il messaggio specificato.
      *
-     * @param message Il messaggio di errore da visualizzare.
+     * @param message <strong>Il messaggio di errore da visualizzare.</strong>
      * @author Tahir Agalliu
      */
     private void showErrorDialog(String message) {
@@ -165,8 +165,8 @@ public class VisualizzaTramiteNomePanel extends JPanel {
     /**
      * Mostra un dialogo di errore con il messaggio e il tipo di messaggio specificati.
      *
-     * @param message     Il messaggio di errore da visualizzare.
-     * @param messageType Il tipo di messaggio (ad esempio, JOptionPane.ERROR_MESSAGE).
+     * @param message     <strong>Il messaggio di errore da visualizzare.</strong>
+     * @param messageType <strong>Il tipo di messaggio (ad esempio, JOptionPane.ERROR_MESSAGE).</strong>
      * @author Tahir Agalliu
      */
     private void showErrorDialog(String message, int messageType) {

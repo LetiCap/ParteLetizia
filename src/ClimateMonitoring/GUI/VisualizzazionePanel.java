@@ -5,6 +5,7 @@ Letizia Capitanio 752465 VA
 Alessandro D'Urso 753578 VA
 Francesca Ziggiotto 752504 VA
 */
+
 import ClimateMonitoring.ServerInterface;
 
 import javax.swing.*;
@@ -15,9 +16,9 @@ import java.awt.*;
  * Questo pannello consente all'utente di selezionare il tipo di ricerca da effettuare
  * e navigare verso i pannelli di ricerca specifici.
  *
- * <p>Il pannello include pulsanti per la ricerca basata su nome città, coordinate o stato.
- * Inoltre, fornisce un pulsante "Back" per tornare alla schermata principale e gestisce la navigazione tra i pannelli
- * utilizzando un {@link CardLayout}.</p>
+ * <p>Il pannello include pulsanti per la ricerca basata su <strong>nome città</strong>, <strong>coordinate</strong>
+ * o <strong>stato</strong>. Inoltre, fornisce un pulsante "Back" per tornare alla schermata principale e gestisce la
+ * navigazione tra i pannelli utilizzando un {@link CardLayout}.</p>
  *
  * @author Tahir Agalliu
  */
@@ -25,11 +26,12 @@ public class VisualizzazionePanel extends JPanel {
 
     /**
      * Costruttore della classe {@code VisualizzazionePanel}.
-     * Crea un pannello di visualizzazione con opzioni per la ricerca basata su nome città, coordinate o stato.
+     * Crea un pannello di visualizzazione con opzioni per la ricerca basata su <strong>nome città</strong>,
+     * <strong>coordinate</strong> o <strong>stato</strong>.
      *
-     * @param server       L'interfaccia con il server per la comunicazione dei dati.
-     * @param cardLayout   Il layout delle schede utilizzato per la navigazione tra i pannelli.
-     * @param mainPanel    Il pannello principale che contiene tutti i pannelli delle schede.
+     * @param server       L'<strong>interfaccia</strong> con il server per la comunicazione dei dati.
+     * @param cardLayout   Il <strong>layout delle schede</strong> utilizzato per la navigazione tra i pannelli.
+     * @param mainPanel    Il <strong>pannello principale</strong> che contiene tutti i pannelli delle schede.
      * @author Tahir Agalliu
      */
     public VisualizzazionePanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {

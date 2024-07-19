@@ -11,7 +11,9 @@ import ClimateMonitoring.Result;
 
 /**
  * Classe di avvolgimento per il risultato di una ricerca.
- * Estende la classe {@link Result} e aggiunge un numero di indice per ordinare i risultati.
+ * <p>
+ * <strong>Estende la classe {@link Result} e aggiunge un numero di indice per ordinare i risultati.</strong>
+ * </p>
  *
  * @author Tahir Agalliu
  */
@@ -20,6 +22,9 @@ public class ResultWrapper extends Result {
 
     /**
      * Costruttore per creare un'istanza di {@link ResultWrapper}.
+     * <p>
+     * <strong>Inizializza il risultato avvolto e imposta il numero di indice associato al risultato.</strong>
+     * </p>
      *
      * @param result Il risultato originale da avvolgere.
      * @param number Il numero di indice associato al risultato.
@@ -35,7 +40,9 @@ public class ResultWrapper extends Result {
 
     /**
      * Restituisce una rappresentazione in formato stringa del risultato avvolto.
-     * La stringa include il numero di indice e la rappresentazione stringa del risultato originale.
+     * <p>
+     * <strong>La stringa include il numero di indice e la rappresentazione stringa del risultato originale.</strong>
+     * </p>
      *
      * @return Una stringa che rappresenta il risultato con il numero di indice.
      *

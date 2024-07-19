@@ -410,12 +410,13 @@ public class DatabaseConnection {
 
 
     /**
-     * Cerca aree geografiche basate sul nome della città fornito.
+     * Cerca aree geografiche basate sul <strong>nome della città</strong> fornito.
      * Inizialmente cerca una corrispondenza esatta con il nome della città. Se non trova risultati,
      * riduce gradualmente la lunghezza del nome della città e riprova la ricerca con il nome parziale.
      *
-     * @param nomeCitta Il nome della città per cui cercare le aree geografiche.
-     * @return Una lista di risultati che corrispondono al nome della città o ai nomi parziali della città.
+     * @param nomeCitta Il <strong>nome della città</strong> per cui cercare le aree geografiche.
+     * @return Una lista di <strong>risultati</strong> che corrispondono al nome della città o ai nomi parziali della città.
+     * @author Tahir Agalliu
      */
     public LinkedList<Result> cercaAreaGeograficaNomeCitta(String nomeCitta) {
         LinkedList<Result> risultati = new LinkedList<>();
@@ -484,14 +485,14 @@ public class DatabaseConnection {
         return risultati;
     }
 
-
     /**
-     * Ricerca le aree geografiche basate sul nome dello stato di appartenenza fornito.
+     * Ricerca le aree geografiche basate sul <strong>nome dello stato</strong> di appartenenza fornito.
      * Prima cerca una corrispondenza esatta con il nome dello stato. Se non trova risultati,
      * riduce gradualmente la lunghezza del nome dello stato e riprova la ricerca con il nome parziale.
      *
-     * @param statoAppartenenza Il nome dello stato per cui cercare le aree geografiche.
-     * @return Una lista di risultati che corrispondono al nome dello stato o ai nomi parziali dello stato.
+     * @param statoAppartenenza Il <strong>nome dello stato</strong> per cui cercare le aree geografiche.
+     * @return Una lista di <strong>risultati</strong> che corrispondono al nome dello stato o ai nomi parziali dello stato.
+     * @author Tahir Agalliu
      */
     public LinkedList<Result> ricercaTramiteStato(String statoAppartenenza) {
         LinkedList<Result> risultati = new LinkedList<>();
@@ -561,20 +562,21 @@ public class DatabaseConnection {
     }
 
     /**
-     * Cerca le aree geografiche in base alle coordinate di latitudine e longitudine fornite, utilizzando vari intervalli di ricerca.
-     * Restituisce una lista di risultati che corrispondono alle coordinate specificate.
-     * Se vengono trovati duplicati, restituisce solo il risultato del duplicato.
+     * Cerca le aree geografiche in base alle <strong>coordinate di latitudine e longitudine</strong> fornite,
+     * utilizzando vari intervalli di ricerca. Restituisce una lista di risultati che corrispondono alle coordinate
+     * specificate. Se vengono trovati duplicati, restituisce solo il risultato del duplicato.
      *
-     * @param latitudine La latitudine centrale per la ricerca.
-     * @param longitudine La longitudine centrale per la ricerca.
-     * @return Una lista di risultati che corrispondono alle coordinate specificate. Se ci sono duplicati, restituisce solo il risultato del duplicato.
+     * @param latitudine La <strong>latitudine</strong> centrale per la ricerca.
+     * @param longitudine La <strong>longitudine</strong> centrale per la ricerca.
+     * @return Una lista di <strong>risultati</strong> che corrispondono alle coordinate specificate. Se ci sono duplicati, restituisce solo il risultato del duplicato.
+     * @author Tahir Agalliu
      */
     public LinkedList<Result> cercaAreaGeograficaCoordinate(double latitudine, double longitudine) {
         LinkedList<Result> risultati = new LinkedList<>();
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
-        double[] range = {0.00001, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0};//possibile anche aumento range di ricerca a scapito di precisione
+        double[] range = {0.00001, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0}; // possibile anche aumento range di ricerca a scapito di precisione
 
         try {
             // Connessione al database
@@ -652,17 +654,16 @@ public class DatabaseConnection {
         return risultati;
     }
 
-
-
     /**
-     * Recupera informazioni climatiche per una città specificata dalla tabella "ParametriClimatici".
-     * Il tipo di informazione restituita dipende dal valore del parametro {@code moda}.
+     * Recupera informazioni climatiche per una città specificata dalla tabella <strong>"ParametriClimatici"</strong>.
+     * Il tipo di informazione restituita dipende dal valore del parametro <strong>moda</strong>.
      *
-     * @param cityName Il nome della città per cui recuperare le informazioni climatiche.
-     * @param colonna Il nome della colonna da cui estrarre i dati. Se è {@code null} o vuoto, viene selezionata tutte le colonne.
+     * @param cityName Il <strong>nome della città</strong> per cui recuperare le informazioni climatiche.
+     * @param colonna Il <strong>nome della colonna</strong> da cui estrarre i dati. Se è {@code null} o vuoto, viene selezionata tutte le colonne.
      * @param moda Se {@code true}, calcola e restituisce la moda (valore più frequente) della colonna specificata.
      *             Se {@code false}, restituisce tutti i valori della colonna come una stringa separata da nuove righe.
-     * @return Una stringa contenente le informazioni climatiche richieste. Se non ci sono informazioni, restituisce "<no info yet>".
+     * @return Una <strong>stringa</strong> contenente le informazioni climatiche richieste. Se non ci sono informazioni, restituisce "<no info yet>".
+     * @author Tahir Agalliu
      */
     public String getInfoCity(String cityName, String colonna, boolean moda) {
         Connection connection = null;
@@ -776,5 +777,4 @@ public class DatabaseConnection {
 
         return result.toString();
     }
-
 }

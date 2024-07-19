@@ -18,8 +18,8 @@ import java.util.LinkedList;
 /**
  * Pannello per la visualizzazione e ricerca di risultati tramite coordinate geografiche.
  * <p>
- * Questo pannello consente all'utente di inserire latitudine e longitudine per cercare
- * aree geografiche e visualizzare i risultati in una lista. Gli utenti possono anche
+ * <strong>Questo pannello consente all'utente di inserire latitudine e longitudine per cercare
+ * aree geografiche e visualizzare i risultati in una lista.</strong> Gli utenti possono anche
  * tornare al pannello di visualizzazione principale.
  * </p>
  *
@@ -35,13 +35,13 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
     /**
      * Costruisce un pannello per la visualizzazione tramite coordinate geografiche.
      * <p>
-     * Inizializza i componenti dell'interfaccia grafica e configura i layout e i listener
-     * per gestire l'interazione dell'utente.
+     * <strong>Inizializza i componenti dell'interfaccia grafica e configura i layout e i listener
+     * per gestire l'interazione dell'utente.</strong>
      * </p>
      *
-     * @param server       l'interfaccia del server da cui ottenere i risultati della ricerca
-     * @param cardLayout   il layout del pannello che consente di passare tra i pannelli
-     * @param mainPanel    il pannello principale in cui visualizzare la scheda
+     * @param server       <strong>l'interfaccia del server da cui ottenere i risultati della ricerca</strong>
+     * @param cardLayout   <strong>il layout del pannello che consente di passare tra i pannelli</strong>
+     * @param mainPanel    <strong>il pannello principale in cui visualizzare la scheda</strong>
      * @author Tahir Agalliu
      */
     public VisualizzaTramiteCoordinatePanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
@@ -113,13 +113,13 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
     /**
      * Crea un {@link ActionListener} per il pulsante di ricerca.
      * <p>
-     * Questo listener esegue la ricerca dell'area geografica basata sulle coordinate
-     * inserite dall'utente. Gestisce le eccezioni se i valori non sono numeri validi
+     * <strong>Questo listener esegue la ricerca dell'area geografica basata sulle coordinate
+     * inserite dall'utente.</strong> Gestisce le eccezioni se i valori non sono numeri validi
      * e aggiorna la lista dei risultati e il conteggio dei risultati.
      * </p>
      *
-     * @param server l'interfaccia del server da cui ottenere i risultati della ricerca
-     * @return l'ActionListener creato per il pulsante di ricerca
+     * @param server <strong>l'interfaccia del server da cui ottenere i risultati della ricerca</strong>
+     * @return <strong>l'ActionListener creato per il pulsante di ricerca</strong>
      * @author Tahir Agalliu
      */
     private ActionListener createSearchActionListener(ServerInterface server) {
@@ -169,11 +169,11 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
     /**
      * Crea un {@link java.awt.event.MouseListener} per la lista dei risultati.
      * <p>
-     * Questo listener gestisce il doppio clic sugli elementi della lista dei risultati
-     * per aprire i dettagli dell'elemento selezionato.
+     * <strong>Questo listener gestisce il doppio clic sugli elementi della lista dei risultati
+     * per aprire i dettagli dell'elemento selezionato.</strong>
      * </p>
      *
-     * @return il MouseListener creato per la lista dei risultati
+     * @return <strong>il MouseListener creato per la lista dei risultati</strong>
      * @author Tahir Agalliu
      */
     private java.awt.event.MouseListener createResultListMouseListener() {
@@ -200,12 +200,12 @@ public class VisualizzaTramiteCoordinatePanel extends JPanel {
     /**
      * Gestisce l'azione del pulsante "Back".
      * <p>
-     * Questo metodo resetta i campi di input e il conteggio dei risultati,
-     * e mostra il pannello di visualizzazione principale.
+     * <strong>Questo metodo resetta i campi di input e il conteggio dei risultati,
+     * e mostra il pannello di visualizzazione principale.</strong>
      * </p>
      *
-     * @param cardLayout il layout del pannello che consente di passare tra i pannelli
-     * @param mainPanel  il pannello principale in cui visualizzare la scheda
+     * @param cardLayout <strong>il layout del pannello che consente di passare tra i pannelli</strong>
+     * @param mainPanel  <strong>il pannello principale in cui visualizzare la scheda</strong>
      * @author Tahir Agalliu
      */
     private void handleBackButtonAction(CardLayout cardLayout, JPanel mainPanel) {

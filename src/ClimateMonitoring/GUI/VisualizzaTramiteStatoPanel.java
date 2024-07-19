@@ -9,6 +9,7 @@ Francesca Ziggiotto 752504 VA
 
 import ClimateMonitoring.Result;
 import ClimateMonitoring.ServerInterface;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -36,9 +37,9 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
     /**
      * Costruttore per creare il pannello di visualizzazione tramite stato.
      *
-     * @param server      L'interfaccia del server per effettuare la ricerca.
-     * @param cardLayout  Il layout manager del pannello principale.
-     * @param mainPanel   Il pannello principale dell'applicazione.
+     * @param server      L'<strong>interfaccia</strong> del server per effettuare la ricerca.
+     * @param cardLayout  Il <strong>layout manager</strong> del pannello principale.
+     * @param mainPanel   Il <strong>pannello principale</strong> dell'applicazione.
      * @author Tahir Agalliu
      */
     public VisualizzaTramiteStatoPanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
@@ -116,7 +117,7 @@ public class VisualizzaTramiteStatoPanel extends JPanel {
      * Vengono effettuati controlli su ricerca e gestione delle principali eccezioni.
      * Ogni valore di ricerca deve essere almeno di due caratteri e possibilmente con lettera iniziale maiuscola.
      *
-     * @param server L'interfaccia del server per effettuare la ricerca.
+     * @param server L'<strong>interfaccia</strong> del server per effettuare la ricerca.
      * @author Tahir Agalliu
      */
     private void performSearch(ServerInterface server) {
