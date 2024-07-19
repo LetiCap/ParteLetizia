@@ -12,18 +12,51 @@ import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * Questa classe gestisce la connessione a un database PostgreSQL, inclusa la creazione del database e delle tabelle necessarie.
+ * <p>
+ * La connessione al database è configurata tramite il metodo {@link #setConnectionDetails(String, String, String)}.
+ * Una volta impostati i dettagli della connessione, è possibile utilizzare {@link #connect()} per connettersi al database.
+ * Se il database non esiste, viene creato automaticamente. Se è necessaria la creazione delle tabelle, viene eseguito
+ * uno script SQL specificato in un file di risorse.
+ * </p>
+ * <p>
+ * È importante chiudere la connessione utilizzando il metodo {@link #closeConnection(Connection)} quando non è più necessaria.
+ * </p>
+ *
+ * @author Tahir Agalliu
+ * @author Letizia Capitanio
+ */
 public class DatabaseConnection {
     private static String URL;
     private static String USERNAME;
     private static String PASSWORD;
     private String centro;
 
+
+    /**
+     * Imposta i dettagli di connessione al database.
+     *
+     * @param dbUrl L'URL di connessione al database.
+     * @param dbUsername Il nome utente per la connessione al database.
+     * @param dbPassword La password per la connessione al database.
+     */
     public static void setConnectionDetails(String dbUrl, String dbUsername, String dbPassword) {
         URL = dbUrl;
         USERNAME = dbUsername;
         PASSWORD = dbPassword;
     }
 
+    /**
+     * Stabilisce una connessione al database utilizzando i dettagli forniti.
+     * <p>
+     * Se i dettagli di connessione non sono stati impostati, viene sollevata un'eccezione {@link SQLException}.
+     * Se il database non esiste, verrà creato automaticamente.
+     * </p>
+     *
+     * @return Una connessione al database.
+     * @throws SQLException Se si verifica un errore durante la connessione al database.
+     */
     public static Connection connect() throws SQLException {
         if (URL == null || USERNAME == null || PASSWORD == null) {
             throw new SQLException("Database connection details are not set.");
@@ -40,6 +73,11 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * Controlla se il database esiste.
+     *
+     * @return {@code true} se il database esiste, {@code false} altrimenti.
+     */
     private static boolean databaseExists() {
         try (Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/", USERNAME, PASSWORD)) {
             DatabaseMetaData metaData = conn.getMetaData();
@@ -58,6 +96,11 @@ public class DatabaseConnection {
         return false;
     }
 
+    /**
+     * Crea il database se non esiste già e esegue lo script per la creazione delle tabelle.
+     *
+     * @throws SQLException Se si verifica un errore durante la creazione del database o delle tabelle.
+     */
     private static void createDatabase() throws SQLException {
         if (!databaseExists()) {
             try (Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/", USERNAME, PASSWORD)) {
@@ -72,7 +115,15 @@ public class DatabaseConnection {
             }
         }
     }
-
+    /**
+     * Esegue lo script SQL per la creazione delle tabelle nel database.
+     * <p>
+     * Lo script SQL viene letto da un file di risorse denominato "script". Le istruzioni SQL devono essere separate
+     * da punto e virgola (;) nel file di script.
+     * </p>
+     *
+     * @throws SQLException Se si verifica un errore durante l'esecuzione dello script SQL.
+     */
     private static void executeTableCreationScript() throws SQLException {
         Connection g= DriverManager.getConnection("jdbc:postgresql://localhost:5432/climatemonitoring", USERNAME, PASSWORD);
        // setConnectionDetails("jdbc:postgresql://localhost:5432/climatemonitoring",USERNAME,PASSWORD);
@@ -104,7 +155,11 @@ public class DatabaseConnection {
         }
     }
 
-
+    /**
+     * Chiude la connessione al database.
+     *
+     * @param connection La connessione al database da chiudere.
+     */
     public static void closeConnection(Connection connection) {
         if (connection != null) {
             try {
@@ -121,21 +176,30 @@ public class DatabaseConnection {
 
 
 
-/**
-     * Metodo che permette di inserire uno o piu valori contemporaneamente nella tabella passata come parametro
+
+
+    /**
+     * Inserisce uno o più valori nella tabella specificata.
+     * <p>
+     * Se la tabella è "CentriMonitoraggio" o "OperatoriRegistrati", viene eseguito un inserimento con una sola colonna.
+     * Se la tabella è "aree", vengono inseriti due valori in due colonne. Se la tabella è "ParametriClimatici",
+     * vengono inseriti valori in base a una mappa di dati.
+     * </p>
+     *
      * @param tabella nome della tabella dove inserire i dati
      * @param valore valore da inserire nella tabella
      * @param colonna colonna dove inserire il valore
-     * @param valore2 valore da inserire nella tabella
-     * @param colonna2 colonna dove inserire il valore 2
+     * @param valore2 secondo valore da inserire nella tabella, se applicabile
+     * @param colonna2 seconda colonna dove inserire il valore2, se applicabile
      * @param dato cosa visualizzare nella stampa di successo o insuccesso
+     * @param dataMap mappa contenente coppie colonna-valore per l'inserimento nella tabella "ParametriClimatici"
+     * @author Letizia Capitanio
      */
     protected void inserimentoinDB(String tabella, String valore, String colonna, String valore2, String colonna2, String dato, Map<String, Object> dataMap ) {
         Connection connection = null;
         try {
             connection = connect();
 
-            String database="climatemonitoringdb";
             Statement statement = connection.createStatement();
             int esito;
             String query = null;
@@ -176,13 +240,16 @@ public class DatabaseConnection {
         }
     }
 
+
+
     /**
-     *Metodo che aggiunge i dati presenti nella Map, alla tabella passata come argomento,
-     *  nella colonna contenente l'argomento passato come valoreColonnaWhere.
-     * @param dataMap Mappa contenente i valori con il nome della colonna dove vanno inseriti
-     * @param tabella nome della tabella dove inserire i dati (update)
-     * @param valoreColonnaWhere valore presente nella tabella, dove andare a inserire i dati, contenuti nella Mappa
-     * @param nomeColonnaWhere nome della colonna in cui cercare per il WHERE
+     * Aggiorna i dati nella tabella specificata basandosi sui valori presenti nella mappa e sulla condizione di WHERE.
+     *
+     * @param dataMap mappa contenente i valori da aggiornare, con il nome della colonna come chiave
+     * @param tabella nome della tabella in cui aggiornare i dati
+     * @param valoreColonnaWhere valore presente nella tabella, usato nella clausola WHERE
+     * @param nomeColonnaWhere nome della colonna su cui applicare il filtro WHERE
+     * @author Letizia Capitanio
      */
     protected void UpdateDataToDB(Map<String, Object> dataMap, String tabella, String valoreColonnaWhere, String nomeColonnaWhere) {
         Connection connection = null;
@@ -210,12 +277,12 @@ public class DatabaseConnection {
     }
 
     /**
-     *Metodo che aggiunge "inserimento", nella "colonna", all'"id" alla tabella <strong>OperatoriRegostrati</strong>,
-     * @param colonna nome della colonna dove si vuole aggiungere l'elemento
+     * Aggiorna la colonna "NomeCentro" nella tabella <Strong>OperatoriRegistrati</Strong> per un utente specifico identificato dall'id.
      * @param inserimento valore che si vuole aggiungere alla tabella
      * @param id valore dell'id presente nella tabella, dove andare a inserire il dato
+     * @author Letizia Capitanio
      */
-    protected void UpdateDataToDB(String colonna, String inserimento, String id) {
+    protected void UpdateDataToDB( String inserimento, String id) {
         Connection connection = null;
         try {
             connection = connect();
@@ -223,7 +290,7 @@ public class DatabaseConnection {
             Statement statement = connection.createStatement();
             int esito;
 
-            String query = "UPDATE \"OperatoriRegistrati\" SET \"" + colonna + "\" = '" + inserimento + "' WHERE \"Userid\" = '" + id + "'";
+            String query = "UPDATE \"OperatoriRegistrati\" SET \"NomeCentro\" = '" + inserimento + "' WHERE \"Userid\" = '" + id + "'";
             esito = statement.executeUpdate(query);
             System.out.println(query);
             if (esito == 1)
@@ -244,7 +311,8 @@ public class DatabaseConnection {
      * @param valore Stringa da cercare nella tabella
      * @param tabella tabella dove cercare il valore
      * @param colonna nome della colonna dove cercare il valore
-     * @return true se è già presente l'argomento valore. false se non è presente
+     * @return {@code true} se è già presente l'argomento valore. {@code false} se non è presente
+     * @author Letizia Capitanio
      */
     protected boolean controlloSegiaPresente(String valore, String tabella, String colonna)  {
         Connection connection = null;
@@ -266,10 +334,11 @@ public class DatabaseConnection {
     }
 
     /**
-     * Metodo che serve in fase di login per verificare che la coppia id e password passati come argomento, siano presenti nella tabella <strong>OperatoriRegistrati</strong>
-     * @param id id dell'utente teoricamente registrato
+     * Verifica la validità delle credenziali dell'utente e restituisce il centro associato se il login ha successo.
+     * @param id id dell'utente da verificare
      * @param password password dell'id passato come argomento
-     * @return in caso di utente registrato( quindi che il login abbia avuto successo) resitutisce il centro per cui lavora
+     * @return il nome del centro associato all'utente se il login è valido, {@code null} altrimenti
+     * @author Letizia Capitanio
      */
     public String controlloPasswordUtente(String id, String password)  {
         Connection connection = null;
@@ -301,14 +370,16 @@ public class DatabaseConnection {
 
     /**
      * Metodo che restituisce la lista degli elementi nella tabella passato come argomento.
-     * Se si tratta della tabella <strong>CentroMonitoraggio</strong> non è necessario specificare l'argoemnto centro, ne il boolean. Va specificata come argomento "nomeColonnaDoveRicercare"
-     * Se si tratta della tabella <strong>aree</strong> e si vuole restituire gli elementi di una colonna di un centro specifico, va specificato l'argoemnto "centro" e boolean come false
-     * Se si tratta della tabella <strong>aree</strong> e si vogliono restituire i valori di una colonna, senza vincolo del centro, non va specificato quest'ultimo, ma va imposto come boolean true
-     *
-     * @param tabella                  nome della tabella dove estrarre i dati
+     * <p>
+     * Se la tabella è <Strong>CentriMonitoraggio</Strong>, restituisce tutti i valori della colonna specificata.
+     * Se la tabella è <Strong>aree</Strong> e la ricerca è libera, restituisce tutti i valori della colonna.
+     * Se la tabella è <Strong>aree</Strong> e la ricerca non è libera, restituisce solo i valori della colonna per il centro specificato.
+     * </p>
+     * @param tabella nome della tabella dove estrarre i dati
      * @param nomeColonnaDoveRicercare nome della colonna di cui restituire i valori
-     * @param ricercaLibera            impostare true se si tratta di una ricerca senza un WHERE, altrimenti false
+     * @param ricercaLibera {@code true} se si tratta di una ricerca senza filtro WHERE, {@code false} altrimenti
      * @return lista dei valori della colonna
+     * @author Letizia Capitanio
      */
     public  LinkedList<String> mostraElementiDisponibili(String tabella, String nomeColonnaDoveRicercare, boolean ricercaLibera) {
         Connection connection = null;
@@ -339,75 +410,6 @@ public class DatabaseConnection {
         }
         return listaElementi;
     }
-
-    /**
-     * Metodo che restituisce in forma di Map le mode e le eventuali note di tutti i parametri, di un'area o di un centro in base all'argomento "campodiricerca",
-     * dell'elemento dell'area o centro passato come argomento "parametroscelto"
-     * @return map che restituisce le mode e le note
-     */
-
-    public Map<String, HashMap<String, String>>  RicercaMode(String parametroscelto, String[] nomiColonneParametriPAR, String[] nomiColonneParametriNOT) {
-        Connection connection = null;
-        String query;
-        ResultSet resultSet;
-        boolean stampatoIntestazione = false;
-        Map<String, HashMap<String, String>> result = new HashMap<>();
-        try {
-            connection = connect();
-            Statement statement = connection.createStatement();
-            for (String colonna : nomiColonneParametriPAR) {
-                query = "SELECT " + colonna + ", COUNT(" + colonna + ") AS frequenza FROM \"ParametriClimatici\" WHERE  \"area\" = '" + parametroscelto + "'  GROUP BY " + colonna + " ORDER BY frequenza DESC LIMIT 1";
-                resultSet = statement.executeQuery(query);
-                HashMap<String, String> parResult = new HashMap<>();
-                if (resultSet.next()) {
-
-                    String valorePiuUsato = resultSet.getString(colonna);
-                    if (valorePiuUsato != null) {
-                        int frequenza = resultSet.getInt("frequenza");
-                        //  System.out.println("Valore più usato in " + colonna + ": " + valorePiuUsato);
-                        //   System.out.println("Frequenza: " + frequenza + "\n");
-                        parResult.put("ValorePiuUsato", valorePiuUsato);
-                        parResult.put("Frequenza", String.valueOf(frequenza));
-                        result.put(colonna, parResult);
-                    }
-                }
-            }
-            for (String column : nomiColonneParametriNOT) {
-                query = "SELECT \"" + column + "\" FROM \"ParametriClimatici\" WHERE  \"area\" = '" + parametroscelto + "'";
-                resultSet = statement.executeQuery(query);
-                HashMap<String, String> noteResult = new HashMap<>();
-                LinkedList<String> listaNote = new LinkedList<>();
-                // Stampa le note una sotto l'altra
-                while (resultSet.next()) {
-                    String note = resultSet.getString(column);
-                    if (note != null) {
-                        if (!stampatoIntestazione) {
-                            //  System.out.println("Le note per " + column + " sono:");
-                            stampatoIntestazione = true;
-                        }
-                        listaNote.add(note);
-                        //  System.out.println("- " + note);
-                    }
-                }
-                if (!listaNote.isEmpty()) {
-                    noteResult.put("Note", listaNote.toString());
-                    result.put(column, noteResult);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Chiudi la connessione
-            DatabaseConnection.closeConnection(connection);
-        }
-        return result;
-
-    }
-
-
-
-
-
 
     /**
      * Cerca aree geografiche basate sul <strong>nome della città</strong> fornito.

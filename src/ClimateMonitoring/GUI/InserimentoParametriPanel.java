@@ -1,7 +1,11 @@
+/*Tahir Agalliu	753550 VA
+Letizia Capitanio 752465 VA
+Alessandro D'Urso 753578 VA
+Francesca Ziggiotto	752504 VA
+*/
+
 package ClimateMonitoring.GUI;
-
 import ClimateMonitoring.ServerInterface;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -16,13 +20,22 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+
+/**
+ * Pannello di inserimento dei parametri climatici.
+ * <p>
+ * Questo pannello consente all'utente di selezionare un'area di lavoro e inserire valutazioni e note per vari parametri climatici.
+ * Include una lista per selezionare le aree, una tabella per l'inserimento dei parametri climatici e pulsanti per inviare i dati o tornare indietro.
+ * </p>
+ *
+ * @author Letizia Capitanio
+ */
 public class InserimentoParametriPanel extends JPanel {
     private ServerInterface server;
     private JList<String> resultList;
     private String areaScelta;
     private JTable climateTable;
     private InterfaceCreatorComponent creator= new InterfaceCreatorComponent();
-
     private static String[] NomiColonneParametriPAR = {
             "vento_val",
             "umidita_val",
@@ -52,6 +65,13 @@ public class InserimentoParametriPanel extends JPanel {
             {"Massa dei ghiacciai", "In kg, suddivisa in fasce", "", ""}
     };
 
+    /**
+     * Imposta il panel di inserimento parametri climatici. è possibile visualizzare le aree di lavoro dell'utente, sceglierne una
+     * e scegliere per quali parametri inserire una valutazione con una nota.
+     * @param server     <strong>l'interfaccia del server</strong> da cui ottenere i risultati della ricerca.
+     * @param cardLayout <strong>il layout del pannello</strong> che consente di passare tra i pannelli.
+     * @param mainPanel  <strong>il pannello principale</strong> in cui visualizzare la scheda.
+     */
     public InserimentoParametriPanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
         this.server = server;
 
@@ -98,11 +118,7 @@ public class InserimentoParametriPanel extends JPanel {
         climateTable.getTableHeader().setReorderingAllowed(false);
 
         // Applica il TableCellEditor alla colonna "Score"
-        climateTable.getColumnModel().getColumn(2).setCellEditor(new ScoreCellEditor(new JTextField()));
-
-
-
-
+        climateTable.getColumnModel().getColumn(2).setCellEditor(new ScoreCellEditor(new JTextField(),climateTable));
 
         // Aggiungi il listener per avviare l'editor di popup per le Notes
         climateTable.addMouseListener(new MouseAdapter() {
@@ -116,12 +132,6 @@ public class InserimentoParametriPanel extends JPanel {
                 }
             }
         });
-
-
-
-
-
-
         // Aggiungi la tabella al pannello centrale
         JScrollPane scrollTable = new JScrollPane(climateTable);
         add(scrollTable, BorderLayout.CENTER);
@@ -274,58 +284,4 @@ public class InserimentoParametriPanel extends JPanel {
     }
 
 
-
-    private class ScoreCellEditor extends DefaultCellEditor {
-        private JTextField textField;
-        private String originalValue;
-
-        public ScoreCellEditor(JTextField textField) {
-            super(textField);
-            this.textField = textField;
-
-            // Aggiungi un listener per il focus per monitorare quando l'utente inizia a editare
-            textField.addFocusListener(new FocusAdapter() {
-                @Override
-                public void focusLost(FocusEvent e) {
-                    validateAndStopEditing();
-                }
-            });
-        }
-
-        @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            // Imposta il valore originale per il confronto successivo
-            originalValue = (value == null) ? "" : value.toString();
-            return super.getTableCellEditorComponent(table, value, isSelected, row, column);
-        }
-
-        @Override
-        public boolean stopCellEditing() {
-            validateAndStopEditing();
-            return super.stopCellEditing(); // Prosegui con la conferma dell'editing
-        }
-
-        // Metodo per validare il valore di Score e terminare l'editing se valido
-        private void validateAndStopEditing() {
-            String scoreStr = textField.getText().trim();
-            if (isValidScore(scoreStr)) {
-                // Aggiorna il modello della tabella solo se stai editando una cella valida
-                int editingRow = climateTable.getEditingRow();
-                int editingColumn = climateTable.getEditingColumn();
-                if (editingRow != -1 && editingColumn != -1) {
-                    climateTable.getModel().setValueAt(scoreStr, editingRow, editingColumn);
-                }
-            } else {
-                // Mostra il messaggio di errore
-                JOptionPane.showMessageDialog(InserimentoParametriPanel.this,
-                        "Inserisci un valore numerico compreso tra 1 e 5 per Score",
-                        "Input non valido", JOptionPane.ERROR_MESSAGE);
-
-                // Ripristina il valore originale nella cella
-                textField.setText(originalValue);
-                textField.requestFocusInWindow(); // Rimetti il focus nella cella per permettere la modifica
-
-            }
-        }
-    }
 }

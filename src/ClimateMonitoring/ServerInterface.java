@@ -13,6 +13,8 @@ import java.util.Map;
 
 /**
  * Interfaccia implementata dal server. contiene i metodi che vengono utilizzati dal client per comunicare
+ * @author Tahir Agalliu
+ * @author Letizia Capitanio
  */
 public interface ServerInterface extends Remote {
     boolean registrazione(String id, LinkedList<String> inserimenti) throws RemoteException;

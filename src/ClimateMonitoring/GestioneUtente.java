@@ -10,12 +10,15 @@ package ClimateMonitoring;
 import java.io.Serializable;
 import java.util.*;
     /**
-     *
-     *La classe <strong>GestioneUtente</strong> si occupa degli aspetti relativi ai dati dell'utente.
-     *Sia le fasi per registrarsi all'interno del programma <strong>Climate Monitoring</strong>,
-     *sia le fasi per fare il login.
-     *@author Letizia Capitanio
+     * La classe <strong>GestioneUtente</strong> gestisce le operazioni relative ai dati degli utenti all'interno del programma <strong>Climate Monitoring</strong>.
+     * Questa classe include le funzionalità per la registrazione e il login degli utenti.
+     * <p>
+     * Le operazioni di registrazione includono la verifica della disponibilità dell'ID, l'inserimento dei dati dell'utente e l'associazione a un centro.
+     * Le operazioni di login includono la verifica delle credenziali e la gestione dei parametri climatici.
+     * </p>
+     * @author Letizia Capitanio
      */
+
     public class GestioneUtente  implements Serializable {
         private String id;
         private GestioneCentri gestioneCentri;
@@ -27,11 +30,17 @@ import java.util.*;
         /*Metodo controllo password e id del login*/
 
         /**
-         * Viene controllato che sia presente quella corrispondenza user, password nel db <strong>OperatoriRegistrati</strong
+         * Verifica le credenziali dell'utente confrontando l'username e la password forniti con i dati presenti
+         * nel database nella tabella <strong>OperatoriRegistrati</strong>.
+         * <p>
+         * Se l'username è trovato nel database, viene effettuato un ulteriore controllo per verificare se la password
+         * corrisponde. In caso di successo, il metodo imposta il campo `centro` con il nome del centro associato all'utente
+         * e ritorna {@code true}. Altrimenti, ritorna {@code false}.
+         * </p>
          * @param id Username
          * @param password password associata all'username
          * @param db oggetto della classe DatabaseConnection
-         * @return true se presente
+         * @return {@code true} se presente
          */
         protected boolean login(String id, String password, DatabaseConnection db) {
             if (db.controlloSegiaPresente(id, "OperatoriRegistrati", "Userid")) {
@@ -56,11 +65,13 @@ import java.util.*;
         /*Metodo che verifica che l'id scelto in fase di registrazione sia gia presente oppure no*/
 
         /**
-         * Metodo di controllo dell'id in fase di <strong>registrazione</strong>..
-         * Viene controllato che <strong>non</strong> non sia presente l'id nel db <strong>OperatoriRegistrati</strong>
+         * Metodo di controllo dell'id in fase di <strong>registrazione</strong>.
+         * <p>
+         * Viene controllato che <strong>non</strong> non sia presente l'id nel db <strong>OperatoriRegistrati</strong>*
+         * </p>
          * @param id che si vuole registrare
          * @param db oggetto della classe DatabaseConnection
-         * @return true se l'id non è gia presente, altrimenti false
+         * @return {@code true} se l'id non è gia presente, altrimenti {@code false}
          */
         protected boolean controlloId(String id, DatabaseConnection db) {
             // Verifica se il ResultSet ha dei risultati
@@ -83,6 +94,7 @@ import java.util.*;
          * Vengono passati i dati per la registrazione: Email, Codice Fiscale, Nome e Cognome attraverso la lista di Stringhe
          * @param inserimenti lista con elementi da inserire associati all'utente
          * @param db oggetto della classe DatabaseConnection
+         * @author Letizia Capitanio
          */
         protected void RichiestaDatiPerRegistrazione(LinkedList<String> inserimenti, DatabaseConnection db) {
             db.inserimentoinDB("OperatoriRegistrati", this.id, "Userid", null, null, "User", null);
@@ -99,6 +111,7 @@ import java.util.*;
          * @param datiUtente  è un booleano. se impostato su true, richiede i dati per l'utente, se false richiede i dati per registrare un nuovo centro
          * @param inserimenti lista con elementi da inserire
          * @param db oggetto della classe DatabaseConnection
+         * @author Letizia Capitanio
          */
         protected void InserimentoDatiAggiuntivi(LinkedList<String> inserimenti, boolean datiUtente, DatabaseConnection db) {
             String[] Nomicolonne;
@@ -123,16 +136,17 @@ import java.util.*;
          * @param elementiDisponibili lista d centri già registrati
          * @param centro nome del centro a cui ci si vuole associare o registrare
          * @param db oggetto della classe DatabaseConnection
-         * @return true se il centro era già esistente, false se va creato
+         * @return {@code true} se il centro era già esistente, {@code false} se va creato
+         * @author Letizia Capitanio
          */
         protected boolean richiestaInserimentoCentro(String centro, LinkedList<String> elementiDisponibili, DatabaseConnection db) {
             this.centro = centro;
             if (elementiDisponibili.contains(centro)) {
-                db.UpdateDataToDB("NomeCentro", centro, id);
+                db.UpdateDataToDB( centro, id);
                 return true;
             } else {
                 db.inserimentoinDB("CentriMonitoraggio", centro, "NomeCentro", null, null, "centro", null);
-                db.UpdateDataToDB("NomeCentro", centro, id);
+                db.UpdateDataToDB( centro, id);
                 return false;
             }
         }
@@ -144,11 +158,14 @@ import java.util.*;
 
         /**
          * Metodo della sezione<strong>Login</strong>
-         * Metodo che permette di inserire le valutazioni e le note, presenti nella Map, nell'area passata come argomento "longScelta"
-         * Per poter utilizzare questo metodo è necessario non utilizzarlo da solo, ma soltanto in seguito ad aver richiamato il metodo <strong>login</strong>.
+         * <p>
+         *     Metodo che permette di inserire le valutazioni e le note presenti nella Map, nell'area passata come argomento "longScelta"
+         *     Per poter utilizzare questo metodo è necessario non utilizzarlo da solo, ma soltanto in seguito ad aver richiamato il metodo{@link #login(String, String, DatabaseConnection)}.
+         * </p>
          * @param longlatScelta area scelta del proprio centro dove aggiungere valutazoni e note climatiche
          * @param mappaNoteValutazioni mappa con key con nome della colonna e value come valutazioni e note
          * @param db oggetto della classe DatabaseConnection
+         * @author Letizia Capitanio
          */
         protected void inserisciParametriClimatici(String longlatScelta, Map<String, Object> mappaNoteValutazioni, DatabaseConnection db) {
             gestioneCentri = new GestioneCentri();
@@ -166,6 +183,7 @@ import java.util.*;
          * @param inserimenti dati del centro
          * @param lonlatInserite nome delle aree associate al centro che si vogliono registrare
          * @param db oggetto della classe DatabaseConnection
+         * @author Letizia Capitanio
          */
         protected void registraCentroAree(LinkedList<String> inserimenti, LinkedList<String> lonlatInserite, DatabaseConnection db) {
             InserimentoDatiAggiuntivi(inserimenti, false, db);

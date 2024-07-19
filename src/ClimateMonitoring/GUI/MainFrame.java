@@ -55,11 +55,11 @@ public class MainFrame extends JFrame {
         homePanel.add(buttonsPanel, BorderLayout.CENTER);
 
         RegistrazioneNuovoCentroPanel registraCentroPanel = new RegistrazioneNuovoCentroPanel(server, cardLayout, mainPanel);
-        SelezionaCittaPanel selezionaCittaPanel=  new SelezionaCittaPanel(server, cardLayout, mainPanel);
-        SelezionaCoordinatePanel SelezionaCoordinatePanel =  new SelezionaCoordinatePanel(server, cardLayout, mainPanel);
+        VisualizzaTramiteNomePanel VisualizzaTramiteNomePanel=  new VisualizzaTramiteNomePanel(server, cardLayout, mainPanel, true);
+       VisualizzaTramiteCoordinatePanel VisualizzaTramiteCoordinatePanel= new VisualizzaTramiteCoordinatePanel(server, cardLayout, mainPanel, true);
 
-        selezionaCittaPanel.setBackButtonListener(registraCentroPanel);
-        SelezionaCoordinatePanel.setBackButtonListener(registraCentroPanel);
+        VisualizzaTramiteNomePanel.setBackButtonListener(registraCentroPanel);
+        VisualizzaTramiteCoordinatePanel.setBackButtonListener(registraCentroPanel);
 
         // Aggiungi pannelli al card layout
         mainPanel.add(homePanel, "Home");
@@ -68,12 +68,12 @@ public class MainFrame extends JFrame {
         mainPanel.add(new SceltaCentroPanel(server,cardLayout, mainPanel), "SceltaCentro");
         mainPanel.add(new VisualizzazionePanel(server, cardLayout, mainPanel), "Visualizzazione");
         mainPanel.add(registraCentroPanel, "RegistraCentroNuovo");
-        mainPanel.add(new VisualizzaTramiteCoordinatePanel(server, cardLayout, mainPanel), "VisualizzaCoordinate");
-        mainPanel.add(new VisualizzaTramiteNomePanel(server, cardLayout, mainPanel), "VisualizzaNome");
+        mainPanel.add(new VisualizzaTramiteCoordinatePanel(server, cardLayout, mainPanel,false), "VisualizzaCoordinate");
+        mainPanel.add(new VisualizzaTramiteNomePanel(server, cardLayout, mainPanel,false), "VisualizzaNome");
         mainPanel.add(new VisualizzaTramiteStatoPanel(server, cardLayout, mainPanel), "VisualizzazioneStato");
         mainPanel.add(new InserimentoParametriPanel(server,cardLayout,mainPanel), "InseritoreParametri");
-        mainPanel.add(selezionaCittaPanel, "AggiuntaCittàCentro");
-        mainPanel.add(SelezionaCoordinatePanel, "AggiuntaCoordinateCentro");
+        mainPanel.add(VisualizzaTramiteNomePanel, "AggiuntaCittàCentro");
+        mainPanel.add(VisualizzaTramiteCoordinatePanel, "AggiuntaCoordinateCentro");
 
 
 

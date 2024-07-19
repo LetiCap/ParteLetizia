@@ -9,6 +9,21 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+/**
+ * La classe <strong>ClientCM</strong> rappresenta il client per l'applicazione di Climate Monitoring.
+ * <p>
+ * Il client si connette a un server remoto tramite RMI (Remote Method Invocation).
+ * </p>
+ * <p>
+ * La classe estende {@link UnicastRemoteObject} e implementa {@link ClientInterface}.
+ * </p>
+ *
+ * @see ClientInterface
+ * @see ServerInterface
+ * @see MainFrame
+ * @author Letizia Capitanio
+ * @author Tahir Agalliu
+ */
 public class ClientCM extends UnicastRemoteObject implements ClientInterface {
     private ServerInterface server;
     public ClientCM() throws RemoteException {

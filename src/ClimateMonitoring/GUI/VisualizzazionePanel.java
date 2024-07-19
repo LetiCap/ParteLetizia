@@ -70,10 +70,10 @@ public class VisualizzazionePanel extends JPanel {
         add(bottomPanel, BorderLayout.SOUTH);
 
         // Aggiunge i pannelli per le diverse opzioni di ricerca al pannello principale
-        VisualizzaTramiteNomePanel risultatiTramiteNomePanel = new VisualizzaTramiteNomePanel(server, cardLayout, mainPanel);
+        VisualizzaTramiteNomePanel risultatiTramiteNomePanel = new VisualizzaTramiteNomePanel(server, cardLayout, mainPanel, false);
         mainPanel.add(risultatiTramiteNomePanel, "VisualizzaTramiteNomePanel");
 
-        VisualizzaTramiteCoordinatePanel risultatiTramiteCoordinatePanel = new VisualizzaTramiteCoordinatePanel(server, cardLayout, mainPanel);
+        VisualizzaTramiteCoordinatePanel risultatiTramiteCoordinatePanel = new VisualizzaTramiteCoordinatePanel(server, cardLayout, mainPanel ,false);
         mainPanel.add(risultatiTramiteCoordinatePanel, "VisualizzaTramiteCoordinatePanel");
 
         VisualizzaTramiteStatoPanel risultatiTramiteStatoPanel = new VisualizzaTramiteStatoPanel(server, cardLayout, mainPanel);

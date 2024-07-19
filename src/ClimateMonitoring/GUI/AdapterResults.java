@@ -87,6 +87,36 @@ public class AdapterResults {
         }
     }
 
+
+    /**
+     * <strong>Apre il pannello</strong> dei dettagli per richiedere se associare l'area selezionata al centro
+     *
+     * @param parentFrame  <strong>La finestra principale</strong> dell'applicazione.
+     * @param selectedResult <strong>L'oggetto ResultWrapper</strong> che contiene i dettagli climatici selezionati.
+     * @throws RemoteException <strong>Se si verifica un errore</strong> nella comunicazione con il server.
+     * @author Letizia Capitanio
+     */
+    void openDetailsPanel(JFrame parentFrame, ResultWrapper selectedResult, LinkedList<String> lonlatInserite) {
+        String cityName = selectedResult.getName();
+        Object[] options = {"Yes", "No"};
+        int choice = JOptionPane.showOptionDialog(parentFrame,
+                String.format("Si vuole procedere con l'inserimento di questa area? %f,%f (%s)",
+                        selectedResult.getLatitude(), selectedResult.getLongitude(), cityName),
+                "Dettagli",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                options,
+                options[0]);
+
+        if (choice == JOptionPane.YES_OPTION) {
+            // Aggiungi l'elemento selezionato alla lista lonlatInserite
+            lonlatInserite.add(selectedResult.getLatitude() + "," + selectedResult.getLongitude()+ " ("+ selectedResult.getName()+")");
+        } else if (choice == JOptionPane.NO_OPTION) {
+            // L'utente ha scelto di non fare nulla
+        }
+    }
+
     /**
      * <strong>Ripristina il campo di ricerca e la lista dei risultati.</strong>
      *

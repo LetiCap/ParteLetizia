@@ -113,7 +113,7 @@ public class InterfaceCreatorComponent {
         JList<ResultWrapper> resultList = new JList<>(new DefaultListModel<>()); // Inizializziamo lista contenimento result
         resultList.setFont(new Font("Serif", Font.PLAIN, 16)); // Modello predefinito
         resultList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        resultList.setBackground(new Color(0x5DE2D2));
+      //  resultList.setBackground(new Color(0x5DE2D2));
         return resultList;
     }
 }

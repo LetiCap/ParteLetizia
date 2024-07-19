@@ -1,11 +1,24 @@
+/*Tahir Agalliu	753550 VA
+Letizia Capitanio 752465 VA
+Alessandro D'Urso 753578 VA
+Francesca Ziggiotto	752504 VA
+*/
 package ClimateMonitoring.GUI;
-
 import ClimateMonitoring.ServerInterface;
-
 import javax.swing.*;
 import java.awt.*;
 import java.rmi.RemoteException;
 
+
+/**
+ * Pannello di login per l'utente.
+ * <p>
+ * Questo pannello fornisce un'interfaccia per l'accesso dell'utente al sistema. Consente di inserire un identificativo e una password,
+ * e include pulsanti per effettuare il login o tornare alla schermata principale.
+ * </p>
+ *
+ * @author Letizia Capitanio
+ */
 public class LoginPanel extends JPanel {
     private JTextField txtField1;
     private JTextField txtField2;
@@ -13,6 +26,13 @@ public class LoginPanel extends JPanel {
     private JButton btnIndietro;
     private InterfaceCreatorComponent creator = new InterfaceCreatorComponent();
 
+
+    /**
+     * Imposta il panel di login con textfield per inserire username e password.
+     * @param server     <strong>l'interfaccia del server</strong> da cui ottenere i risultati della ricerca.
+     * @param cardLayout <strong>il layout del pannello</strong> che consente di passare tra i pannelli.
+     * @param mainPanel  <strong>il pannello principale</strong> in cui visualizzare la scheda.
+     */
     public LoginPanel(ServerInterface server, CardLayout cardLayout, JPanel mainPanel) {
         setLayout(new BorderLayout()); // Layout principale come BorderLayout
 
