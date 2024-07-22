@@ -48,7 +48,8 @@ import java.util.*;
                     lonlatInserite.remove(i);
                 }else{
                     db.inserimentoinDB("aree",lonlat ,"lonlat", centro, "NomeCentro","lonlat", null);
-                    i++; }// Passa all'elemento successivo solo se non viene rimosso
+                    i++;
+                }// Passa all'elemento successivo solo se non viene rimosso
             }
         }
         /**

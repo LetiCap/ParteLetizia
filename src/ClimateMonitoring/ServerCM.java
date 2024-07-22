@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -88,27 +89,47 @@ import java.util.Map;
             panel.add(dbPasswordField);
 
             JButton saveButton = new JButton("Save Configuration");
+            JButton closeServer = new JButton("close Server");
+            closeServer.setVisible(false);
             saveButton.addActionListener(e -> {
                 String dbUrl = dbHostField.getText().trim();
                 String dbUsername = dbUsernameField.getText().trim();
-                String dbPassword = new String(dbPasswordField.getPassword());
-
+                String dbPassword = dbPasswordField.getText().trim();
+                closeServer.setVisible(true);
                 if(dbUrl.isEmpty() || dbUsername.isEmpty() || dbPassword.isEmpty()) {
                     JOptionPane.showMessageDialog(frame, "Inserisci tutti i valori correttamente");
                 }else{
                     db.setConnectionDetails(dbUrl, dbUsername, dbPassword);
                     try {
                         db.connect();
+                        dbPasswordField.setEditable(false);
+                        dbHostField.setEditable(false);
+                        dbUsernameField.setEditable(false);
+                        saveButton.setVisible(false);
+                        JOptionPane.showMessageDialog(frame, "Connessione Effettuata", "Info Connessione", JOptionPane.INFORMATION_MESSAGE);
                         db.setConnectionDetails("jdbc:postgresql://localhost:5432/climatemonitoring", dbUsername, dbPassword);
+
+
                     } catch (SQLException ex) {
                         throw new RuntimeException(ex);
                     }
                     startRMIServer();
-                    frame.setVisible(false);
+
+                }
+
+            });
+            closeServer.addActionListener(e->{
+                try {
+                    UnicastRemoteObject.unexportObject(this, true);
+                    System.exit(0);
+                    System.out.println("server chiuso ");
+                } catch (NoSuchObjectException ex) {
+                   ex.printStackTrace();
                 }
 
             });
 
+            panel.add(closeServer);
             panel.add(saveButton);
             frame.add(panel, BorderLayout.CENTER);
 
@@ -124,6 +145,7 @@ import java.util.Map;
             try {
                 Registry registry = LocateRegistry.createRegistry(1099);
                 registry.rebind("Server", this);
+
                 System.out.println("Server CM started on RMI registry.");
             } catch (RemoteException e) {
                 System.err.println("Error starting the RMI server or connecting to database: " + e.getMessage());
@@ -170,13 +192,13 @@ import java.util.Map;
         public synchronized LinkedList<Result> ricercaTramiteStato(String statoAppartenenza) {return db.ricercaTramiteStato(statoAppartenenza);}
 
         @Override
-        public LinkedList<Result> cercaAreaGeograficaCoordinate(double latitudine, double longitudine) {return db.cercaAreaGeograficaCoordinate(latitudine,longitudine);}
+        public synchronized LinkedList<Result> cercaAreaGeograficaCoordinate(double latitudine, double longitudine) {return db.cercaAreaGeograficaCoordinate(latitudine,longitudine);}
 
         @Override
-        public String getNote(String cityName, String colonna){return db.getInfoCity(cityName,colonna,false);}
+        public synchronized String getNote(String cityName, String colonna){return db.getInfoCity(cityName,colonna,false);}
 
         @Override
-        public String getModa(String cityName,String colonna){return db.getInfoCity(cityName,colonna,true);}
+        public synchronized String getModa(String cityName,String colonna){return db.getInfoCity(cityName,colonna,true);}
 
 
 

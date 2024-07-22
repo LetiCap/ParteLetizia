@@ -93,7 +93,6 @@ public class AdapterResults {
      *
      * @param parentFrame  <strong>La finestra principale</strong> dell'applicazione.
      * @param selectedResult <strong>L'oggetto ResultWrapper</strong> che contiene i dettagli climatici selezionati.
-     * @throws RemoteException <strong>Se si verifica un errore</strong> nella comunicazione con il server.
      * @author Letizia Capitanio
      */
     void openDetailsPanel(JFrame parentFrame, ResultWrapper selectedResult, LinkedList<String> lonlatInserite) {
@@ -112,8 +111,6 @@ public class AdapterResults {
         if (choice == JOptionPane.YES_OPTION) {
             // Aggiungi l'elemento selezionato alla lista lonlatInserite
             lonlatInserite.add(selectedResult.getLatitude() + "," + selectedResult.getLongitude()+ " ("+ selectedResult.getName()+")");
-        } else if (choice == JOptionPane.NO_OPTION) {
-            // L'utente ha scelto di non fare nulla
         }
     }
 

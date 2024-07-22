@@ -82,17 +82,17 @@ public class RegistrazioneNuovoCentroPanel extends JPanel implements BackButtonL
         JButton apriPanel1Button =creator.createButton(false,"Ricerca tramite città");
         JButton apriPanel2Button =creator.createButton(false,"Ricerca tramite longitudine latitudine");
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton btnIndietro = creator.createButton(true, "Back");
+
         JButton mainButton = creator.createButton(false,"Invio");
-        buttonPanel.add(btnIndietro);
+
         buttonPanel.add(mainButton);
         buttonPanel.add(apriPanel1Button);
         buttonPanel.add(apriPanel2Button);
-        btnIndietro.addActionListener(e -> cardLayout.show(mainPanel, "SceltaCentro"));
+
         mainButton.addActionListener(e -> {
             try {
                 inserire();
-                server.registraCentroAree(inserimenti, lonlatInserite);
+
             } catch (RemoteException ex) {
                 ex.printStackTrace();
             }
@@ -112,22 +112,31 @@ public class RegistrazioneNuovoCentroPanel extends JPanel implements BackButtonL
             JOptionPane.showMessageDialog(this, "Per favore, inserisci tutti i campi.", "Errore", JOptionPane.ERROR_MESSAGE);
             return;
         } else {
+            if (CAPText.length() != 5) {
+                JOptionPane.showMessageDialog(this, "Il CAP deve essere di 5 caratteri.", "Errore", JOptionPane.ERROR_MESSAGE);
+                return; // Esce dall'azione senza salvare i dati
+            }
             inserimenti.add(civicoText);
             inserimenti.add(CAPText);
             inserimenti.add(comuneText);
             inserimenti.add(viaPiazzaText);
             inserimenti.add(provinciaText);
-        }
 
-        // Esempio di output dei dati inseriti
-        JOptionPane.showMessageDialog(this, "Registrazione Centro effettuata \n Registrazione completata!", "Registrazione Centro", JOptionPane.INFORMATION_MESSAGE);
-
-        // Esempio di output delle coordinate selezionate
-        StringBuilder lonlatOutput = new StringBuilder("Coordinate selezionate:\n");
-        for (String lonlat : lonlatInserite) {
-            lonlatOutput.append(lonlat).append("\n");
+            if(!lonlatInserite.isEmpty()) {
+                // Esempio di output dei dati inseriti
+                JOptionPane.showMessageDialog(this, "Registrazione Centro effettuata \n Registrazione completata!", "Registrazione Centro", JOptionPane.INFORMATION_MESSAGE);
+                // Esempio di output delle coordinate selezionate
+                StringBuilder lonlatOutput = new StringBuilder("Coordinate selezionate:\n");
+                for (String lonlat : lonlatInserite) {
+                    lonlatOutput.append(lonlat).append("\n");
+                }
+                JOptionPane.showMessageDialog(this, lonlatOutput.toString(), "Coordinate Selezionate", JOptionPane.INFORMATION_MESSAGE);
+                server.registraCentroAree(inserimenti, lonlatInserite);
+            }else{
+                JOptionPane.showMessageDialog(this, "Selezionare almeno un area.", "Errore", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
-        JOptionPane.showMessageDialog(this, lonlatOutput.toString(), "Coordinate Selezionate", JOptionPane.INFORMATION_MESSAGE);
 
         // Reset dei campi dopo la registrazione
         resetFields();

@@ -17,6 +17,12 @@ public class ScoreCellEditor extends DefaultCellEditor {
     private String originalValue;
     private JTable climateTable;
 
+    /**
+     * Costruttore per inizializzare l'editor delle celle.
+     *
+     * @param textField Il componente {@link JTextField} utilizzato per l'editing delle celle.
+     * @param climateTable La tabella dei parametri climatici in cui si trovano le celle da editare.
+     */
     public ScoreCellEditor(JTextField textField, JTable climateTable) {
         super(textField);
         this.textField = textField;
@@ -31,6 +37,16 @@ public class ScoreCellEditor extends DefaultCellEditor {
         });
     }
 
+    /**
+     * Restituisce il componente dell'editor per la cella della tabella.
+     *
+     * @param table La tabella in cui si trova la cella da editare.
+     * @param value Il valore attuale della cella.
+     * @param isSelected Indica se la cella è selezionata.
+     * @param row L'indice della riga della cella.
+     * @param column L'indice della colonna della cella.
+     * @return Il componente dell'editor per la cella.
+     */
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         // Imposta il valore originale per il confronto successivo
@@ -38,13 +54,21 @@ public class ScoreCellEditor extends DefaultCellEditor {
         return super.getTableCellEditorComponent(table, value, isSelected, row, column);
     }
 
+    /**
+     * Termina l'editing della cella e applica le modifiche se il valore è valido.
+     *
+     * @return true se l'editing è stato confermato, false altrimenti.
+     */
     @Override
     public boolean stopCellEditing() {
         validateAndStopEditing();
         return super.stopCellEditing(); // Prosegui con la conferma dell'editing
     }
 
-    // Metodo per validare il valore di Score e terminare l'editing se valido
+    /**
+     * Valida il valore inserito nella cella e termina l'editing se il valore è valido.
+     * Se il valore non è valido, viene mostrato un messaggio di errore e l'editor rimane aperto.
+     */
     private void validateAndStopEditing() {
         String scoreStr = textField.getText().trim();
         if (isValidScore(scoreStr)) {
@@ -67,6 +91,12 @@ public class ScoreCellEditor extends DefaultCellEditor {
         }
     }
 
+    /**
+     * Verifica se il valore fornito è un punteggio valido (compreso tra 1 e 5).
+     *
+     * @param scoreStr Il valore del punteggio da verificare.
+     * @return true se il valore è valido, false altrimenti.
+     */
     private boolean isValidScore(String scoreStr) {
         try {
             int score = Integer.parseInt(scoreStr);

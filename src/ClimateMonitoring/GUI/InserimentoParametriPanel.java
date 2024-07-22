@@ -7,6 +7,7 @@ Francesca Ziggiotto	752504 VA
 package ClimateMonitoring.GUI;
 import ClimateMonitoring.ServerInterface;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -57,12 +58,12 @@ public class InserimentoParametriPanel extends JPanel {
     private static String[] columnNames = {"Climate Category", "Explanation", "Score: 1 ….. 5", "Notes"};
     private static Object[][] data = {
             {"Vento", "Velocità del vento (km/h)", "", ""},
-            {"Umidità", "% di Umidità, suddivisa in fasce", "", ""},
-            {"Pressione", "In hPa, suddivisa in fasce", "", ""},
-            {"Temperatura", "In °C, suddivisa in fasce", "", ""},
-            {"Precipitazioni", "In mm di pioggia, suddivisa in fasce", "", ""},
-            {"Altitudine dei ghiacciai", "In m, suddivisa in fasce", "", ""},
-            {"Massa dei ghiacciai", "In kg, suddivisa in fasce", "", ""}
+            {"Umidità", "% di Umidità,\n suddivisa in fasce", "", ""},
+            {"Pressione", "In hPa,\n suddivisa in fasce", "", ""},
+            {"Temperatura", "In °C, \n suddivisa in fasce", "", ""},
+            {"Precipitazioni", "In mm di pioggia,\n suddivisa in fasce", "", ""},
+            {"Altitudine dei ghiacciai", "In m, \nsuddivisa in fasce", "", ""},
+            {"Massa dei ghiacciai", "In kg, \nsuddivisa in fasce", "", ""}
     };
 
     /**
@@ -116,6 +117,14 @@ public class InserimentoParametriPanel extends JPanel {
         climateTable.getTableHeader().setResizingAllowed(false);
         climateTable.setColumnSelectionAllowed(false);
         climateTable.getTableHeader().setReorderingAllowed(false);
+        climateTable.getColumnModel().getColumn(1).setCellRenderer(new TooltipTableCellRenderer());
+
+        climateTable.setRowHeight(46); // Altezza delle righe della tabella
+        climateTable.setFont(new Font("Arial", Font.PLAIN, 18)); // Font per il testo della tabella
+        climateTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 20)); // Font per l'intestazione della tabella
+        climateTable.getTableHeader().setBackground(new Color(0, 102, 204)); // Colore di sfondo dell'intestazione
+        climateTable.getTableHeader().setForeground(Color.WHITE); // Colore del testo dell'intestazione
+
 
         // Applica il TableCellEditor alla colonna "Score"
         climateTable.getColumnModel().getColumn(2).setCellEditor(new ScoreCellEditor(new JTextField(),climateTable));
@@ -280,6 +289,18 @@ public class InserimentoParametriPanel extends JPanel {
             return score >= 1 && score <= 5; // Restituisce true se il valore è nel range 1-5
         } catch (NumberFormatException ex) {
             return false; // Restituisce false se la conversione fallisce (non è un numero)
+        }
+    }
+
+
+    private static class TooltipTableCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if (component instanceof JComponent) {
+                ((JComponent) component).setToolTipText(value == null ? "" : value.toString());
+            }
+            return component;
         }
     }
 

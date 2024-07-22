@@ -56,7 +56,7 @@ public class MainFrame extends JFrame {
 
         RegistrazioneNuovoCentroPanel registraCentroPanel = new RegistrazioneNuovoCentroPanel(server, cardLayout, mainPanel);
         VisualizzaTramiteNomePanel VisualizzaTramiteNomePanel=  new VisualizzaTramiteNomePanel(server, cardLayout, mainPanel, true);
-       VisualizzaTramiteCoordinatePanel VisualizzaTramiteCoordinatePanel= new VisualizzaTramiteCoordinatePanel(server, cardLayout, mainPanel, true);
+        VisualizzaTramiteCoordinatePanel VisualizzaTramiteCoordinatePanel= new VisualizzaTramiteCoordinatePanel(server, cardLayout, mainPanel, true);
 
         VisualizzaTramiteNomePanel.setBackButtonListener(registraCentroPanel);
         VisualizzaTramiteCoordinatePanel.setBackButtonListener(registraCentroPanel);

@@ -149,7 +149,6 @@ public class VisualizzaTramiteNomePanel extends JPanel {
                 cardLayout.show(mainPanel, "Visualizzazione");
                 adapter.reset(searchField, resultCountLabel);
             }else{
-
                 // Chiamata al listener per passare lonlatInserite al pannello principale
                 if (backButtonListener != null) {
                     backButtonListener.onBackButtonClicked(lonlatInserite);

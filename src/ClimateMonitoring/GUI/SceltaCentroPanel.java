@@ -58,9 +58,7 @@ public class SceltaCentroPanel extends JPanel {
         // Pannello per i pulsanti Invia e Indietro
         JPanel ButtonPanel = new JPanel(new BorderLayout());
 
-        // Pannello per il pulsante Indietro
-        JPanel buttonPanelIndietro = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        ButtonPanel.add(buttonPanelIndietro, BorderLayout.WEST);
+
 
         // Pannello per il pulsante Invia
         JPanel sendButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
